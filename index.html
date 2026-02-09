@@ -9,11 +9,11 @@
     <style>
         /* ===== CSS Variables for Academic Colors ===== */
         :root {
-            --primary-color: #1e3a8a;        /* Deep Blue */
-            --secondary-color: #0f766e;      /* Teal */
-            --accent-color: #b45309;         /* Amber */
-            --dark-bg: #1f2937;              /* Dark Gray */
-            --light-bg: #f8fafc;             /* Light Gray */
+            --primary-color: #1e3a8a;
+            --secondary-color: #0f766e;
+            --accent-color: #b45309;
+            --dark-bg: #1f2937;
+            --light-bg: #f8fafc;
             --white: #ffffff;
             --text-primary: #1f2937;
             --text-secondary: #6b7280;
@@ -22,7 +22,6 @@
             --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
         }
 
-        /* ===== Reset & Base Styles ===== */
         * {
             margin: 0;
             padding: 0;
@@ -63,7 +62,6 @@
             padding: 0 20px;
         }
 
-        /* ===== Navigation ===== */
         .navbar {
             background-color: var(--primary-color);
             padding: 1rem 0;
@@ -124,7 +122,6 @@
             border-radius: 2px;
         }
 
-        /* ===== Hero Section ===== */
         .hero {
             background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: var(--white);
@@ -216,7 +213,6 @@
             transform: translateY(-2px);
         }
 
-        /* ===== Section Styles ===== */
         .section {
             padding: 4rem 0;
         }
@@ -254,7 +250,6 @@
             padding-left: 1rem;
         }
 
-        /* ===== About Section ===== */
         .about-content {
             max-width: 900px;
             margin: 0 auto;
@@ -324,7 +319,6 @@
             font-family: 'Helvetica Neue', 'Arial', sans-serif;
         }
 
-        /* ===== Timeline (Education) ===== */
         .timeline {
             max-width: 800px;
             margin: 0 auto;
@@ -396,13 +390,6 @@
             margin: 0.25rem 0;
         }
 
-        .achievement {
-            margin-top: 0.75rem;
-            color: var(--accent-color);
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-        }
-
-        /* ===== Experience Section ===== */
         .experience-card {
             background-color: var(--white);
             padding: 2rem;
@@ -453,7 +440,6 @@
             line-height: 1.8;
         }
 
-        /* ===== Publications Section ===== */
         .publications-list {
             max-width: 1000px;
             margin: 0 auto;
@@ -515,7 +501,6 @@
             color: var(--accent-color);
         }
 
-        /* ===== Working Papers ===== */
         .working-papers {
             max-width: 1000px;
             margin: 0 auto;
@@ -560,7 +545,6 @@
             color: #065f46;
         }
 
-        /* ===== Consultancy ===== */
         .consultancy-item {
             max-width: 1000px;
             margin: 0 auto;
@@ -576,7 +560,6 @@
             text-align: justify;
         }
 
-        /* ===== Conferences Section ===== */
         .conferences-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
@@ -667,7 +650,6 @@
             color: var(--secondary-color);
         }
 
-        /* ===== Skills Section ===== */
         .skills-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -705,7 +687,6 @@
             line-height: 1.6;
         }
 
-        /* ===== Training Section ===== */
         .training-table {
             overflow-x: auto;
             background-color: var(--white);
@@ -768,7 +749,6 @@
             color: #065f46;
         }
 
-        /* ===== Contact Section ===== */
         .contact-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -816,7 +796,101 @@
             color: var(--accent-color);
         }
 
-        /* ===== Referees Section ===== */
+        /* Contact Form */
+        .contact-form-container {
+            max-width: 700px;
+            margin: 3rem auto;
+            background-color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            border-top: 4px solid #1e3a8a;
+        }
+
+        .contact-form-container h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: #1e3a8a;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #1f2937;
+            font-weight: 600;
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+        }
+
+        .form-group label span {
+            color: #dc2626;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #0f766e;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background-color: #1e3a8a;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            font-family: 'Helvetica Neue', 'Arial', sans-serif;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #0f766e;
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .success-message {
+            display: none;
+            padding: 1rem;
+            background-color: #d1fae5;
+            border-left: 4px solid #059669;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            color: #065f46;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
         .referees-section {
             margin-top: 3rem;
         }
@@ -856,7 +930,6 @@
             color: var(--secondary-color);
         }
 
-        /* ===== Footer ===== */
         .footer {
             background-color: var(--dark-bg);
             color: var(--white);
@@ -870,7 +943,6 @@
             opacity: 0.8;
         }
 
-        /* ===== Responsive Design ===== */
         @media (max-width: 768px) {
             .nav-menu {
                 position: fixed;
@@ -962,6 +1034,10 @@
             .training-table td {
                 padding: 0.75rem 0.5rem;
             }
+
+            .contact-form-container {
+                padding: 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -992,9 +1068,8 @@
             }
         }
 
-        /* ===== Print Styles ===== */
         @media print {
-            .navbar, .footer, .hamburger {
+            .navbar, .footer, .hamburger, .contact-form-container {
                 display: none;
             }
 
@@ -1015,7 +1090,6 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <div class="nav-brand">Sandip Paudel</div>
@@ -1037,7 +1111,6 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="container">
             <div class="hero-content">
@@ -1059,7 +1132,6 @@
         </div>
     </section>
 
-    <!-- About Section -->
     <section id="about" class="section">
         <div class="container">
             <h2 class="section-title">About Me</h2>
@@ -1097,7 +1169,6 @@
         </div>
     </section>
 
-    <!-- Education Section -->
     <section id="education" class="section bg-light">
         <div class="container">
             <h2 class="section-title">Education & Academic Qualifications</h2>
@@ -1109,7 +1180,6 @@
                         <h3>Ph.D Scholar</h3>
                         <p class="institution-name">Department of Business Administration, Central Campus</p>
                         <p class="institution-detail">DDU University, India</p>
-                        
                     </div>
                 </div>
                 <div class="timeline-item">
@@ -1119,10 +1189,8 @@
                         <h3>MBA - Banking & Finance</h3>
                         <p class="institution-name">Lumbini Banijya Campus</p>
                         <p class="institution-detail">Affiliated to Tribhuvan University, Nepal</p>
-                        <!-- <p class="achievement"><strong>CGPA: 3.76/4</strong></p> -->
                     </div>
                 </div>
-
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
@@ -1130,10 +1198,8 @@
                         <h3>Bachelor of Business Studies</h3>
                         <p class="institution-name">Aims College</p>
                         <p class="institution-detail">Affiliated to Tribhuvan University, Nepal</p>
-                        <!-- <p class="achievement"><strong>Percentage: 66%</strong></p> -->
                     </div>
                 </div>
-
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
@@ -1141,10 +1207,8 @@
                         <h3>10+2 (Higher Secondary Education)</h3>
                         <p class="institution-name">Aims English Higher Secondary School</p>
                         <p class="institution-detail">HSEB, Nepal</p>
-                        <!-- <p class="achievement"><strong>Percentage: 71.5%</strong></p> -->
                     </div>
                 </div>
-
                 <div class="timeline-item">
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
@@ -1152,14 +1216,12 @@
                         <h3>School Leaving Certificate (SLC)</h3>
                         <p class="institution-name">Shree Shrawan Secondary School</p>
                         <p class="institution-detail">Nepal Government Board, Syangja, Nepal</p>
-                        <!-- <p class="achievement"><strong>Percentage: 74.625%</strong></p> -->
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Professional Experience Section -->
     <section id="experience" class="section">
         <div class="container">
             <h2 class="section-title">Professional & Academic Experience</h2>
@@ -1184,7 +1246,6 @@
         </div>
     </section>
 
-    <!-- Publications Section -->
     <section id="publications" class="section bg-light">
         <div class="container">
             <h2 class="section-title">Research Output & Publications</h2>
@@ -1277,7 +1338,6 @@
         </div>
     </section>
 
-    <!-- Conferences Section -->
     <section id="conferences" class="section">
         <div class="container">
             <h2 class="section-title">International/National Conference Presentations</h2>
@@ -1397,7 +1457,6 @@
         </div>
     </section>
 
-    <!-- Research & Training Section -->
     <section id="research" class="section bg-light">
         <div class="container">
             <h2 class="section-title">Research Skills & Methodology</h2>
@@ -1429,7 +1488,6 @@
         </div>
     </section>
 
-    <!-- Training Section -->
     <section id="training" class="section">
         <div class="container">
             <h2 class="section-title">Research Trainings & Experience</h2>
@@ -1514,7 +1572,6 @@
         </div>
     </section>
 
-    <!-- Contact Section -->
     <section id="contact" class="section bg-light">
         <div class="container">
             <h2 class="section-title">Contact Information</h2>
@@ -1549,6 +1606,48 @@
                 </div>
             </div>
 
+            <div class="contact-form-container">
+                <h3><i class="fas fa-paper-plane"></i> Send Me a Message</h3>
+                
+                <div id="successMessage" class="success-message">
+                    <i class="fas fa-check-circle"></i> Thank you for your message! I'll get back to you soon.
+                </div>
+
+                <form action="https://formspree.io/f/xbdalkyb" method="POST" id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Full Name <span>*</span></label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address <span>*</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subject">Subject <span>*</span></label>
+                        <select id="subject" name="subject" required>
+                            <option value="">-- Select a subject --</option>
+                            <option value="Research Collaboration">Research Collaboration</option>
+                            <option value="Student Supervision">Student Supervision</option>
+                            <option value="Consultation">Consultation</option>
+                            <option value="Speaking Engagement">Speaking Engagement</option>
+                            <option value="General Inquiry">General Inquiry</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="message">Message <span>*</span></label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+
             <div class="referees-section">
                 <h3 class="subsection-title">Academic Referees</h3>
                 <div class="referees-grid">
@@ -1570,7 +1669,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p>&copy; 2026 Sandip Paudel. All rights reserved.</p>
@@ -1579,7 +1677,6 @@
     </footer>
 
     <script>
-        // Mobile Navigation Toggle
         const hamburger = document.querySelector('.hamburger');
         const navMenu = document.querySelector('.nav-menu');
 
@@ -1589,7 +1686,6 @@
             });
         }
 
-        // Close mobile menu when clicking on a link
         const navLinks = document.querySelectorAll('.nav-menu a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -1597,7 +1693,6 @@
             });
         });
 
-        // Add active state to navigation on scroll
         window.addEventListener('scroll', () => {
             const sections = document.querySelectorAll('section[id]');
             const scrollY = window.pageYOffset;
@@ -1619,7 +1714,6 @@
             });
         });
 
-        // Smooth scroll behavior
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 const href = this.getAttribute('href');
@@ -1636,7 +1730,21 @@
             });
         });
 
-        // Animation on scroll
+        const contactForm = document.getElementById('contactForm');
+        const successMessage = document.getElementById('successMessage');
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                setTimeout(() => {
+                    successMessage.classList.add('show');
+                    
+                    setTimeout(() => {
+                        successMessage.classList.remove('show');
+                    }, 5000);
+                }, 500);
+            });
+        }
+
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1651,7 +1759,6 @@
             });
         }, observerOptions);
 
-        // Observe elements for animation
         const animateElements = document.querySelectorAll('.publication-item, .conference-card, .timeline-item, .skill-category, .contact-card');
         animateElements.forEach(el => {
             el.style.opacity = '0';
@@ -1659,8 +1766,6 @@
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
         });
-
-        console.log('Website loaded successfully!');
     </script>
 </body>
 </html>
