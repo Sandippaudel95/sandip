@@ -3,1756 +3,733 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sandip Paudel - Assistant Professor</title>
+    <meta name="description" content="Sandip Paudel: Assistant Professor of Finance at Lumbini Banijya Campus and PhD candidate at DDU Gorakhpur University. Research in financial econometrics, market efficiency, and NEPSE.">
+    <meta name="author" content="Sandip Paudel">
+    <title>Sandip Paudel | Assistant Professor of Finance</title>
+
+    <!-- Favicon (replace favicon.ico with your own in the root if you have one) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a2540'/%3E%3Ctext x='50' y='68' font-family='Georgia' font-size='56' font-weight='600' fill='white' text-anchor='middle'%3ESP%3C/text%3E%3C/svg%3E">
+
+    <!-- Google Fonts: Lora for serif headings, Inter for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        /* ===== CSS Variables for Academic Colors ===== */
-        :root {
-            --primary-color: #251e8a;        /* Deep Blue */
-            --secondary-color: #0f766e;      /* Teal */
-            --accent-color: #b45309;         /* Amber */
-            --dark-bg: #1f2937;              /* Dark Gray */
-            --light-bg: #f8fafc;             /* Light Gray */
-            --white: #ffffff;
-            --text-primary: #1f2937;
-            --text-secondary: #6b7280;
-            --border-color: #e5e7eb;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
 
-        /* ===== Reset & Base Styles ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            line-height: 1.7;
-            color: var(--text-primary);
-            background-color: var(--white);
-        }
-
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-            font-weight: 600;
-            line-height: 1.3;
-            color: var(--primary-color);
-        }
-
-        a {
-            text-decoration: none;
-            color: var(--secondary-color);
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: var(--accent-color);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* ===== Navigation ===== */
-        .navbar {
-            background-color: var(--primary-color);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: var(--shadow);
-        }
-
-        .navbar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .nav-brand {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--white);
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-        }
-
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-        }
-
-        .nav-menu a {
-            color: var(--white);
-            font-size: 0.95rem;
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            transition: background-color 0.3s ease;
-        }
-
-        .nav-menu a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--white);
-        }
-
-        .nav-menu a.active {
-            background-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            gap: 4px;
-            cursor: pointer;
-        }
-
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background-color: var(--white);
-            border-radius: 2px;
-        }
-
-        /* ===== Hero Section ===== */
-        .hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
-            color: var(--white);
-            padding: 5rem 0;
-            text-align: center;
-        }
-
-        .profile-photo {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 2rem;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 6px solid var(--white);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .profile-photo:hover {
-            transform: scale(1.05);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .profile-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .hero-content h1 {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            color: var(--white);
-        }
-
-        .hero-content h2 {
-            font-size: 1.75rem;
-            font-weight: 400;
-            margin-bottom: 0.5rem;
-            color: rgba(255, 255, 255, 0.95);
-        }
-
-        .hero-content .institution {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            line-height: 1.6;
-        }
-
-        .hero-links {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .btn-primary, .btn-secondary {
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-            font-size: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .btn-primary {
-            background-color: var(--white);
-            color: var(--primary-color);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-            color: var(--primary-color);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--white);
-            border: 2px solid var(--white);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--white);
-            color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-
-        /* ===== Section Styles ===== */
-        .section {
-            padding: 4rem 0;
-        }
-
-        .bg-light {
-            background-color: var(--light-bg);
-        }
-
-        .section-title {
-            font-size: 2.25rem;
-            margin-bottom: 3rem;
-            text-align: center;
-            color: var(--primary-color);
-            position: relative;
-            padding-bottom: 1rem;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--secondary-color), var(--accent-color));
-            border-radius: 2px;
-        }
-
-        .subsection-title {
-            font-size: 1.75rem;
-            margin: 2.5rem 0 1.5rem;
-            color: var(--secondary-color);
-            border-left: 4px solid var(--accent-color);
-            padding-left: 1rem;
-        }
-
-        /* ===== About Section ===== */
-        .about-content {
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .about-text p {
-            font-size: 1.1rem;
-            margin-bottom: 1.5rem;
-            text-align: justify;
-        }
-
-        .about-text h3 {
-            font-size: 1.5rem;
-            margin: 2rem 0 1rem;
-            color: var(--secondary-color);
-        }
-
-        .research-interests {
-            list-style: none;
-            margin: 1rem 0;
-        }
-
-        .research-interests li {
-            padding: 0.75rem 0;
-            font-size: 1.1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .research-interests i {
-            color: var(--accent-color);
-            font-size: 1.2rem;
-        }
-
-        .contributions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 2rem 0;
-        }
-
-        .contribution-item {
-            text-align: center;
-            padding: 1.5rem;
-            background-color: var(--light-bg);
-            border-radius: 8px;
-            border: 2px solid var(--border-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .contribution-item:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .contribution-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .contribution-label {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-        }
-
-        /* ===== Timeline (Education) ===== */
-        .timeline {
-            max-width: 800px;
-            margin: 0 auto;
-            position: relative;
-            padding-left: 50px;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 20px;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: linear-gradient(180deg, var(--primary-color), var(--secondary-color));
-        }
-
-        .timeline-item {
-            position: relative;
-            margin-bottom: 3rem;
-        }
-
-        .timeline-marker {
-            position: absolute;
-            left: -38px;
-            top: 0;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background-color: var(--accent-color);
-            border: 4px solid var(--white);
-            box-shadow: 0 0 0 3px var(--accent-color);
-        }
-
-        .timeline-content {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            border-left: 4px solid var(--secondary-color);
-        }
-
-        .timeline-year {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 0.25rem 0.75rem;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-        }
-
-        .timeline-content h3 {
-            font-size: 1.3rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary-color);
-        }
-
-        .institution-name {
-            font-weight: 600;
-            color: var(--secondary-color);
-            margin: 0.25rem 0;
-        }
-
-        .institution-detail {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin: 0.25rem 0;
-        }
-
-        .achievement {
-            margin-top: 0.75rem;
-            color: var(--accent-color);
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-        }
-
-        /* ===== Experience Section ===== */
-        .experience-card {
-            background-color: var(--white);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            border-top: 4px solid var(--primary-color);
-        }
-
-        .experience-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .experience-header h3 {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        .experience-period {
-            background-color: var(--secondary-color);
-            color: var(--white);
-            padding: 0.5rem 1rem;
-            border-radius: 4px;
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-            font-size: 0.95rem;
-        }
-
-        .experience-location {
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .responsibilities h4 {
-            font-size: 1.2rem;
-            color: var(--secondary-color);
-            margin: 1.5rem 0 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .responsibilities p {
-            text-align: justify;
-            line-height: 1.8;
-        }
-
-        /* ===== Publications Section ===== */
-        .publications-list {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .publication-item {
-            display: flex;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .publication-item:hover {
-            transform: translateX(5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .pub-year {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--white);
-            background-color: var(--primary-color);
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            height: fit-content;
-            min-width: 60px;
-            text-align: center;
-        }
-
-        .pub-content {
-            flex: 1;
-        }
-
-        .pub-citation {
-            font-size: 1rem;
-            line-height: 1.7;
-            margin-bottom: 0.75rem;
-            text-align: justify;
-        }
-
-        .pub-citation em {
-            color: var(--secondary-color);
-        }
-
-        .pub-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: var(--secondary-color);
-            font-size: 0.9rem;
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-        }
-
-        .pub-link:hover {
-            color: var(--accent-color);
-        }
-
-        /* ===== Working Papers ===== */
-        .working-papers {
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .working-paper-item {
-            padding: 1.5rem;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            margin-bottom: 1.5rem;
-            border-left: 4px solid var(--secondary-color);
-        }
-
-        .working-paper-item p {
-            margin-top: 0.75rem;
-            line-height: 1.7;
-            text-align: justify;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-        }
-
-        .status-badge.under-review {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-
-        .status-badge.in-progress {
-            background-color: #dbeafe;
-            color: #1e40af;
-        }
-
-        .status-badge.data-collection {
-            background-color: #d1fae5;
-            color: #065f46;
-        }
-
-        /* ===== Consultancy ===== */
-        .consultancy-item {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 1.5rem;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            border-left: 4px solid var(--accent-color);
-        }
-
-        .consultancy-item p {
-            line-height: 1.7;
-            text-align: justify;
-        }
-
-        /* ===== Conferences Section ===== */
-        .conferences-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-
-        .conference-card {
-            background-color: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            border-top: 4px solid var(--secondary-color);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .conference-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .conference-card.award {
-            border-top-color: var(--accent-color);
-        }
-
-        .conference-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .conference-number {
-            background-color: var(--primary-color);
-            color: var(--white);
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-        }
-
-        .award-badge {
-            background-color: #fef3c7;
-            color: #92400e;
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .conference-card h3 {
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-            line-height: 1.4;
-        }
-
-        .conference-organizer, .conference-date {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            margin: 0.5rem 0;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.5rem;
-        }
-
-        .conference-organizer i, .conference-date i {
-            margin-top: 0.2rem;
-            color: var(--secondary-color);
-        }
-
-        .paper-title {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
-            font-size: 0.95rem;
-            line-height: 1.6;
-            text-align: justify;
-        }
-
-        .paper-title strong {
-            color: var(--secondary-color);
-        }
-
-        /* ===== Skills Section ===== */
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .skill-category {
-            text-align: center;
-            padding: 2rem;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .skill-category:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .skill-icon {
-            font-size: 3rem;
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-        }
-
-        .skill-category h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .skill-category p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        /* ===== Training Section ===== */
-        .training-table {
-            overflow-x: auto;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-        }
-
-        .training-table table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .training-table thead {
-            background-color: var(--primary-color);
-            color: var(--white);
-        }
-
-        .training-table th {
-            padding: 1rem;
-            text-align: left;
-            font-weight: 600;
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-        }
-
-        .training-table td {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .training-table tbody tr:hover {
-            background-color: var(--light-bg);
-        }
-
-        .role-badge {
-            display: inline-block;
-            padding: 0.3rem 0.7rem;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            font-family: 'Helvetica Neue', 'Arial', sans-serif;
-        }
-
-        .role-badge.trainee {
-            background-color: #dbeafe;
-            color: #1e40af;
-        }
-
-        .role-badge.expert {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-
-        .role-badge.editor {
-            background-color: #e0e7ff;
-            color: #3730a3;
-        }
-
-        .role-badge.trainer {
-            background-color: #d1fae5;
-            color: #065f46;
-        }
-
-        /* ===== Contact Section ===== */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .contact-card {
-            text-align: center;
-            padding: 2rem;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .contact-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .contact-icon {
-            font-size: 2.5rem;
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-        }
-
-        .contact-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
-        }
-
-        .contact-card p {
-            margin: 0.5rem 0;
-            line-height: 1.6;
-        }
-
-        .contact-card a {
-            color: var(--secondary-color);
-            word-break: break-all;
-        }
-
-        .contact-card a:hover {
-            color: var(--accent-color);
-        }
-
-        /* ===== Referees Section ===== */
-        .referees-section {
-            margin-top: 3rem;
-        }
-
-        .referees-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .referee-card {
-            background-color: var(--white);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .referee-card h4 {
-            font-size: 1.2rem;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .referee-position {
-            color: var(--secondary-color);
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .referee-card p {
-            margin: 0.5rem 0;
-            color: var(--text-secondary);
-        }
-
-        .referee-card a {
-            color: var(--secondary-color);
-        }
-
-        /* ===== Footer ===== */
-        .footer {
-            background-color: var(--dark-bg);
-            color: var(--white);
-            text-align: center;
-            padding: 2rem 0;
-            margin-top: 3rem;
-        }
-
-        .footer p {
-            margin: 0.5rem 0;
-            opacity: 0.8;
-        }
-
-        /* ===== Responsive Design ===== */
-        @media (max-width: 768px) {
-            .nav-menu {
-                position: fixed;
-                left: -100%;
-                top: 60px;
-                flex-direction: column;
-                background-color: var(--primary-color);
-                width: 100%;
-                text-align: center;
-                transition: 0.3s;
-                box-shadow: 0 10px 27px rgba(0, 0, 0, 0.3);
-                padding: 2rem 0;
-                gap: 0;
-            }
-
-            .nav-menu.active {
-                left: 0;
-            }
-
-            .nav-menu li {
-                margin: 0;
-            }
-
-            .nav-menu a {
-                display: block;
-                padding: 1rem;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .profile-photo {
-                width: 150px;
-                height: 150px;
-                margin-bottom: 1.5rem;
-            }
-
-            .hero-content h1 {
-                font-size: 2rem;
-            }
-
-            .hero-content h2 {
-                font-size: 1.3rem;
-            }
-
-            .section-title {
-                font-size: 1.75rem;
-            }
-
-            .subsection-title {
-                font-size: 1.4rem;
-            }
-
-            .timeline {
-                padding-left: 30px;
-            }
-
-            .timeline::before {
-                left: 10px;
-            }
-
-            .timeline-marker {
-                left: -28px;
-            }
-
-            .conferences-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .publication-item {
-                flex-direction: column;
-            }
-
-            .pub-year {
-                width: fit-content;
-            }
-
-            .experience-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .training-table {
-                font-size: 0.9rem;
-            }
-
-            .training-table th,
-            .training-table td {
-                padding: 0.75rem 0.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero {
-                padding: 3rem 0;
-            }
-
-            .profile-photo {
-                width: 130px;
-                height: 130px;
-                border: 4px solid var(--white);
-            }
-
-            .section {
-                padding: 3rem 0;
-            }
-
-            .contributions-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .referees-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ===== Print Styles ===== */
-        @media print {
-            .navbar, .footer, .hamburger {
-                display: none;
-            }
-
-            .section {
-                page-break-inside: avoid;
-            }
-
-            .hero {
-                background: none;
-                color: var(--text-primary);
-            }
-
-            .hero-content h1,
-            .hero-content h2 {
-                color: var(--primary-color);
-            }
-        }
-    </style>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">Sandip Paudel</div>
-            <ul class="nav-menu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#education">Education</a></li>
-                <li><a href="#publications">Publications</a></li>
-                <li><a href="#conferences">Conferences</a></li>
-                <li><a href="#research">Research</a></li>
-                <li><a href="#training">Training</a></li>
-                <li><a href="#contact">Contact</a></li>
+
+    <!-- ====================================================== -->
+    <!-- NAVIGATION                                              -->
+    <!-- Sticky top nav. Update links in li > a if you add or    -->
+    <!-- remove sections below.                                  -->
+    <!-- ====================================================== -->
+    <header class="site-header" id="siteHeader">
+        <div class="container nav-container">
+            <a href="#home" class="brand">
+                <span class="brand-mark">SP</span>
+                <span class="brand-name">Sandip Paudel</span>
+            </a>
+            <nav class="primary-nav" aria-label="Primary navigation">
+                <ul class="nav-list" id="navList">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#education">Education</a></li>
+                    <li><a href="#publications">Publications</a></li>
+                    <li><a href="#conferences">Conferences</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ================================================== -->
+        <!-- HERO SECTION                                        -->
+        <!-- Replace images/Sandip_Photo.png with your photo.    -->
+        <!-- Update name, titles, and social links as needed.    -->
+        <!-- ================================================== -->
+        <section id="home" class="hero">
+            <div class="container hero-grid">
+                <div class="hero-text">
+                    <p class="eyebrow">Assistant Professor of Finance</p>
+                    <h1 class="hero-title">Sandip Paudel</h1>
+                    <p class="hero-affiliations">
+                        Lumbini Banijya Campus, Tribhuvan University<br>
+                        PhD Candidate, DDU Gorakhpur University
+                    </p>
+                    <p class="hero-summary">
+                        I study market efficiency, long-memory volatility, and the
+                        Nepal Stock Exchange (NEPSE), with side interests in
+                        behavioral finance and bibliometric analysis of green
+                        finance, ESG, and Industry 5.0 literature.
+                    </p>
+                    <!-- Profile links: Scholar and ORCID are required.
+                         Add or remove links here as needed. -->
+                    <div class="hero-links" aria-label="Academic profiles">
+                        <a href="https://scholar.google.com/citations?user=TCUUU7wAAAAJ&hl=en"
+                           class="icon-link"
+                           target="_blank" rel="noopener"
+                           aria-label="Google Scholar profile">
+                            <i class="fas fa-graduation-cap" aria-hidden="true"></i>
+                            <span>Google Scholar</span>
+                        </a>
+                        <a href="https://orcid.org/0000-0003-4689-7477"
+                           class="icon-link"
+                           target="_blank" rel="noopener"
+                           aria-label="ORCID profile">
+                            <i class="fab fa-orcid" aria-hidden="true"></i>
+                            <span>ORCID</span>
+                        </a>
+                        <a href="https://github.com/SandipPaudel"
+                           class="icon-link"
+                           target="_blank" rel="noopener"
+                           aria-label="GitHub profile">
+                            <i class="fab fa-github" aria-hidden="true"></i>
+                            <span>GitHub</span>
+                        </a>
+                        <a href="mailto:sandip.paudel@lbc.edu.np"
+                           class="icon-link"
+                           aria-label="Send email">
+                            <i class="fas fa-envelope" aria-hidden="true"></i>
+                            <span>Email</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-photo">
+                    <!-- Place your photo at images/Sandip_Photo.png -->
+                    <img src="images/Sandip_Photo.png"
+                         alt="Portrait of Sandip Paudel"
+                         loading="eager"
+                         onerror="this.src='data:image/svg+xml;utf8,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 400 400&quot;&gt;&lt;rect width=&quot;400&quot; height=&quot;400&quot; fill=&quot;%23e5e7eb&quot;/&gt;&lt;text x=&quot;200&quot; y=&quot;210&quot; font-family=&quot;Georgia&quot; font-size=&quot;28&quot; fill=&quot;%236b7280&quot; text-anchor=&quot;middle&quot;&gt;Profile Photo&lt;/text&gt;&lt;/svg&gt;'">
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================== -->
+        <!-- ABOUT SECTION                                       -->
+        <!-- Edit the prose, research interests, and stats here. -->
+        <!-- ================================================== -->
+        <section id="about" class="section">
+            <div class="container narrow">
+                <header class="section-header">
+                    <p class="section-kicker">01 / About</p>
+                    <h2 class="section-title">About</h2>
+                </header>
+
+                <div class="prose">
+                    <p>
+                        I am an Assistant Professor in the Department of Finance
+                        at Lumbini Banijya Campus, Butwal, where I have taught
+                        since 2019. I am concurrently pursuing a PhD at DDU
+                        Gorakhpur University. My teaching covers Corporate
+                        Finance, Financial Institutions and Markets, Financial
+                        Management, Entrepreneurial Finance and Venture Capital,
+                        and Research Methodology at both undergraduate and
+                        postgraduate levels.
+                    </p>
+                    <p>
+                        Over the past several years I have supervised more than
+                        one hundred final-year projects and theses, and I run
+                        workshops on quantitative methods and data analysis for
+                        faculty and graduate students across Nepal.
+                    </p>
+                </div>
+
+                <!-- Research interests: each list item is one focused topic. -->
+                <h3 class="subhead">Research Interests</h3>
+                <ul class="interest-list">
+                    <li>
+                        <strong>Financial econometrics:</strong>
+                        panel data, linear and non-linear time-series methods.
+                    </li>
+                    <li>
+                        <strong>Market efficiency and long-memory volatility:</strong>
+                        MFDFA, GARCH family models, and applications to NEPSE
+                        and sector indices.
+                    </li>
+                    <li>
+                        <strong>Behavioral finance:</strong>
+                        personal financial behavior, financial literacy, and
+                        decision-making among Nepali households and students.
+                    </li>
+                    <li>
+                        <strong>Bibliometric analysis:</strong>
+                        mapping the literature on green finance, ESG
+                        performance, and Industry 5.0 to identify thematic
+                        structures and research gaps.
+                    </li>
+                </ul>
+
+                <!-- Quick stats block. Edit numbers when they change. -->
+                <div class="stats-grid">
+                    <div class="stat">
+                        <div class="stat-number">100+</div>
+                        <div class="stat-label">Students Mentored</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">6</div>
+                        <div class="stat-label">Peer-Reviewed Articles</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">Conference Presentations</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">13</div>
+                        <div class="stat-label">Research Trainings</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================== -->
+        <!-- EDUCATION SECTION                                   -->
+        <!-- Each .timeline-item is one degree. Add or remove    -->
+        <!-- as needed.                                          -->
+        <!-- ================================================== -->
+        <section id="education" class="section section-alt">
+            <div class="container narrow">
+                <header class="section-header">
+                    <p class="section-kicker">02 / Education</p>
+                    <h2 class="section-title">Education</h2>
+                </header>
+
+                <ol class="timeline">
+                    <li class="timeline-item">
+                        <div class="timeline-meta">In progress</div>
+                        <div class="timeline-body">
+                            <h3>PhD in Management (ongoing)</h3>
+                            <p class="institution">DDU Gorakhpur University, India</p>
+                            <p class="detail">Coursework completed; research stage.</p>
+                        </div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-meta">Coursework completed</div>
+                        <div class="timeline-body">
+                            <h3>MPhil in Management</h3>
+                            <p class="institution">School of Management, Kathmandu University, Nepal</p>
+                        </div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-meta">2019</div>
+                        <div class="timeline-body">
+                            <h3>MBA in Banking and Finance</h3>
+                            <p class="institution">Lumbini Banijya Campus, Tribhuvan University, Nepal</p>
+                        </div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-meta">2015</div>
+                        <div class="timeline-body">
+                            <h3>Bachelor of Business Studies</h3>
+                            <p class="institution">Aims College, Tribhuvan University, Nepal</p>
+                        </div>
+                    </li>
+                    <li class="timeline-item">
+                        <div class="timeline-meta">2012</div>
+                        <div class="timeline-body">
+                            <h3>Higher Secondary (10+2)</h3>
+                            <p class="institution">Aims English Higher Secondary School, HSEB, Nepal</p>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- ================================================== -->
+        <!-- PUBLICATIONS AND WORKING PAPERS                     -->
+        <!-- To add a new publication, copy one <li> and edit.   -->
+        <!-- ================================================== -->
+        <section id="publications" class="section">
+            <div class="container">
+                <header class="section-header">
+                    <p class="section-kicker">03 / Research</p>
+                    <h2 class="section-title">Publications and Working Papers</h2>
+                </header>
+
+                <!-- Peer-reviewed publications -->
+                <h3 class="subhead">Peer-Reviewed Journal Articles</h3>
+                <ol class="pub-list" reversed>
+
+                    <li class="pub-item">
+                        <span class="pub-year">2025</span>
+                        <p class="pub-citation">
+                            Paudel, S., and Bhandari, O. P. (2025).
+                            Lived experiences of corruption in public service
+                            delivery: a phenomenological study in Butwal, Nepal.
+                            <em>Journal of Interdisciplinary Studies</em>, 14(1), 111-132.
+                        </p>
+                        <a href="https://doi.org/10.3126/jis.v14i1.88420"
+                           class="pub-doi"
+                           target="_blank" rel="noopener">
+                            doi.org/10.3126/jis.v14i1.88420
+                        </a>
+                    </li>
+
+                    <li class="pub-item">
+                        <span class="pub-year">2025</span>
+                        <p class="pub-citation">
+                            Poudel, P., and Paudel, S. (2025).
+                            Quantitative trading strategy, backtesting, and
+                            performance analysis using Python: a data-driven
+                            analysis.
+                            <em>Quest Journal of Management and Social Sciences</em>, 7(2), 219-238.
+                        </p>
+                        <a href="https://doi.org/10.3126/qjmss.v7i2.87782"
+                           class="pub-doi"
+                           target="_blank" rel="noopener">
+                            doi.org/10.3126/qjmss.v7i2.87782
+                        </a>
+                    </li>
+
+                    <li class="pub-item">
+                        <span class="pub-year">2025</span>
+                        <p class="pub-citation">
+                            Panday, S., and Paudel, S. (2025).
+                            Role of energy consumption on economic growth:
+                            evidence from Nepal.
+                            <em>The Lumbini Journal of Business and Economics</em>, 13(2), 167-181.
+                        </p>
+                        <a href="https://doi.org/10.3126/ljbe.v13i2.82930"
+                           class="pub-doi"
+                           target="_blank" rel="noopener">
+                            doi.org/10.3126/ljbe.v13i2.82930
+                        </a>
+                    </li>
+
+                    <li class="pub-item">
+                        <span class="pub-year">2025</span>
+                        <p class="pub-citation">
+                            Paudel, S. (2025).
+                            From knowledge to action: students' personal
+                            financial management in Rupandehi District of Nepal.
+                            <em>KMC Journal</em>, 7(2), 310-330.
+                        </p>
+                        <a href="https://doi.org/10.3126/kmcj.v7i2.83454"
+                           class="pub-doi"
+                           target="_blank" rel="noopener">
+                            doi.org/10.3126/kmcj.v7i2.83454
+                        </a>
+                    </li>
+
+                    <li class="pub-item">
+                        <span class="pub-year">2024</span>
+                        <p class="pub-citation">
+                            Paudel, S. (2024).
+                            Predicting NEPSE index: an ARIMA-based model.
+                            <em>The Lumbini Journal of Business and Economics</em>, 12(1), 16-29.
+                        </p>
+                        <a href="https://doi.org/10.3126/ljbe.v12i1.70318"
+                           class="pub-doi"
+                           target="_blank" rel="noopener">
+                            doi.org/10.3126/ljbe.v12i1.70318
+                        </a>
+                    </li>
+
+                    <li class="pub-item">
+                        <span class="pub-year">2021</span>
+                        <p class="pub-citation">
+                            Tandan, L., and Paudel, S. (2021).
+                            The relationship among the inflation, broad money,
+                            and economic growth: evidence from Nepal.
+                            <em>The Lumbini Journal of Business and Economics</em>, 9(1-2), 68-73.
+                        </p>
+                        <a href="https://doi.org/10.3126/ljbe.v9i1-2.45989"
+                           class="pub-doi"
+                           target="_blank" rel="noopener">
+                            doi.org/10.3126/ljbe.v9i1-2.45989
+                        </a>
+                    </li>
+
+                </ol>
+
+                <!-- Working papers and manuscripts under review -->
+                <h3 class="subhead">Working Papers and Manuscripts Under Review</h3>
+                <ol class="pub-list">
+
+                    <li class="pub-item">
+                        <span class="status under-review">Under review (R1)</span>
+                        <p class="pub-citation">
+                            Paudel, S. (2025).
+                            Non-linear properties of the Nepalese capital market:
+                            a multifractal detrended fluctuation analysis (MFDFA)
+                            approach.
+                            <em>Submitted to International Review of Economics and Finance.</em>
+                        </p>
+                    </li>
+
+                    <li class="pub-item">
+                        <span class="status under-review">Under review</span>
+                        <p class="pub-citation">
+                            Paudel, S., and Sapkota, P. (2026).
+                            Evolution of market efficiency in Nepal: sectoral
+                            insights through skewed multifractal detrended
+                            fluctuation analysis.
+                            <em>Submitted to Cogent Economics and Finance.</em>
+                        </p>
+                    </li>
+
+                    <li class="pub-item">
+                        <span class="status revising">Revising after presentation</span>
+                        <p class="pub-citation">
+                            Paudel, S., Agrahari, R., and Sapkota, P. (2026).
+                            Socio-cultural drivers of women's empowerment in
+                            rural Nepal: the mediating roles of family support
+                            and mobility.
+                        </p>
+                    </li>
+
+                    <li class="pub-item">
+                        <span class="status revising">Revising after presentation</span>
+                        <p class="pub-citation">
+                            Paudel, S., and Paudel, S. (2026).
+                            The impact of teaching method on long-term knowledge
+                            retention: a quasi-experimental study of financial
+                            concept retention among management students.
+                        </p>
+                    </li>
+
+                    <li class="pub-item">
+                        <span class="status in-progress">In progress</span>
+                        <p class="pub-citation">
+                            Paudel, S., Sapkota, P., Gautam, A., Jnawali, G., and
+                            Bhandari, O. P. (2026).
+                            Effects of meal planning, portion control, food
+                            preservation, and leftover management on household
+                            food waste prevention: the moderating role of food
+                            types.
+                        </p>
+                    </li>
+
+                    <li class="pub-item">
+                        <span class="status in-progress">In progress</span>
+                        <p class="pub-citation">
+                            Paudel, S., Neupane, P., and Sapkota, P. (2026).
+                            Long-memory and asymmetric volatility in a frontier
+                            equity market: GARCH-family evidence from NEPSE and
+                            sector indices.
+                        </p>
+                    </li>
+
+                    <!--
+                        Industry 5.0 paper: described precisely as a
+                        bibliometric mapping exercise. We do not claim
+                        substantive findings about Industry 5.0 itself, only
+                        about the structure of the published literature.
+                    -->
+                    <li class="pub-item">
+                        <span class="status in-progress">Presented; manuscript in preparation</span>
+                        <p class="pub-citation">
+                            Paudel, S. (2026).
+                            Towards Industry 5.0: a bibliometric analysis of
+                            research linking green finance, digital
+                            transformation, and ESG.
+                            <em>Bibliometric mapping of indexed publications;
+                            findings describe publication trends, co-authorship,
+                            and keyword co-occurrence in the existing literature
+                            rather than empirical claims about Industry 5.0
+                            outcomes.</em>
+                        </p>
+                    </li>
+
+                </ol>
+
+                <!-- Optional: research consultancy / commissioned reports -->
+                <h3 class="subhead">Research Consultancy</h3>
+                <ul class="pub-list plain">
+                    <li class="pub-item">
+                        <p class="pub-citation">
+                            Sapkota, P., Paudel, S., and Pun, D. B. (2025).
+                            Effectiveness analysis of Butwal Industrial Trade
+                            Fair, 2081. Commissioned report for the Butwal
+                            Chamber of Commerce and Industry, Rupandehi.
+                        </p>
+                    </li>
+                </ul>
+
+            </div>
+        </section>
+
+        <!-- ================================================== -->
+        <!-- CONFERENCES AND TRAINING                            -->
+        <!-- Two subsections inside one section.                 -->
+        <!-- ================================================== -->
+        <section id="conferences" class="section section-alt">
+            <div class="container">
+                <header class="section-header">
+                    <p class="section-kicker">04 / Conferences and Training</p>
+                    <h2 class="section-title">Conferences and Training</h2>
+                </header>
+
+                <!-- Selected conferences. Add new <article> blocks at the top. -->
+                <h3 class="subhead">Selected Conference Presentations</h3>
+                <div class="conf-grid">
+
+                    <article class="conf-card">
+                        <p class="conf-date">March 2026</p>
+                        <h4 class="conf-paper">Towards Industry 5.0: a bibliometric analysis of green finance, digital transformation, and ESG research</h4>
+                        <p class="conf-venue">1st National Conference, Rapti Babai Campus, Dang, Nepal</p>
+                    </article>
+
+                    <article class="conf-card">
+                        <p class="conf-date">February 2026</p>
+                        <h4 class="conf-paper">Market efficiency under permanent short-sale bans: comparative evidence from Nepal, India, and Pakistan</h4>
+                        <p class="conf-venue">1st International Conference on the Future of Work, Birgunj Public College</p>
+                    </article>
+
+                    <article class="conf-card">
+                        <p class="conf-date">February 2026</p>
+                        <h4 class="conf-paper">Socio-cultural drivers of women's empowerment in rural Nepal: the mediating role of family support</h4>
+                        <p class="conf-venue">1st International Conference on the Future of Work, Birgunj Public College</p>
+                    </article>
+
+                    <article class="conf-card">
+                        <p class="conf-date">February 2026</p>
+                        <h4 class="conf-paper">An experimental study of learning method in financial concept retention among BBA-FA students</h4>
+                        <p class="conf-venue">1st International Conference on the Future of Work, Birgunj Public College</p>
+                    </article>
+
+                    <article class="conf-card highlight">
+                        <p class="conf-award">Best Oral Presenter</p>
+                        <p class="conf-date">September 2025</p>
+                        <h4 class="conf-paper">Non-linear properties of the Nepalese capital market: an MFDFA approach</h4>
+                        <p class="conf-venue">RUEC 1st International Research Conference, Rajshahi, Bangladesh</p>
+                    </article>
+
+                    <article class="conf-card">
+                        <p class="conf-date">June 2025</p>
+                        <h4 class="conf-paper">Role of energy consumption in enhancing economic growth: evidence from Nepal</h4>
+                        <p class="conf-venue">Butwal Kalika Campus, Rupandehi, Nepal</p>
+                    </article>
+
+                    <article class="conf-card">
+                        <p class="conf-date">May 2025</p>
+                        <h4 class="conf-paper">Quantitative trading strategies, backtesting, and performance analysis of NEPSE using Python</h4>
+                        <p class="conf-venue">Mahakavi Devkota Campus, Sunwal, Nawalparasi, Nepal</p>
+                    </article>
+
+                    <article class="conf-card">
+                        <p class="conf-date">May 2025</p>
+                        <h4 class="conf-paper">Multifractal properties in the Nepalese stock market through DFA: a comprehensive exploration</h4>
+                        <p class="conf-venue">Marsyangdi Multiple Campus, Lamjung, Nepal</p>
+                    </article>
+
+                    <article class="conf-card">
+                        <p class="conf-date">February 2025</p>
+                        <h4 class="conf-paper">Navigating personal finance: how financial literacy, behavior, and attitude shape financial management among college students</h4>
+                        <p class="conf-venue">Kailali Multiple Campus, Dhangadhi, Nepal</p>
+                    </article>
+
+                    <article class="conf-card highlight">
+                        <p class="conf-award">Best Paper Presenter</p>
+                        <p class="conf-date">July 2024</p>
+                        <h4 class="conf-paper">Predictive modeling of Nepal Stock Exchange index: an ARIMA approach</h4>
+                        <p class="conf-venue">International Conference on Sustainable Business and Management, Pokhara</p>
+                    </article>
+
+                </div>
+
+                <p class="see-more">
+                    A complete list of conference presentations is available in my
+                    <a href="#" target="_blank" rel="noopener">CV (PDF)</a>.
+                    <!-- Replace href above with a link to your CV PDF once uploaded. -->
+                </p>
+
+                <!-- Selected training. Add <article> blocks as you go. -->
+                <h3 class="subhead">Selected Training and Workshops</h3>
+                <div class="training-list">
+
+                    <article class="training-item">
+                        <div class="training-date">Jun 2026</div>
+                        <div class="training-body">
+                            <h4>ICT Integration in Research</h4>
+                            <p>Session Expert. Yerawati Aadarsha Multiple Campus, Dang (UGC supported).</p>
+                        </div>
+                    </article>
+
+                    <article class="training-item">
+                        <div class="training-date">Apr 2026</div>
+                        <div class="training-body">
+                            <h4>AI Integration in Research and Publications</h4>
+                            <p>Session Expert. Janapriya Multiple Campus (UGC supported), Faculty Professional Development, Second Cohort.</p>
+                        </div>
+                    </article>
+
+                    <article class="training-item">
+                        <div class="training-date">Apr 2026</div>
+                        <div class="training-body">
+                            <h4>Digital and Blended Learning</h4>
+                            <p>Session Expert. Lumbini Banijya Campus (UGC supported).</p>
+                        </div>
+                    </article>
+
+                    <article class="training-item">
+                        <div class="training-date">Jun-Dec 2025</div>
+                        <div class="training-body">
+                            <h4>Research Ethics and Plagiarism (2 credits, 80%)</h4>
+                            <p>Trainee. SWAYAM, Indira Gandhi National Open University, New Delhi.</p>
+                        </div>
+                    </article>
+
+                    <article class="training-item">
+                        <div class="training-date">Jun 2025</div>
+                        <div class="training-body">
+                            <h4>AI Tools for Curriculum Development</h4>
+                            <p>Session Expert. Lumbini Banijya Campus (UGC supported).</p>
+                        </div>
+                    </article>
+
+                    <article class="training-item">
+                        <div class="training-date">Nov 2024</div>
+                        <div class="training-body">
+                            <h4>4th International Conference Proceedings</h4>
+                            <p>Editor-in-Chief. Lumbini Banijya Campus, Rupandehi.</p>
+                        </div>
+                    </article>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================================================== -->
+        <!-- CONTACT SECTION                                     -->
+        <!-- IMPORTANT: see README.md for how to wire up the     -->
+        <!-- form action. Default uses Formspree; replace        -->
+        <!-- YOUR_FORM_ID with your Formspree endpoint, or change-->
+        <!-- to a mailto: action.                                -->
+        <!-- ================================================== -->
+        <section id="contact" class="section">
+            <div class="container narrow">
+                <header class="section-header">
+                    <p class="section-kicker">05 / Contact</p>
+                    <h2 class="section-title">Get in Touch</h2>
+                </header>
+
+                <div class="contact-grid">
+
+                    <div class="contact-info">
+                        <p class="prose">
+                            I welcome inquiries about collaboration, supervision,
+                            workshops, and academic referee requests. The fastest
+                            way to reach me is email.
+                        </p>
+
+                        <ul class="contact-list">
+                            <li>
+                                <i class="fas fa-envelope" aria-hidden="true"></i>
+                                <div>
+                                    <span class="contact-label">Email</span>
+                                    <a href="mailto:sandip.paudel@lbc.edu.np">sandip.paudel@lbc.edu.np</a><br>
+                                    <a href="mailto:sandippaudel1995@gmail.com">sandippaudel1995@gmail.com</a>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone" aria-hidden="true"></i>
+                                <div>
+                                    <span class="contact-label">Phone</span>
+                                    <a href="tel:+9779857011047">+977 9857011047</a>
+                                </div>
+                            </li>
+                            <li>
+                                <i class="fas fa-location-dot" aria-hidden="true"></i>
+                                <div>
+                                    <span class="contact-label">Office</span>
+                                    Department of Finance, Lumbini Banijya Campus,
+                                    Butwal, Rupandehi, Nepal
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!--
+                        Contact form.
+                        Default action points to Formspree. To enable:
+                          1. Create a free account at https://formspree.io
+                          2. Create a new form and copy its endpoint
+                          3. Replace YOUR_FORM_ID below
+                        Alternative: set action="mailto:sandip.paudel@lbc.edu.np"
+                        and remove the JS handler in main.js.
+                    -->
+                    <form class="contact-form"
+                          id="contactForm"
+                          action="https://formspree.io/f/YOUR_FORM_ID"
+                          method="POST"
+                          novalidate>
+                        <div class="form-row">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required autocomplete="name">
+                        </div>
+                        <div class="form-row">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" required autocomplete="email">
+                        </div>
+                        <div class="form-row">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                        <div class="form-row">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">
+                            <span>Send Message</span>
+                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </button>
+                        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+                    </form>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ====================================================== -->
+    <!-- FOOTER                                                  -->
+    <!-- Edit GitHub URL or add more links as needed.            -->
+    <!-- ====================================================== -->
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <span class="brand-mark">SP</span>
+                <div>
+                    <p class="footer-name">Sandip Paudel</p>
+                    <p class="footer-role">Assistant Professor of Finance, Lumbini Banijya Campus</p>
+                </div>
+            </div>
+            <ul class="footer-links" aria-label="Footer links">
+                <li>
+                    <a href="https://github.com/SandipPaudel" target="_blank" rel="noopener" aria-label="GitHub">
+                        <i class="fab fa-github" aria-hidden="true"></i> GitHub
+                    </a>
+                </li>
+                <li>
+                    <a href="https://scholar.google.com/citations?user=TCUUU7wAAAAJ&hl=en" target="_blank" rel="noopener" aria-label="Google Scholar">
+                        <i class="fas fa-graduation-cap" aria-hidden="true"></i> Scholar
+                    </a>
+                </li>
+                <li>
+                    <a href="https://orcid.org/0000-0003-4689-7477" target="_blank" rel="noopener" aria-label="ORCID">
+                        <i class="fab fa-orcid" aria-hidden="true"></i> ORCID
+                    </a>
+                </li>
             </ul>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
+            <div class="footer-meta">
+                <p>&copy; <span id="currentYear">2026</span> Sandip Paudel. All rights reserved.</p>
+                <p>Source on <a href="https://github.com/SandipPaudel" target="_blank" rel="noopener">GitHub</a>.</p>
             </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <div class="profile-photo">
-                    <img src="images/Sandip_Photo.png" alt="Sandip Paudel">
-                </div>
-                <h1>Sandip Paudel</h1>
-                <h2>Assistant Professor of Finance</h2>
-                <p class="institution">Department of Finance<br>Lumbini Banijya Campus, Butwal, Rupandehi, Nepal</p>
-                <div class="hero-links">
-                    <a href="https://scholar.google.com/citations?user=TCUUU7wAAAAJ&hl=en" target="_blank" class="btn-primary">
-                        <i class="fas fa-graduation-cap"></i> Google Scholar
-                    </a>
-                    <a href="https://orcid.org/0000-0003-4689-7477" target="_blank" class="btn-secondary">
-                        <i class="fab fa-orcid"></i> ORCID
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="section">
-        <div class="container">
-            <h2 class="section-title">About Me</h2>
-            <div class="about-content">
-                <div class="about-text">
-                    <p>I am an Assistant Professor in the Department of Finance at Lumbini Banijya Campus, Butwal, where I have been teaching since 2019. My academic journey is driven by a passion for understanding financial behavior and econometric modeling.</p>
-                    
-                    <h3>Research Interests</h3>
-                    <ul class="research-interests">
-                        <li><i class="fas fa-chart-line"></i> Behavioral finance regarding personal financial behavior.</li>
-                        <li><i class="fas fa-calculator"></i> Financial econometrics, Panel Data, and Time series analysis.</li>
-                    </ul>
-
-                    <h3>Academic Contributions</h3>
-                    <div class="contributions-grid">
-                        <div class="contribution-item">
-                            <div class="contribution-number">100+</div>
-                            <div class="contribution-label">Students Mentored</div>
-                        </div>
-                        <div class="contribution-item">
-                            <div class="contribution-number">6</div>
-                            <div class="contribution-label">Peer-Reviewed Publications</div>
-                        </div>
-                        <div class="contribution-item">
-                            <div class="contribution-number">15</div>
-                            <div class="contribution-label">Conference Presentations</div>
-                        </div>
-                        <div class="contribution-item">
-                            <div class="contribution-number">13</div>
-                            <div class="contribution-label">Research Trainings</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Education Section -->
-    <section id="education" class="section bg-light">
-        <div class="container">
-            <h2 class="section-title">Education & Academic Qualifications</h2>
-            <div class="timeline">
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-year">Coursework Completed</span>
-                        <h3>MPhill</h3>
-                        <p class="institution-name">School of Management</p>
-                        <p class="institution-detail">Kathmandu University, Nepal</p>
-                        
-                    </div>
-                </div>
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-year">2019</span>
-                        <h3>MBA - Banking & Finance</h3>
-                        <p class="institution-name">Lumbini Banijya Campus</p>
-                        <p class="institution-detail">Affiliated to Tribhuvan University, Nepal</p>
-                        <!-- <p class="achievement"><strong>CGPA: 3.76/4</strong></p> -->
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-year">2015</span>
-                        <h3>Bachelor of Business Studies</h3>
-                        <p class="institution-name">Aims College</p>
-                        <p class="institution-detail">Affiliated to Tribhuvan University, Nepal</p>
-                        <!-- <p class="achievement"><strong>Percentage: 66%</strong></p> -->
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-year">2012</span>
-                        <h3>10+2 (Higher Secondary Education)</h3>
-                        <p class="institution-name">Aims English Higher Secondary School</p>
-                        <p class="institution-detail">HSEB, Nepal</p>
-                        <!-- <p class="achievement"><strong>Percentage: 71.5%</strong></p> -->
-                    </div>
-                </div>
-
-                <div class="timeline-item">
-                    <div class="timeline-marker"></div>
-                    <div class="timeline-content">
-                        <span class="timeline-year">2010</span>
-                        <h3>School Leaving Certificate (SLC)</h3>
-                        <p class="institution-name">Shree Shrawan Secondary School</p>
-                        <p class="institution-detail">Nepal Government Board, Syangja, Nepal</p>
-                        <!-- <p class="achievement"><strong>Percentage: 74.625%</strong></p> -->
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Professional Experience Section -->
-    <section id="experience" class="section">
-        <div class="container">
-            <h2 class="section-title">Professional & Academic Experience</h2>
-            <div class="experience-card">
-                <div class="experience-header">
-                    <h3>Assistant Professor, Finance</h3>
-                    <span class="experience-period">2019 – Present</span>
-                </div>
-                <p class="experience-location"><i class="fas fa-map-marker-alt"></i> Lumbini Banijya Campus, Butwal, Rupandehi, Nepal</p>
-                
-                <div class="responsibilities">
-                    <h4><i class="fas fa-chalkboard-teacher"></i> Teaching & Curriculum</h4>
-                    <p>Designed and delivered courses in Corporate Finance, Financial Institutions and Market, Financial Management, Entrepreneurial Finance & Venture Capital, and Research Methodology to undergraduate (BBA-FA, BBM-A, BMS, BBS) and postgraduate students (MBS & MBA-BF).</p>
-
-                    <h4><i class="fas fa-users"></i> Research Supervision</h4>
-                    <p>Mentored more than 100 students' final year projects/theses. Actively engaged in research-related activities like training on data analysis and research consultancy services to local levels.</p>
-
-                    <h4><i class="fas fa-tasks"></i> Administration</h4>
-                    <p>Served on curriculum development, modification, paper setter, examiner. Also worked as reviewer and technical associate for the Lumbini Journal of Business and Economics.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Publications Section -->
-    <section id="publications" class="section bg-light">
-        <div class="container">
-            <h2 class="section-title">Research Output & Publications</h2>
-            
-            <h3 class="subsection-title">Peer-Reviewed Publications</h3>
-            <div class="publications-list">
-                <div class="publication-item">
-                    <span class="pub-year">2025</span>
-                    <div class="pub-content">
-                        <p class="pub-citation">Paudel, S., & Bhandari, O. P. (2025). Lived Experiences of Corruption in Public Service Delivery: A Phenomenological Study in Butwal, Nepal. <em>Journal of Interdisciplinary Studies</em>, 14(1), 111–132.</p>
-                        <a href="https://doi.org/10.3126/jis.v14i1.88420" target="_blank" class="pub-link">
-                            <i class="fas fa-external-link-alt"></i> https://doi.org/10.3126/jis.v14i1.88420
-                        </a>
-                    </div>
-                </div>
-
-                <div class="publication-item">
-                    <span class="pub-year">2025</span>
-                    <div class="pub-content">
-                        <p class="pub-citation">Poudel, P., & Paudel, S. (2025). Quantitative Trading Strategy, Backtesting, and Performance Analysis Using Python: A Data-Driven Analysis. <em>Quest Journal of Management and Social Sciences</em>, 7(2), 219–238.</p>
-                        <a href="https://doi.org/10.3126/qjmss.v7i2.87782" target="_blank" class="pub-link">
-                            <i class="fas fa-external-link-alt"></i> https://doi.org/10.3126/qjmss.v7i2.87782
-                        </a>
-                    </div>
-                </div>
-
-                <div class="publication-item">
-                    <span class="pub-year">2025</span>
-                    <div class="pub-content">
-                        <p class="pub-citation">Panday, S., & Paudel, S. (2025). Role of Energy Consumption on Economic Growth: Evidence from Nepal. <em>The Lumbini Journal of Business and Economics</em>, 13(2), 167–181.</p>
-                        <a href="https://doi.org/10.3126/ljbe.v13i2.82930" target="_blank" class="pub-link">
-                            <i class="fas fa-external-link-alt"></i> https://doi.org/10.3126/ljbe.v13i2.82930
-                        </a>
-                    </div>
-                </div>
-
-                <div class="publication-item">
-                    <span class="pub-year">2025</span>
-                    <div class="pub-content">
-                        <p class="pub-citation">Paudel, S. (2025). From Knowledge to Action: Students' Personal Financial Management in Rupandehi District of Nepal. <em>KMC Journal</em>, 7(2), 310–330.</p>
-                        <a href="https://doi.org/10.3126/kmcj.v7i2.83454" target="_blank" class="pub-link">
-                            <i class="fas fa-external-link-alt"></i> https://doi.org/10.3126/kmcj.v7i2.83454
-                        </a>
-                    </div>
-                </div>
-
-                <div class="publication-item">
-                    <span class="pub-year">2024</span>
-                    <div class="pub-content">
-                        <p class="pub-citation">Paudel, S. (2024). Predicting NEPSE Index: An ARIMA-Based Model. <em>The Lumbini Journal of Business and Economics</em>, 12(1), 16–29.</p>
-                        <a href="https://doi.org/10.3126/ljbe.v12i1.70318" target="_blank" class="pub-link">
-                            <i class="fas fa-external-link-alt"></i> https://doi.org/10.3126/ljbe.v12i1.70318
-                        </a>
-                    </div>
-                </div>
-
-                <div class="publication-item">
-                    <span class="pub-year">2021</span>
-                    <div class="pub-content">
-                        <p class="pub-citation">Tandan, L., & Paudel, S. (2021). The Relationship Among the Inflation, Broad Money, and Economic Growth: Evidence from Nepal. <em>The Lumbini Journal of Business and Economics</em>, 9(1–2), 68–73.</p>
-                        <a href="https://doi.org/10.3126/ljbe.v9i1-2.45989" target="_blank" class="pub-link">
-                            <i class="fas fa-external-link-alt"></i> https://doi.org/10.3126/ljbe.v9i1-2.45989
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <h3 class="subsection-title">Working Papers</h3>
-            <div class="working-papers">
-                <div class="working-paper-item">
-                    <span class="status-badge under-review">Submitted/1st Minor Revision/Under Review</span>
-                    <p>Paudel, S. (2025). Non-linear properties of Nepalese capital market: A multifractal Detrended Fluctuation (MFDFA) Approach. Submitted to the <em>International Review of Economics and Finance</em>.</p>
-                </div>
-                
-                <div class="working-paper-item">
-                    <span class="status-badge under-review">Submitted/Under Review</span>
-                    <p>Paudel, S & Sapkota, P (2026). Evolution of Market Efficiency in Nepal: Sectoral Insights through Skewed Multifractal Detrended Fluctuation Analysis. Submitted to <em> Cogent, Economics and Fiannce </em>.</p>
-                </div>
-
-                <div class="working-paper-item">
-                    <span class="status-badge in-progress">Presented in International Conference and revisions are being made as per the comments</span>
-                    <p>Paudel, S., Agrahari, R., & Sapkota, P., (2026) Socio-Cultural Drivers of Women's Empowerment in Rural Nepal: The Mediating Roles of Family Support and Mobility.</p>
-                </div>
-
-                <div class="working-paper-item">
-                    <span class="status-badge in-progress">Presented in International Conference and revisions are being made as per the comments</span>
-                    <p>Paudel, S., and Paudel, S., (2026) The Impact of Teaching Method on Long-Term Knowledge Retention: A Quasi-Experimental Study of Financial Concept Retention among Management Students.</p>
-                </div>
-
-                <div class="working-paper-item">
-                    <span class="status-badge in-progress">Submitted to present in an international conference</span>
-                    <p>Paudel, S., Sapkota, P., Gautam, A., Jnawali, G., & Bhandari, O.P., (2026) Effects of meal planning, portion control, food preservation and leftover management on households' food waste prevention: The moderating role of food types </p>
-                </div>
-
-                <div class="working-paper-item">
-                    <span class="status-badge in-progress">Submitted to present in a national conference</span>
-                    <p> Paudel, S., Neupane, P., & Sapkota, P., (2026) Long-Memory and Asymmetric Volatility in a Frontier Equity Market: GARCH Family Evidence from NEPSE and Sector Indices </p>
-                </div>
-
-            </div>
-
-            <h3 class="subsection-title">Research Consultancy</h3>
-            <div class="consultancy-item">
-                <p>Sapkota, P., Paudel, S., & Pun, D.B., (2025). Effectiveness Analysis of Butwal Industrial Trade Fair, 2081. Butwal Chamber of Commerce and Industry Butwal, Rupandehi.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Conferences Section -->
-    <section id="conferences" class="section">
-        <div class="container">
-            <h2 class="section-title">International/National Conference Presentations</h2>
-            <div class="conferences-grid">
-                <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">1</span>
-                     </div>
-                    <h3>1st National Conference on Research and Innovative Strategies for Enhancing Higher Education and Learning Outcome</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Rapti Babai Campus, Dang</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 20-21 March, 2026</p>
-                    <p class="paper-title"><strong>Paper:</strong> Towards Industry 5.0: A Bibliometric Analysis of Green Finance, Digital Transformation, and ESG Research </p>
-                </div>
-                <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">2</span>
-                    </div>
-                    <h3>1st Interational Conference on The Future of Work: Innovations and Sustainability in Global Management Practices in management</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Birgunj Public College</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 20-21 February, 2026</p>
-                    <p class="paper-title"><strong>Paper:</strong> Market Efficiency Under Permanent Short-Sale Bans: Comparative Evidence from Nepal, India, and Pakistan</p>
-                </div>
-                
-                    
-                <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">3</span>
-                    </div>
-                    <h3>1st Interational Conference on The Future of Work: Innovations and Sustainability in Global Management Practices in management</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Birgunj Public College</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 20-21 February, 2026</p>
-                    <p class="paper-title"><strong>Paper:</strong> An Experimental Study of Learning Method in Financial Concept Retention among BBA-FA Students of Lumbini Banijya Campus</p>
-                </div>
-                
-                 <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">4</span>
-                    </div>
-                    <h3>1st Interational Conference on The Future of Work: Innovations and Sustainability in Global Management Practices in management</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Birgunj Public College</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 20-21 February, 2026</p>
-                    <p class="paper-title"><strong>Paper:</strong> Socio Cultural Drivers of Women Empowerment in Rural Nepal: The Mediating Role of Family Support</p>
-                </div>
-                
-                <div class="conference-card award">
-                    <div class="conference-header">
-                        <span class="conference-number">5</span>
-                        <span class="award-badge"><i class="fas fa-award"></i> Best Oral Presenter</span>
-                    </div>
-                    <h3>RUEC 1st International Research Conference 2025</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Rajshahi University Education Club, Rajshahi, Bangladesh</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 6-7 September, 2025</p>
-                    <p class="paper-title"><strong>Paper:</strong> Non-linear properties of Nepalese capital market: A multifractal Detrended Fluctuation (MFDFA) Approach</p>
-                </div>
-
-                <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">6</span>
-                    </div>
-                    <h3>1st National Conference on Bridging Knowledge & Practice: Management & Social Science for Sustainable Localization</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Butwal Kalika Campus, Butwal, Rupandehi, Nepal</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 20-21 June, 2025</p>
-                    <p class="paper-title"><strong>Paper:</strong> Role of energy consumption to enhance economic growth: Evidence from Nepal</p>
-                </div>
-
-                <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">7</span>
-                    </div>
-                    <h3>1st National Conference on Management, IT, Education & Social Science</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Mahakavi Devkota Campus, Sunwal, Nawalparasi, Nepal</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 30 May 2025</p>
-                    <p class="paper-title"><strong>Paper:</strong> Quantitative trading strategies, back-testing and performance analysis of the NEPSE using Python: A data-driven market exploration</p>
-                </div>
-
-                <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">8</span>
-                    </div>
-                    <h3>1st National Conference 2025</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Marsyangdi Multiple Campus, Besishahar, Lamjung Nepal</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 10-11 May, 2025</p>
-                    <p class="paper-title"><strong>Paper:</strong> Multifractal properties in the Nepalese stock market through detrended fluctuation analysis (DFA): A comprehensive exploration</p>
-                </div>
-
-                <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">9</span>
-                    </div>
-                    <h3>1st International Conference on Emerging Research Trends in Education, Humanities, Management and Science</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Kailali Multiple Campus, Dhangadhi, Nepal</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 27-28 February, 2025</p>
-                    <p class="paper-title"><strong>Paper:</strong> Navigating Personal Finance: How Financial Literacy, Behavior, and Attitude Shape Financial Management among College Students of Rupandehi District</p>
-                </div>
-
-                <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">10</span>
-                    </div>
-                    <h3>4th International Conference on Global Innovations in Management and Social Science</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Lumbini Banijya Campus, Butwal, Rupandehi</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 29-30 November, 2024</p>
-                    <p class="paper-title"><strong>Paper:</strong> Financial inclusion in Nepal: A case of Rampur Palpa</p>
-                </div>
-
-                <div class="conference-card award">
-                    <div class="conference-header">
-                        <span class="conference-number">11</span>
-                        <span class="award-badge"><i class="fas fa-award"></i> Best Paper Presenter</span>
-                    </div>
-                    <h3>International Conference on Sustainable Business and Management 2024</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Gupteshwor Mahadev Multiple Campus, Pokhara, Kaski, Nepal</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 5-6 July, 2024</p>
-                    <p class="paper-title"><strong>Paper:</strong> Predictive modeling of Nepal Stock Exchange index: An ARIMA approach</p>
-                </div>
-
-                <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">12</span>
-                    </div>
-                    <h3>National Conference on Nepalese Higher Education</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Balkumari College, Narayangarh, Chitwan, Nepal</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 14-15 December, 2023</p>
-                    <p class="paper-title"><strong>Paper:</strong> People's experience towards corruption in public sectors' service delivery</p>
-                </div>
-
-                <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">13</span>
-                    </div>
-                    <h3>One Day International Webinar on Recent Developments in Business Management & Social Sciences</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Lumbini Banijya Campus, Butwal, Rupandehi</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 4 December 2020</p>
-                    <p class="paper-title"><strong>Paper:</strong> The Relationship Among the Inflation, Broad Money, and Economic Growth: Evidence from Nepal</p>
-                </div>
-
-                <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">14</span>
-                    </div>
-                    <h3>International seminar on redefining management education in Nepal</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Lumbini Banijya Campus, Butwal, Rupandehi</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 16-17 November 2018</p>
-                    <p class="paper-title"><strong>Paper:</strong> Determinants of profitability in commercial bank: empirical evidence from Nepal</p>
-                </div>
-
-                <div class="conference-card">
-                    <div class="conference-header">
-                        <span class="conference-number">15</span>
-                    </div>
-                    <h3>11th Triennial Conference of the Association of Asia Pacific Operational Research Societies (APORS) on Operations Research and Development</h3>
-                    <p class="conference-organizer"><i class="fas fa-building"></i> Operational Research Society of Nepal</p>
-                    <p class="conference-date"><i class="fas fa-calendar-alt"></i> 6-9 August, 2018</p>
-                    <p class="paper-title"><strong>Paper:</strong> Import, export and economic growth of Nepal: Empirical analysis</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Research & Training Section -->
-    <section id="research" class="section bg-light">
-        <div class="container">
-            <h2 class="section-title">Research Skills & Methodology</h2>
-            <div class="skills-grid">
-                <div class="skill-category">
-                    <div class="skill-icon"><i class="fas fa-chart-bar"></i></div>
-                    <h3>Statistical Software</h3>
-                    <p>SPSS, SmartPLS, Eviews, MSExcel, Python (Basics of Pandas, Matplotlib, NumPy), Power BI, Google Sheet</p>
-                </div>
-
-                <div class="skill-category">
-                    <div class="skill-icon"><i class="fas fa-book"></i></div>
-                    <h3>Reference Manager</h3>
-                    <p>Zotero, Mendeley, EndNote</p>
-                </div>
-
-                <div class="skill-category">
-                    <div class="skill-icon"><i class="fas fa-poll"></i></div>
-                    <h3>Survey Manager</h3>
-                    <p>Google Form, Microsoft Forms</p>
-                </div>
-
-                <div class="skill-category">
-                    <div class="skill-icon"><i class="fas fa-microscope"></i></div>
-                    <h3>Research Methods</h3>
-                    <p>Panel Data Econometrics, Time Series Analysis (linear & Non-linear), Qualitative Studies, Mediation and Moderation Analysis</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Training Section -->
-    <section id="training" class="section">
-        <div class="container">
-            <h2 class="section-title">Research Trainings & Experience</h2>
-            <div class="training-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>S.N.</th>
-                            <th>Topic</th>
-                            <th>Organizer</th>
-                            <th>Date</th>
-                            <th>Role</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>ICT Integration in Research</td>
-                            <td>Yerawati Aadarsha Multiple Campus, Lalmatiya, Deukhuri, Dang, with support of University Grants Commission</td>
-                            <td>6 June 2026</td>
-                            <td><span class="role-badge expert">Session Expert</span></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>AI Integration in Research/Publications, Faculty Professional Development Training (Second Cohort)</td>
-                            <td>Janapriya Multiple Campus with support of University Grants Commission</td>
-                            <td>16-21 April 2026</td>
-                            <td><span class="role-badge expert">Session Expert</span></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Digital & Blended Learning: Technology-Enhanced Learning and Digital Pedagogy, Faculty Professional Development Training (Second Cohort)</td>
-                            <td>Lumbini Banijya Campus with support of University Grants Commission</td>
-                            <td>2 April 2026</td>
-                            <td><span class="role-badge expert">Session Expert</span></td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Training on Integrating AI in Research Methodology: Tools, Techniques, and Practices</td>
-                            <td>Research Management Cell, Lumbini Banijya Campus, with support of University Grants Commission</td>
-                            <td>30th & 31st January 2026</td>
-                            <td><span class="role-badge trainee">Trainee</span></td>
-                        </tr>
-                        <tr>
-                            <td>5</td>
-                            <td>Research Ethics and Plagiarism (2 credits, Score: 80%) </td>
-                            <td>SWAYAM-Indira Gandhi National Open University, New Delhi, India</td>
-                            <td>June 2025 - December 2025</td>
-                            <td><span class="role-badge trainee">Trainee</span></td>
-                        </tr>
-
-                        <tr>
-                            <td>6</td>
-                            <td>Integration of AI tools for curriculum development, Faculty Professional Development Training (First Cohort)</td>
-                            <td>Lumbini Banijya Campus with support of University Grants Commission</td>
-                            <td>22 June 2025</td>
-                            <td><span class="role-badge expert">Session Expert</span></td>
-                        </tr>
-                        <tr>
-                            <td>7</td>
-                            <td>Workshop on Research Writing</td>
-                            <td>Research Management Cell, Lumbini Banijya Campus</td>
-                            <td>2 February, 2025</td>
-                            <td><span class="role-badge trainee">Trainee</span></td>
-                        </tr>
-                        <tr>
-                            <td>8</td>
-                            <td>4th International Conference Proceeding Committee</td>
-                            <td>Lumbini Banijya Campus, Butwal, Rupadehi</td>
-                            <td>29-30 November, 2024</td>
-                            <td><span class="role-badge editor">Editor-in-Chief</span></td>
-                        </tr>
-                        <tr>
-                            <td>9</td>
-                            <td>Advanced Data Analysis & Case Development</td>
-                            <td>Research Management Cell, Lumbini Banijya Campus</td>
-                            <td>23-25 May, 2024</td>
-                            <td><span class="role-badge trainee">Trainee</span></td>
-                        </tr>
-                        <tr>
-                            <td>10</td>
-                            <td>Orientation on Stock Market</td>
-                            <td>Parroha Multiple Campus, Sainamaina, Rupandehi</td>
-                            <td>13 October, 2023</td>
-                            <td><span class="role-badge trainer">Trainer</span></td>
-                        </tr>
-                        <tr>
-                            <td>11</td>
-                            <td>Statistical Data Analysis and Interpretation Using SmartPLS and Bibliometrics</td>
-                            <td>Department of Research and Development, Lumbini Banijya Campus</td>
-                            <td>1-7 July, 2023</td>
-                            <td><span class="role-badge trainee">Trainee</span></td>
-                        </tr>
-                        <tr>
-                            <td>12</td>
-                            <td>Research Methodology & Data Analysis</td>
-                            <td>Department of Research and Development, Lumbini Banijya Campus</td>
-                            <td>22 June, 2023</td>
-                            <td><span class="role-badge trainee">Trainee</span></td>
-                        </tr>
-                        <tr>
-                            <td>13</td>
-                            <td>Mixed Methods of Business Research and Model Building</td>
-                            <td>Department of Research and Development, Lumbini Banijya Campus</td>
-                            <td>30 April, 2022</td>
-                            <td><span class="role-badge trainee">Trainee</span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="section bg-light">
-        <div class="container">
-            <h2 class="section-title">Contact Information</h2>
-            <div class="contact-grid">
-                <div class="contact-card">
-                    <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-                    <h3>Email</h3>
-                    <p><a href="mailto:sandippaudel1995@gmail.com">sandippaudel1995@gmail.com</a></p>
-                    <p><a href="mailto:sandip.paudel@lbc.edu.np">sandip.paudel@lbc.edu.np</a></p>
-                </div>
-
-                <div class="contact-card">
-                    <div class="contact-icon"><i class="fas fa-phone"></i></div>
-                    <h3>Phone / WhatsApp / Viber</h3>
-                    <p><a href="tel:+9779857011047">+977-9857011047</a></p>
-                </div>
-
-                <div class="contact-card">
-                    <div class="contact-icon"><i class="fas fa-building"></i></div>
-                    <h3>Office</h3>
-                    <p>Department of Finance<br>
-                    Lumbini Banijya Campus<br>
-                    Butwal, Rupandehi, Nepal</p>
-                    <p><a href="https://lbc.edu.np/teaching-faculties" target="_blank">Visit Faculty Page</a></p>
-                </div>
-
-                <div class="contact-card">
-                    <div class="contact-icon"><i class="fas fa-link"></i></div>
-                    <h3>Academic Profiles</h3>
-                    <p><a href="https://scholar.google.com/citations?user=TCUUU7wAAAAJ&hl=en" target="_blank">Google Scholar</a></p>
-                    <p><a href="https://orcid.org/0000-0003-4689-7477" target="_blank">ORCID</a></p>
-                </div>
-            </div>
-
-            <div class="referees-section">
-                <h3 class="subsection-title">Academic Referees</h3>
-                <div class="referees-grid">
-                    <div class="referee-card">
-                        <h4>Professor Dr. Tara Prasad Upadhyaya</h4>
-                        <p class="referee-position">Campus Chief, Lumbini Banijya Campus</p>
-                        <p><i class="fas fa-phone"></i> +977-9857026361</p>
-                        <p><i class="fas fa-envelope"></i> <a href="mailto:tpug1969@gmail.com">tpug1969@gmail.com</a></p>
-                    </div>
-
-                    <div class="referee-card">
-                        <h4>Professor Dr. A.K Gupta </h4>
-                        <p class="referee-position">DDU University</p>
-                        <p><i class="fas fa-phone"></i> ++91 98398 02098</p>
-                    </div>
-
-                    <div class="referee-card">
-                        <h4>Professor Dr. Bharat Bhusal</h4>
-                        <p class="referee-position">Lumbini Banijya Campus, Butwal</p>
-                        <p><i class="fas fa-phone"></i> +977-9857033964</p>
-                        <p><i class="fas fa-envelope"></i> <a href="mailto:bharatbhusal05@gmail.com">bharatbhusal05@gmail.com</a></p>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 Sandip Paudel. All rights reserved.</p>
-            <p>Last Updated: February 2026</p>
         </div>
     </footer>
 
-    <script>
-        // Mobile Navigation Toggle
-        const hamburger = document.querySelector('.hamburger');
-        const navMenu = document.querySelector('.nav-menu');
-
-        if (hamburger) {
-            hamburger.addEventListener('click', () => {
-                navMenu.classList.toggle('active');
-            });
-        }
-
-        // Close mobile menu when clicking on a link
-        const navLinks = document.querySelectorAll('.nav-menu a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                navMenu.classList.remove('active');
-            });
-        });
-
-        // Add active state to navigation on scroll
-        window.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('section[id]');
-            const scrollY = window.pageYOffset;
-
-            sections.forEach(section => {
-                const sectionHeight = section.offsetHeight;
-                const sectionTop = section.offsetTop - 100;
-                const sectionId = section.getAttribute('id');
-                const navLink = document.querySelector(`.nav-menu a[href="#${sectionId}"]`);
-
-                if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                    if (navLink) {
-                        document.querySelectorAll('.nav-menu a').forEach(link => {
-                            link.classList.remove('active');
-                        });
-                        navLink.classList.add('active');
-                    }
-                }
-            });
-        });
-
-        // Smooth scroll behavior
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (href !== '#') {
-                    e.preventDefault();
-                    const target = document.querySelector(href);
-                    if (target) {
-                        target.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'start'
-                        });
-                    }
-                }
-            });
-        });
-
-        // Animation on scroll
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }
-            });
-        }, observerOptions);
-
-        // Observe elements for animation
-        const animateElements = document.querySelectorAll('.publication-item, .conference-card, .timeline-item, .skill-category, .contact-card');
-        animateElements.forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-            observer.observe(el);
-        });
-
-        console.log('Website loaded successfully!');
-    </script>
+    <!-- Site JavaScript -->
+    <script src="assets/js/main.js" defer></script>
 </body>
 </html>
