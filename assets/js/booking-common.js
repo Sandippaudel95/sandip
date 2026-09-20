@@ -1,7 +1,7 @@
 /* ==========================================================================
    Shared code for booking.html and booking-status.html
      - formatting helpers (Nepal time, rupees)
-     - data access (Supabase + booking-api function, or preview data)
+     - data access (Supabase + booking-api function)
      - the payment panel (QR code, amount, proof upload)
 
    Exposes one global: window.SPBooking
@@ -12,12 +12,12 @@
     var CFG = window.BOOKING_CONFIG || {};
     var TZ = CFG.timezone || 'Asia/Kathmandu';
     var LOCAL_TZ = Intl.DateTimeFormat().resolvedOptions().timeZone || TZ;
-    var PREVIEW = !CFG.supabaseUrl || /YOUR-/.test(CFG.supabaseUrl + CFG.supabaseKey);
+    var CONFIGURED = !!CFG.supabaseUrl && !!CFG.supabaseKey && !/YOUR-/.test(CFG.supabaseUrl + CFG.supabaseKey);
     var FN = CFG.functionName || 'booking-api';
     var MAX_PROOF = 5 * 1024 * 1024;
 
     var client = null;
-    if (!PREVIEW && window.supabase && window.supabase.createClient) {
+    if (CONFIGURED && window.supabase && window.supabase.createClient) {
         client = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey, { auth: { persistSession: false } });
     }
 
@@ -135,124 +135,12 @@
         }
     };
 
-    // ---------------------------------------------------------------
-    // Preview data (used until booking-config.js is filled in)
-    // ---------------------------------------------------------------
-    var PREVIEW_QR = 'data:image/svg+xml,' + encodeURIComponent(previewQrSvg());
-
-    function previewQrSvg() {
-        // A decorative placeholder that looks like a QR code. Not scannable.
-        var n = 25, cell = 8, out = '', seed = 7;
-        function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
-        function finder(x, y) {
-            return '<rect x="' + x * cell + '" y="' + y * cell + '" width="' + 7 * cell + '" height="' + 7 * cell + '" fill="#0a2540"/>' +
-                   '<rect x="' + (x + 1) * cell + '" y="' + (y + 1) * cell + '" width="' + 5 * cell + '" height="' + 5 * cell + '" fill="#fff"/>' +
-                   '<rect x="' + (x + 2) * cell + '" y="' + (y + 2) * cell + '" width="' + 3 * cell + '" height="' + 3 * cell + '" fill="#0a2540"/>';
-        }
-        for (var y = 0; y < n; y++) {
-            for (var x = 0; x < n; x++) {
-                var inFinder = (x < 8 && y < 8) || (x > n - 9 && y < 8) || (x < 8 && y > n - 9);
-                if (!inFinder && rnd() > 0.52) out += '<rect x="' + x * cell + '" y="' + y * cell + '" width="' + cell + '" height="' + cell + '" fill="#0a2540"/>';
-            }
-        }
-        var s = n * cell;
-        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="-16 -16 ' + (s + 32) + ' ' + (s + 32) + '"><rect x="-16" y="-16" width="' + (s + 32) + '" height="' + (s + 32) + '" fill="#fff"/>' +
-               out + finder(0, 0) + finder(n - 7, 0) + finder(0, n - 7) +
-               '<rect x="' + (s / 2 - 46) + '" y="' + (s / 2 - 14) + '" width="92" height="28" rx="4" fill="#fff"/><text x="' + s / 2 + '" y="' + (s / 2 + 5) + '" font-family="Arial" font-size="13" font-weight="700" fill="#0a2540" text-anchor="middle">SAMPLE QR</text></svg>';
-    }
-
-    var previewServices = [
-        { id: 'research-consultation', name: 'Research consultation', description: 'Focused advice on a specific research question: design, methods, data analysis, or interpreting results.' },
-        { id: 'proposal-writing', name: 'Proposal writing consultation', description: 'Help shaping a thesis or research proposal: problem statement, objectives, literature review, and methodology.' },
-        { id: 'research-supervision', name: 'Detailed research supervision', description: 'In-depth, step-by-step guidance through your thesis or research project, one session at a time.' },
-        { id: 'assignment-consultation', name: 'Assignment consultation', description: 'Guidance on understanding, structuring, and improving course assignments and research reports.' }
-    ];
-    var previewFees = { 1: 5000, 2: 7000, 3: 10000 };
-
-    var previewSettings = {
-        account_name: 'Sandip Paudel',
-        bank_name: 'Example Bank Ltd., Butwal Branch',
-        account_number: '0123 4567 8901 2345',
-        instructions: 'Scan the QR with any mobile banking, eSewa, Khalti or Fonepay app. Write your booking reference in the remarks.',
-        refund_policy: 'Full refund if you cancel at least 24 hours before your session. If you cancel less than 24 hours before the session, 50% of the fee is refunded. To cancel or request a refund, email sandip.paudel@lbc.edu.np with your booking reference.',
-        qr_url: PREVIEW_QR
-    };
-
-    function previewStore(update) {
-        var data = {};
-        try { data = JSON.parse(sessionStorage.getItem('sp-preview-bookings') || '{}'); } catch (e) { data = {}; }
-        if (update) {
-            update(data);
-            try { sessionStorage.setItem('sp-preview-bookings', JSON.stringify(data)); } catch (e) { /* ignore */ }
-        }
-        return data;
-    }
-
-    function previewSlots() {
-        var out = [], now = Date.now();
-        var hours = ['10:00', '11:00', '12:00', '14:00', '15:00', '16:00'];
-        var taken = previewStore();
-        var busy = {};
-        Object.keys(taken).forEach(function (k) { (taken[k].slot_ids || []).forEach(function (id) { busy[id] = true; }); });
-        for (var i = 1; i <= 28; i++) {
-            var key = dayKey(new Date(now + i * 86400000));
-            var wd = keyToUTCDate(key).getUTCDay();
-            if (wd === 6 || i % 5 === 0) continue;
-            hours.forEach(function (t, j) {
-                if ((i + j) % 7 === 0) return;
-                var id = 'p-' + key + '-' + t;
-                if (busy[id]) return;
-                var iso = new Date(key + 'T' + t + ':00+05:45').toISOString();
-                if (new Date(iso).getTime() < now + 12 * 3600000) return;
-                out.push({ id: id, starts_at: iso, duration_min: 60, mode: j < 3 ? 'either' : 'online' });
-            });
-        }
-        return out;
-    }
-
-    var delay = function (v, ms) { return new Promise(function (r) { setTimeout(function () { r(v); }, ms || 400); }); };
-
-    var previewApi = {
-        getServices: function () { return delay(previewServices, 150); },
-        getFees: function () { return delay(previewFees, 100); },
-        getPaymentSettings: function () { return delay(previewSettings, 100); },
-        getSlots: function () { return delay(previewSlots(), 200); },
-        createHold: function (p) {
-            var svc = previewServices.filter(function (s) { return s.id === p.service_id; })[0];
-            var fee = previewFees[p.hours];
-            var ref = 'SP-' + String(Math.floor(Math.random() * 1e6)).padStart(6, '0');
-            var start = new Date(p._starts_at);
-            var b = {
-                reference: ref, token: 'preview-' + Math.random().toString(36).slice(2),
-                amount_npr: fee, rate_npr: fee / p.hours, hours: p.hours, mode: p.mode,
-                hold_expires_at: new Date(Date.now() + 30 * 60000).toISOString(),
-                service_name: svc.name, starts_at: start.toISOString(),
-                ends_at: new Date(start.getTime() + p.hours * 3600000).toISOString()
-            };
-            previewStore(function (d) {
-                d[ref] = Object.assign({}, b, { status: 'held', name: p.name, level: p.level, topic: p.topic, slot_ids: p._slot_ids });
-            });
-            return delay(Object.assign({ ok: true }, b), 600);
-        },
-        submitPayment: function (ref, token, txn) {
-            previewStore(function (d) { if (d[ref]) { d[ref].status = 'payment_submitted'; d[ref].transaction_id = txn; } });
-            return delay({ ok: true, status: 'payment_submitted' }, 900);
-        },
-        getStatus: function (ref) {
-            var b = previewStore()[ref];
-            if (!b) {
-                var s = new Date(Date.now() + 3 * 86400000);
-                b = { reference: ref || 'SP-000000', status: 'payment_submitted', name: 'Preview visitor', service_name: 'Research consultation',
-                      level: 'master', hours: 2, rate_npr: 3500, amount_npr: 7000, mode: 'online', topic: 'Example topic',
-                      starts_at: s.toISOString(), ends_at: new Date(s.getTime() + 7200000).toISOString(), transaction_id: '' };
-            }
-            return delay(b, 300);
-        }
-    };
-
-    var api = PREVIEW ? previewApi : realApi;
-    if (!PREVIEW && !client) {
-        var fail = function () { return Promise.reject(new Error('The booking service could not load. Check your connection and refresh the page.')); };
+    var api = realApi;
+    if (!client) {
+        var failMsg = CONFIGURED
+            ? 'The booking service could not load. Check your connection and refresh the page.'
+            : 'Online booking is not set up yet. Please use the contact form to request a session.';
+        var fail = function () { return Promise.reject(new Error(failMsg)); };
         api = { getServices: fail, getFees: fail, getPaymentSettings: fail, getSlots: fail, createHold: fail, submitPayment: fail, getStatus: fail };
     }
 
@@ -425,7 +313,7 @@
     }
 
     window.SPBooking = {
-        PREVIEW: PREVIEW, TZ: TZ, SHOW_LOCAL: SHOW_LOCAL, LEVELS: LEVELS, LEVEL_LABEL: LEVEL_LABEL,
+        CONFIGURED: CONFIGURED, TZ: TZ, SHOW_LOCAL: SHOW_LOCAL, LEVELS: LEVELS, LEVEL_LABEL: LEVEL_LABEL,
         F: F, pad: pad, dayKey: dayKey, keyToUTCDate: keyToUTCDate, npr: npr, esc: esc,
         rangeText: rangeText, modeText: modeText, statusUrl: statusUrl,
         api: api, renderPaymentPanel: renderPaymentPanel

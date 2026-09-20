@@ -2,7 +2,7 @@
 
 The website stays on GitHub Pages. Bookings, fees and payment proofs are stored in a free **Supabase** project, and emails are sent through **Resend**. Setup takes about 30 minutes and only has to be done once.
 
-Until you finish step 1, `booking.html`, `booking-status.html` and `admin.html` run in **preview mode**: they show example times, bookings and a sample QR code so you can try the whole flow, but nothing is saved or emailed.
+Until `assets/js/booking-config.js` is filled in (step 1), the booking page shows "Online booking is not set up yet" and points visitors to the contact form, so it is safe to push the site before finishing setup.
 
 > **Already set up the earlier (free) version?** Re-run the new `supabase/schema.sql` (step 2), redeploy the function with the new code (step 4), then upload your QR code on the admin page (step 8). Your fees and cancellation policy are filled in automatically. Your existing slots, bookings and login are kept.
 

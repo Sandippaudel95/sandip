@@ -20,7 +20,6 @@
     var STEPS = ['service', 'time', 'details', 'pay'];
 
     document.addEventListener('DOMContentLoaded', function () {
-        if (B.PREVIEW) $('previewBanner').hidden = false;
         $('timesTz').textContent = B.SHOW_LOCAL ? 'Nepal time (NPT). Your local time is shown underneath.' : 'All times are Nepal time (NPT).';
 
         $('hoursList').addEventListener('change', function (e) {
@@ -46,8 +45,8 @@
             renderServices();
         }).catch(function (err) {
             console.error(err);
-            $('serviceList').innerHTML = '<p class="times-empty">Services could not be loaded. Refresh the page to try again.</p>';
-            $('rateTable').innerHTML = '<p class="times-empty">Rates could not be loaded.</p>';
+            $('serviceList').innerHTML = '<p class="times-empty">' + esc(err.message || 'Services could not be loaded. Refresh the page to try again.') + ' <a href="index.html#contact">Go to the contact form</a>.</p>';
+            $('rateTable').innerHTML = '<p class="times-empty">Fees could not be loaded.</p>';
         });
     });
 
@@ -300,9 +299,7 @@
             slot_id: state.run.id, hours: state.hours, service_id: state.serviceId, level: state.level,
             name: f.name.value.trim(), email: f.email.value.trim(), phone: f.phone.value.trim(),
             affiliation: f.affiliation.value.trim(), stage: f.stage.value, topic: f.topic.value.trim(),
-            message: f.message.value.trim(), mode: modeInput ? modeInput.value : 'online', website: f.website.value,
-            _starts_at: state.run.start,
-            _slot_ids: state.run.slots.map(function (s) { return s.id; })
+            message: f.message.value.trim(), mode: modeInput ? modeInput.value : 'online', website: f.website.value
         };
 
         var btn = $('bSubmit');
@@ -341,8 +338,7 @@
             onSubmitted: function () {
                 $('doneRef').textContent = h.reference;
                 $('doneText').textContent = 'Your booking for ' + B.rangeText(h.starts_at, h.ends_at) +
-                    ' will be confirmed once the payment of ' + npr(h.amount_npr) + ' has been verified. You will receive an email when that happens.' +
-                    (B.PREVIEW ? ' (Preview mode: nothing was saved or emailed.)' : '');
+                    ' will be confirmed once the payment of ' + npr(h.amount_npr) + ' has been verified. You will receive an email when that happens.';
                 $('doneStatusLink').href = B.statusUrl(h.reference, h.token);
                 goTo('done');
                 $('stepDone').focus();

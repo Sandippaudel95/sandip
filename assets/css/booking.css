@@ -3,7 +3,7 @@
    Builds on the design tokens in styles.css (navy, Lora + Inter).
 
    Sections:
-     1. Shared bits (preview banner, buttons, form controls)
+     1. Shared bits (buttons, form controls)
      2. Booking intro
      3. Booking widget: calendar and times
      4. Booking form and confirmation
@@ -13,20 +13,6 @@
 
 
 /* 1. SHARED ---------------------------------------------------------------- */
-.preview-banner {
-    display: flex;
-    gap: var(--space-3);
-    align-items: flex-start;
-    padding: var(--space-4) var(--space-5);
-    margin-bottom: var(--space-7);
-    background: var(--status-amber-bg);
-    border: 1px solid #f5d98b;
-    border-radius: var(--radius-md);
-    color: var(--status-amber);
-}
-.preview-banner i { margin-top: 4px; }
-.preview-banner p { color: #7c3d06; font-size: 0.92rem; }
-
 .btn-ghost {
     display: inline-flex;
     align-items: center;

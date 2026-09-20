@@ -30,11 +30,10 @@
     };
 
     document.addEventListener('DOMContentLoaded', function () {
-        if (B.PREVIEW) $('previewBanner').hidden = false;
         var q = new URLSearchParams(location.search);
         var ref = q.get('ref') || '';
         var token = q.get('t') || '';
-        if (!B.PREVIEW && (!ref || !token)) {
+        if (!ref || !token) {
             return showError('This link is incomplete. Open the "Check booking status" link from your booking email.');
         }
         load(ref, token);

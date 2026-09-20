@@ -4,7 +4,6 @@
      - manage one-hour time slots
      - edit services and session fees (1, 2 or 3 hours)
      - upload the payment QR code and bank details shown to visitors
-   Runs in PREVIEW MODE with example data until booking-config.js is filled.
    ========================================================================== */
 (function () {
     'use strict';
@@ -12,12 +11,11 @@
     var CFG = window.BOOKING_CONFIG || {};
     var TZ = CFG.timezone || 'Asia/Kathmandu';
     var FN = CFG.functionName || 'booking-api';
-    var PREVIEW = !CFG.supabaseUrl || /YOUR-/.test(CFG.supabaseUrl + CFG.supabaseKey);
+    var CONFIGURED = !!CFG.supabaseUrl && !!CFG.supabaseKey && !/YOUR-/.test(CFG.supabaseUrl + CFG.supabaseKey);
     // Read before Supabase clears the URL: are we arriving from a reset email?
     var RECOVERY = /type=recovery/.test(location.hash);
-    var client = (!PREVIEW && window.supabase) ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey) : null;
+    var client = (CONFIGURED && window.supabase) ? window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey) : null;
 
-    var LEVELS = [['bachelor', 'Bachelor'], ['master', 'Master'], ['mphil', 'MPhil'], ['phd', 'PhD']];
     var LEVEL_LABEL = { bachelor: 'Bachelor', master: 'Master', mphil: 'MPhil', phd: 'PhD' };
 
     var $ = function (id) { return document.getElementById(id); };
@@ -84,7 +82,7 @@
         return b;
     }
 
-    var api = PREVIEW ? previewApi() : {
+    var api = {
         listBookings: function () {
             return client.from('bookings')
                 .select('*, service:services(name), booking_slots(released, slot:slots(starts_at, duration_min))')
@@ -170,82 +168,6 @@
         }
     };
 
-    function previewApi() {
-        var at = function (days, t) { return toISO(fmtKey.format(new Date(Date.now() + days * 86400000)), t); };
-        var slots = [];
-        [[1, '10:00'], [1, '11:00'], [2, '10:00'], [2, '11:00'], [2, '14:00'], [3, '10:00'], [3, '11:00'], [3, '12:00'], [5, '14:00'], [5, '15:00'], [-4, '10:00'], [-4, '11:00']]
-            .forEach(function (d, i) { slots.push({ id: 's' + i, starts_at: at(d[0], d[1]), duration_min: 60, mode: i === 7 ? 'online' : 'either', is_active: i !== 9 }); });
-        var services = [
-            { id: 'research-consultation', name: 'Research consultation', description: 'Focused advice on a specific research question: design, methods, data analysis, or interpreting results.', sort_order: 1, is_active: true },
-            { id: 'proposal-writing', name: 'Proposal writing consultation', description: 'Help shaping a thesis or research proposal: problem statement, objectives, literature review, and methodology.', sort_order: 2, is_active: true },
-            { id: 'research-supervision', name: 'Detailed research supervision', description: 'In-depth, step-by-step guidance through your thesis or research project, one session at a time.', sort_order: 3, is_active: true },
-            { id: 'assignment-consultation', name: 'Assignment consultation', description: 'Guidance on understanding, structuring, and improving course assignments and research reports.', sort_order: 4, is_active: true }
-        ];
-        var fees = { 1: 5000, 2: 7000, 3: 10000 };
-        var settings = { account_name: 'Sandip Paudel', bank_name: '', account_number: '', instructions: 'Scan the QR with any mobile banking or Fonepay-enabled app. Write your booking reference in the remarks.', refund_policy: 'Full refund if you cancel at least 24 hours before your session. If you cancel less than 24 hours before the session, 50% of the fee is refunded. To cancel or request a refund, email sandip.paudel@lbc.edu.np with your booking reference.', qr_url: null, qr_path: null };
-        var proofSvg = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="360" height="640"><rect width="360" height="640" fill="#f3f4f6"/><rect x="20" y="40" width="320" height="560" rx="16" fill="#fff"/><circle cx="180" cy="150" r="36" fill="#d1fae5"/><text x="180" y="162" font-family="Arial" font-size="36" fill="#065f46" text-anchor="middle">✓</text><text x="180" y="230" font-family="Arial" font-size="20" font-weight="700" fill="#111" text-anchor="middle">Payment successful</text><text x="180" y="280" font-family="Arial" font-size="30" font-weight="700" fill="#0a2540" text-anchor="middle">Rs. 7,000</text><text x="180" y="330" font-family="Arial" font-size="14" fill="#555" text-anchor="middle">Remarks: SP-482731</text><text x="180" y="360" font-family="Arial" font-size="14" fill="#555" text-anchor="middle">Txn: 7K2M9Q</text><text x="180" y="560" font-family="Arial" font-size="12" fill="#999" text-anchor="middle">Example screenshot (preview)</text></svg>');
-        var now = Date.now();
-        var bookings = [
-            { id: 'b1', reference: 'SP-482731', service_id: 'research-consultation', level: 'master', hours: 2, rate_npr: 3500, amount_npr: 7000, slotIds: ['s2', 's3'], name: 'Anisha Gautam', email: 'anisha@example.com', phone: '98XXXXXXXX', affiliation: 'Lumbini Banijya Campus', stage: 'Analysing data', topic: 'Volatility clustering in NEPSE banking sub-index', message: 'GARCH(1,1) residuals still show ARCH effects. Should I move to EGARCH or GJR-GARCH?', mode: 'online', status: 'payment_submitted', transaction_id: '7K2M9Q', proof_path: 'preview', slot_conflict: false, created_at: new Date(now - 3600000).toISOString(), payment_submitted_at: new Date(now - 3000000).toISOString() },
-            { id: 'b2', reference: 'SP-110245', service_id: 'proposal-writing', level: 'bachelor', hours: 1, rate_npr: 5000, amount_npr: 5000, slotIds: ['s0'], name: 'Bikash Chaudhary', email: 'bikash@example.com', topic: 'Proposal on digital payment adoption among small traders', mode: 'in_person', status: 'held', hold_expires_at: new Date(now + 18 * 60000).toISOString(), slot_conflict: false, created_at: new Date(now - 12 * 60000).toISOString() },
-            { id: 'b3', reference: 'SP-903318', service_id: 'research-supervision', level: 'phd', hours: 3, rate_npr: 3333.33, amount_npr: 10000, slotIds: ['s5', 's6', 's7'], name: 'Ramesh Thapa', email: 'ramesh@example.com', affiliation: 'DDU Gorakhpur University', stage: 'Writing up a thesis or paper', topic: 'Long memory in frontier equity markets', mode: 'online', status: 'confirmed', transaction_id: 'FP88213', proof_path: 'preview', admin_note: 'https://meet.google.com/abc-defg-hij', slot_conflict: false, created_at: new Date(now - 86400000).toISOString() },
-            { id: 'b4', reference: 'SP-771204', service_id: 'assignment-consultation', level: 'master', hours: 1, rate_npr: 5000, amount_npr: 5000, slotIds: ['s10'], name: 'Priya Sharma', email: 'priya@example.com', topic: 'Structuring a portfolio management assignment', mode: 'online', status: 'completed', proof_path: 'preview', slot_conflict: false, created_at: new Date(now - 6 * 86400000).toISOString() }
-        ];
-        var seq = 100;
-        var later = function (v) { return new Promise(function (r) { setTimeout(function () { r(v); }, 120); }); };
-        function slotById(id) { return slots.filter(function (s) { return s.id === id; })[0]; }
-        function active(b) { return ['held', 'payment_submitted', 'confirmed', 'pending'].indexOf(b.status) > -1; }
-        return {
-            listBookings: function () {
-                return later(bookings.map(function (b) {
-                    var copy = Object.assign({}, b, { service: { name: services.filter(function (s) { return s.id === b.service_id; })[0].name } });
-                    copy.booking_slots = b.slotIds.map(function (id) { return { released: !active(b), slot: slotById(id) }; });
-                    return shapeBooking(copy);
-                }));
-            },
-            listSlots: function () {
-                return later(slots.slice().sort(function (a, b) { return a.starts_at < b.starts_at ? -1 : 1; }).map(function (s) {
-                    return Object.assign({}, s, { booking_slots: bookings.filter(function (b) { return b.slotIds.indexOf(s.id) > -1; })
-                        .map(function (b) { return { released: !active(b), booking: { name: b.name, status: b.status } }; }) });
-                }));
-            },
-            addSlots: function (rows) {
-                var added = rows.filter(function (r) { return !slots.some(function (s) { return s.starts_at === r.starts_at; }); });
-                added.forEach(function (r) { slots.push(Object.assign({ id: 'n' + (seq++), is_active: true }, r)); });
-                return later(added);
-            },
-            setSlotActive: function (id, a) { slotById(id).is_active = a; return later(); },
-            deleteSlot: function (id) { slots = slots.filter(function (s) { return s.id !== id; }); return later(); },
-            updateBooking: function (id, status, note) {
-                bookings.forEach(function (b) { if (b.id === id) { b.status = status; if (note) b.admin_note = note; } });
-                return later({ ok: true });
-            },
-            proofUrl: function () {
-                // Browsers block opening data: URLs in a new tab, so use a blob URL.
-                var svg = decodeURIComponent(proofSvg.slice('data:image/svg+xml,'.length));
-                return later(URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' })));
-            },
-            listServices: function () { return later(services.map(function (s) { return Object.assign({}, s); })); },
-            saveService: function (svc) {
-                var ex = services.filter(function (s) { return s.id === svc.id; })[0];
-                if (ex) Object.assign(ex, svc); else services.push(Object.assign({}, svc));
-                return later();
-            },
-            listFees: function () { return later(Object.assign({}, fees)); },
-            saveFees: function (f) { fees = Object.assign({}, f); return later(); },
-            getPaymentSettings: function () { return later(Object.assign({}, settings)); },
-            savePaymentSettings: function (f) { Object.assign(settings, f); return later(); },
-            uploadQr: function (file) {
-                return new Promise(function (resolve) {
-                    var r = new FileReader();
-                    r.onload = function () { settings.qr_url = r.result; settings.qr_path = 'preview'; resolve(r.result); };
-                    r.readAsDataURL(file);
-                });
-            },
-            removeQr: function () { settings.qr_url = null; settings.qr_path = null; return later(); }
-        };
-    }
-
     // ---------------------------------------------------------------
     // Boot and sign-in
     // ---------------------------------------------------------------
@@ -262,13 +184,12 @@
         $('signOut').addEventListener('click', function () { if (client) client.auth.signOut().then(function () { location.reload(); }); });
         $('dlgCancel').addEventListener('click', function () { $('actionDialog').close(); });
 
-        if (PREVIEW) {
-            $('previewBanner').hidden = false;
-            return showDash('preview@example.com');
-        }
         if (!client) {
-            $('loginView').hidden = false;
-            return setLoginStatus('The sign-in service could not load. Check your connection and refresh.', 'error');
+            showOnly('loginView');
+            $('lSubmit').disabled = true;
+            return setLoginStatus(CONFIGURED
+                ? 'The sign-in service could not load. Check your connection and refresh.'
+                : 'Booking is not connected yet. Fill in assets/js/booking-config.js (see SETUP.md, step 1).', 'error');
         }
         client.auth.onAuthStateChange(function (event) { if (event === 'PASSWORD_RECOVERY') showOnly('resetView'); });
         client.auth.getSession().then(function (res) {
