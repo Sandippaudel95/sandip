@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    <meta name="description" content="Book paid, one-to-one research supervision, proposal writing, research and assignment consultation with Sandip Paudel for Bachelor, Master, MPhil and PhD students.">
+    <meta name="author" content="Sandip Paudel">
+    <title>Booking Status | Sandip Paudel</title>
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a2540'/%3E%3Ctext x='50' y='68' font-family='Georgia' font-size='56' font-weight='600' fill='white' text-anchor='middle'%3ESP%3C/text%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/booking.css">
+</head>
+<body>
+
+    <header class="site-header" id="siteHeader">
+        <div class="container nav-container">
+            <a href="index.html" class="brand">
+                <span class="brand-mark">SP</span>
+                <span class="brand-name">Sandip Paudel</span>
+            </a>
+            <nav class="primary-nav" aria-label="Primary navigation">
+                <ul class="nav-list" id="navList">
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#education">Education</a></li>
+                    <li><a href="index.html#publications">Publications</a></li>
+                    <li><a href="index.html#conferences">Conferences</a></li>
+                    <li><a href="booking.html">Consultation</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section class="section section-alt status-section">
+            <div class="container narrow">
+                <div class="preview-banner" id="previewBanner" hidden>
+                    <i class="fas fa-circle-info" aria-hidden="true"></i>
+                    <p><strong>Preview mode.</strong> This shows example data. Follow SETUP.md to connect the booking system.</p>
+                </div>
+
+                <div class="status-card" id="statusCard" aria-live="polite">
+                    <p class="times-empty">Loading your booking…</p>
+                </div>
+
+                <div class="status-pay" id="statusPay" hidden>
+                    <div id="statusPayRoot"></div>
+                </div>
+
+                <p class="booking-footnote">
+                    Questions about your booking? Reply to any booking email, or <a href="index.html#contact">send a message</a>.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <span class="brand-mark">SP</span>
+                <div>
+                    <p class="footer-name">Sandip Paudel</p>
+                    <p class="footer-role">Assistant Professor of Finance, Lumbini Banijya Campus</p>
+                </div>
+            </div>
+            <ul class="footer-links" aria-label="Footer links">
+                <li><a href="https://github.com/SandipPaudel" target="_blank" rel="noopener"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li>
+                <li><a href="https://scholar.google.com/citations?user=TCUUU7wAAAAJ&hl=en" target="_blank" rel="noopener"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Scholar</a></li>
+                <li><a href="https://orcid.org/0000-0003-4689-7477" target="_blank" rel="noopener"><i class="fab fa-orcid" aria-hidden="true"></i> ORCID</a></li>
+            </ul>
+            <div class="footer-meta">
+                <p>&copy; <span id="currentYear">2026</span> Sandip Paudel. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="assets/js/booking-config.js"></script>
+    <script src="assets/js/booking-common.js"></script>
+    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/booking-status.js" defer></script>
+</body>
+</html>

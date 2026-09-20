@@ -444,6 +444,23 @@ button {
 }
 .icon-link i { font-size: 1rem; }
 
+/* Filled variant used for the "Book a consultation" link. */
+.icon-link.icon-link-primary {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+}
+.icon-link.icon-link-primary:hover { background: var(--navy-700); border-color: var(--navy-700); }
+
+.consult-cta {
+    margin-top: var(--space-4);
+    padding: var(--space-4) var(--space-5);
+    background: var(--navy-50);
+    border-radius: var(--radius-md);
+    font-size: 0.98rem;
+}
+.consult-cta a { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+
 .hero-photo {
     display: flex;
     justify-content: center;

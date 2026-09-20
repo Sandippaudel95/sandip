@@ -1,0 +1,5 @@
+# Used only if you deploy with the Supabase CLI.
+# The function checks admin sign-in itself, so Supabase's built-in JWT
+# check is switched off (this also lets the newer "publishable" keys work).
+[functions.booking-api]
+verify_jwt = false

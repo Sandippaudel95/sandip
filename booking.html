@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Book paid, one-to-one research supervision, proposal writing, research and assignment consultation with Sandip Paudel for Bachelor, Master, MPhil and PhD students.">
+    <meta name="author" content="Sandip Paudel">
+    <title>Book a Consultation | Sandip Paudel</title>
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230a2540'/%3E%3Ctext x='50' y='68' font-family='Georgia' font-size='56' font-weight='600' fill='white' text-anchor='middle'%3ESP%3C/text%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/booking.css">
+</head>
+<body>
+
+    <header class="site-header" id="siteHeader">
+        <div class="container nav-container">
+            <a href="index.html" class="brand">
+                <span class="brand-mark">SP</span>
+                <span class="brand-name">Sandip Paudel</span>
+            </a>
+            <nav class="primary-nav" aria-label="Primary navigation">
+                <ul class="nav-list" id="navList">
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#education">Education</a></li>
+                    <li><a href="index.html#publications">Publications</a></li>
+                    <li><a href="index.html#conferences">Conferences</a></li>
+                    <li><a href="booking.html" class="active" aria-current="page">Consultation</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </nav>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section class="section booking-intro">
+            <div class="container">
+                <div class="preview-banner" id="previewBanner" hidden>
+                    <i class="fas fa-circle-info" aria-hidden="true"></i>
+                    <p><strong>Preview mode.</strong> Booking is not connected to the database yet, so the times and QR code below are examples and nothing is saved. The fees and cancellation policy shown are your real ones. Follow SETUP.md to connect it.</p>
+                </div>
+
+                <div class="booking-intro-grid">
+                    <div>
+                        <h1 class="booking-title">Book a consultation</h1>
+                        <p class="booking-lede">
+                            One-to-one sessions for Bachelor, Master, MPhil and PhD
+                            students, in sessions of 1, 2 or 3 hours. Choose a service and a time,
+                            pay by QR, and your booking is confirmed once the payment
+                            is verified.
+                        </p>
+                    </div>
+
+                    <div class="rates-box">
+                        <h2 class="booking-scope-title">Session fees</h2>
+                        <div class="rates-scroll" id="rateTable"><p class="times-empty">Loading rates…</p></div>
+                        <p class="rates-note">The same fee applies to every service and academic level.</p>
+                    </div>
+                </div>
+
+                <ol class="steps steps-4" aria-label="How booking works">
+                    <li><span class="step-num">1</span><div><strong>Choose a service and time</strong><p>Pick your level, a 1 to 3 hour session, and an open slot.</p></div></li>
+                    <li><span class="step-num">2</span><div><strong>Pay by QR</strong><p>Your time is held for 30 minutes while you pay.</p></div></li>
+                    <li><span class="step-num">3</span><div><strong>Upload proof</strong><p>Add a screenshot of the successful payment.</p></div></li>
+                    <li><span class="step-num">4</span><div><strong>Get confirmed</strong><p>You receive an email once the payment is verified.</p></div></li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section section-alt booking-section" id="book">
+            <div class="container">
+
+                <ol class="stepper" id="stepper" aria-label="Booking progress">
+                    <li data-step="service"><button type="button">Service</button></li>
+                    <li data-step="time"><button type="button">Time</button></li>
+                    <li data-step="details"><button type="button">Your details</button></li>
+                    <li data-step="pay"><button type="button">Payment</button></li>
+                </ol>
+
+                <div class="booker" id="booker" aria-live="polite">
+
+                    <!-- Step 1: service, level, hours -->
+                    <div class="step-panel" id="stepService" data-panel="service">
+                        <div class="svc-layout">
+                            <fieldset class="svc-field">
+                                <legend class="field-title">Service</legend>
+                                <div class="svc-list" id="serviceList"><p class="times-empty">Loading services…</p></div>
+                            </fieldset>
+
+                            <div class="svc-side">
+                                <fieldset class="svc-field">
+                                    <legend class="field-title">Your level</legend>
+                                    <div class="seg" id="levelList"></div>
+                                </fieldset>
+
+                                <fieldset class="svc-field">
+                                    <legend class="field-title">Length of session</legend>
+                                    <div class="seg seg-fees" id="hoursList"></div>
+                                </fieldset>
+
+                                <div class="price-box" id="priceBox" aria-live="polite"></div>
+
+                                <button type="button" class="btn-submit btn-wide" id="toTime" disabled><span>Choose a time</span></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: date and start time -->
+                    <div class="step-panel" id="stepTime" data-panel="time" hidden>
+                        <div class="choice-bar" id="choiceBar"></div>
+                        <div class="booker-pick">
+                            <div class="calendar" id="calendar">
+                                <div class="cal-head">
+                                    <button type="button" class="cal-nav" id="calPrev" aria-label="Previous month"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                                    <h2 class="cal-month" id="calMonth">Loading…</h2>
+                                    <button type="button" class="cal-nav" id="calNext" aria-label="Next month"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+                                </div>
+                                <div class="cal-weekdays" aria-hidden="true">
+                                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                                </div>
+                                <div class="cal-grid" id="calGrid" role="grid" aria-labelledby="calMonth"></div>
+                                <p class="cal-legend"><span class="legend-dot"></span> Days with open times</p>
+                            </div>
+
+                            <div class="times" id="times">
+                                <h2 class="times-title" id="timesTitle">Open times</h2>
+                                <p class="times-tz" id="timesTz"></p>
+                                <div class="time-list" id="timeList" role="listbox" aria-labelledby="timesTitle"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: details -->
+                    <form class="step-panel booker-form" id="bookingForm" data-panel="details" novalidate hidden>
+                        <div class="chosen" id="chosen"></div>
+
+                        <div class="form-cols">
+                            <div class="form-row">
+                                <label for="bName">Full name</label>
+                                <input type="text" id="bName" name="name" required maxlength="100" autocomplete="name">
+                            </div>
+                            <div class="form-row">
+                                <label for="bEmail">Email</label>
+                                <input type="email" id="bEmail" name="email" required maxlength="200" autocomplete="email">
+                            </div>
+                            <div class="form-row">
+                                <label for="bPhone">Phone <span class="optional">optional</span></label>
+                                <input type="tel" id="bPhone" name="phone" maxlength="30" autocomplete="tel">
+                            </div>
+                            <div class="form-row">
+                                <label for="bAffiliation">University or campus <span class="optional">optional</span></label>
+                                <input type="text" id="bAffiliation" name="affiliation" maxlength="200" autocomplete="organization">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="bStage">Where are you in your work? <span class="optional">optional</span></label>
+                            <select id="bStage" name="stage">
+                                <option value="">Select one</option>
+                                <option>Choosing a topic</option>
+                                <option>Writing a proposal</option>
+                                <option>Collecting data</option>
+                                <option>Analysing data</option>
+                                <option>Writing up a thesis or paper</option>
+                                <option>Revising after feedback or review</option>
+                                <option>Working on an assignment</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <label for="bTopic">Topic of your research or assignment</label>
+                            <input type="text" id="bTopic" name="topic" required maxlength="200" placeholder="e.g. Financial literacy of college students in Rupandehi">
+                        </div>
+
+                        <div class="form-row">
+                            <label for="bMessage">What would you like to discuss? <span class="optional">optional</span></label>
+                            <textarea id="bMessage" name="message" rows="4" maxlength="3000" placeholder="Your main questions, the methods you are considering, or where you are stuck."></textarea>
+                        </div>
+
+                        <fieldset class="form-row mode-field" id="modeField">
+                            <legend>Format</legend>
+                            <div class="mode-options">
+                                <label class="mode-option"><input type="radio" name="mode" value="online" checked> <i class="fas fa-video" aria-hidden="true"></i> Online</label>
+                                <label class="mode-option"><input type="radio" name="mode" value="in_person"> <i class="fas fa-building-columns" aria-hidden="true"></i> In person, Lumbini Banijya Campus</label>
+                            </div>
+                        </fieldset>
+
+                        <div class="hp" aria-hidden="true">
+                            <label for="bWebsite">Website</label>
+                            <input type="text" id="bWebsite" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit" id="bSubmit"><span>Continue to payment</span></button>
+                            <button type="button" class="btn-ghost" id="bBack">Choose a different time</button>
+                        </div>
+                        <p class="form-status" id="bStatus" role="status" aria-live="polite"></p>
+                    </form>
+
+                    <!-- Step 4: payment -->
+                    <div class="step-panel pay-panel" id="stepPay" data-panel="pay" hidden>
+                        <div class="pay-head">
+                            <h2>Pay and upload proof</h2>
+                            <p>Your time is reserved. Pay the amount below using the QR code, then upload a screenshot of the successful payment.</p>
+                            <p class="pay-later">Need to pay later? <a id="payLaterLink" href="#">Save this link</a>. It lets you upload your proof and check your booking at any time.</p>
+                        </div>
+                        <div id="payRoot"></div>
+                    </div>
+
+                    <!-- Done -->
+                    <div class="step-panel booker-done" id="stepDone" data-panel="done" hidden tabindex="-1">
+                        <div class="done-icon pending"><i class="far fa-hourglass-half" aria-hidden="true"></i></div>
+                        <h2>Payment submitted, awaiting confirmation</h2>
+                        <p id="doneText"></p>
+                        <p class="done-ref">Booking reference <strong id="doneRef"></strong></p>
+                        <p class="done-sub">A copy has been emailed to you. If it is not in your inbox, check your spam folder.</p>
+                        <div class="done-actions">
+                            <a class="btn-submit" id="doneStatusLink" href="#"><span>View booking status</span></a>
+                            <button type="button" class="btn-ghost" id="bAnother">Book another session</button>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="booking-footnote">
+                    Can't find a time that suits you? <a href="index.html#contact">Send me a message</a> and suggest one.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-brand">
+                <span class="brand-mark">SP</span>
+                <div>
+                    <p class="footer-name">Sandip Paudel</p>
+                    <p class="footer-role">Assistant Professor of Finance, Lumbini Banijya Campus</p>
+                </div>
+            </div>
+            <ul class="footer-links" aria-label="Footer links">
+                <li><a href="https://github.com/SandipPaudel" target="_blank" rel="noopener"><i class="fab fa-github" aria-hidden="true"></i> GitHub</a></li>
+                <li><a href="https://scholar.google.com/citations?user=TCUUU7wAAAAJ&hl=en" target="_blank" rel="noopener"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Scholar</a></li>
+                <li><a href="https://orcid.org/0000-0003-4689-7477" target="_blank" rel="noopener"><i class="fab fa-orcid" aria-hidden="true"></i> ORCID</a></li>
+            </ul>
+            <div class="footer-meta">
+                <p>&copy; <span id="currentYear">2026</span> Sandip Paudel. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    <script src="assets/js/booking-config.js"></script>
+    <script src="assets/js/booking-common.js"></script>
+    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/booking.js" defer></script>
+</body>
+</html>
