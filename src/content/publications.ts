@@ -15,6 +15,13 @@ export const publications: Publication[] = [
     doi: "https://doi.org/10.1016/j.ssaho.2026.103174",
   },
   {
+    year: 2026,
+    status: "published",
+    citation:
+      "Paudel, S. (2026). Towards Industry 5.0: a bibliometric analysis of research linking green finance, digital transformation, and ESG.",
+    // TODO: journal name, volume, pages, DOI and quartile still to be added.
+  },
+  {
     year: 2025,
     status: "published",
     citation:
@@ -96,15 +103,6 @@ export const workingPapers: Publication[] = [
     statusLabel: "In progress",
     citation:
       "Paudel, S., Neupane, P., and Sapkota, P. (2026). Long-memory and asymmetric volatility in a frontier equity market: GARCH-family evidence from NEPSE and sector indices.",
-  },
-  {
-    status: "in-progress",
-    statusLabel: "Presented; manuscript in preparation",
-    citation:
-      "Paudel, S. (2026). Towards Industry 5.0: a bibliometric analysis of research linking green finance, digital transformation, and ESG.",
-    // Stated deliberately: this is a mapping of the literature, not a set of
-    // empirical claims about Industry 5.0 outcomes.
-    note: "Bibliometric mapping of indexed publications; findings describe publication trends, co-authorship, and keyword co-occurrence in the existing literature rather than empirical claims about Industry 5.0 outcomes.",
   },
 ];
 
