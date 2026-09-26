@@ -17,6 +17,7 @@ export default function ResearchPage() {
         <SectionHeader
           kicker="Research"
           title="Research and Publications"
+          level={1}
           lede="Work in financial econometrics, market efficiency and behavioral finance, with applications to the Nepal Stock Exchange and Nepali households."
         />
       </Section>

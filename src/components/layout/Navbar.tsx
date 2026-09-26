@@ -17,7 +17,7 @@ import {
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/research", label: "Research" },
-  { href: "/consulting", label: "Consulting" },
+  { href: "/consulting", label: "Services" },
 ] as const;
 
 export function Navbar() {

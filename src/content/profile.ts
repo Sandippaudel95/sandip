@@ -10,7 +10,7 @@ export const profile = {
 
   /** One-line positioning used in the hero and page metadata. */
   tagline:
-    "Academic research in finance and economics, and consulting for organisations that need the same rigour applied to their own data.",
+    "Academic research in finance and economics, and research consultancy, review and training for students, faculty and institutions.",
 
   emails: ["sandip.paudel@lbc.edu.np", "sandippaudel1995@gmail.com"],
   phone: "+977 9857011047",
@@ -34,7 +34,7 @@ export const profileLinks: ProfileLink[] = [
 export const bio: string[] = [
   "I am an Assistant Professor in the Department of Finance at Lumbini Banijya Campus, Butwal, where I have taught since 2019. I am concurrently pursuing a PhD at DDU Gorakhpur University. My teaching covers Corporate Finance, Financial Institutions and Markets, Financial Management, Entrepreneurial Finance and Venture Capital, and Research Methodology at both undergraduate and postgraduate levels.",
   "Over the past several years I have supervised more than one hundred final-year projects and theses, and I run workshops on quantitative methods and data analysis for faculty and graduate students across Nepal.",
-  "Alongside that academic work I consult for organisations in Nepal on data analysis, business strategy and CRM workflows, bringing the same empirical standards to commercial questions that I apply to published research.",
+  "Alongside teaching I work as a research consultant: advising students and faculty on design and analysis, reviewing theses and manuscripts before submission, taking on commissioned studies, and running research training for departments across Nepal.",
 ];
 
 export const researchInterests: ResearchInterest[] = [

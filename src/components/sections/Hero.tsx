@@ -55,11 +55,11 @@ export function Hero() {
                   aria-hidden="true"
                 />
                 <h2 className="mt-3 font-serif text-base font-semibold">
-                  Professional consulting
+                  Research consultancy
                 </h2>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-                  Data analysis, CRM workflows and business strategy for
-                  organisations that need defensible evidence.
+                  Consultation, thesis and paper review, data analysis,
+                  commissioned studies and faculty training.
                 </p>
               </div>
             </div>

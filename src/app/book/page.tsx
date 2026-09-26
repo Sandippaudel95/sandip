@@ -2,12 +2,13 @@ import type { Metadata } from "next";
 import { Clock, Video, FileText } from "lucide-react";
 import { Section, SectionHeader } from "@/components/layout/Section";
 import { BookingEmbed } from "@/components/booking/BookingEmbed";
+import { PaymentPanel } from "@/components/booking/PaymentPanel";
 import { profile } from "@/content/profile";
 
 export const metadata: Metadata = {
   title: "Book a Consultation",
   description:
-    "Book a one-to-one consultation with Sandip Paudel: research supervision and methods advice for Bachelor, Master, MPhil and PhD students, or a scoping call for organisational consulting work.",
+    "Book a one-to-one research consultation with Sandip Paudel: methods and analysis advice for Bachelor, Master, MPhil and PhD students and faculty. Rs. 5,000 per hour.",
   alternates: { canonical: "/book" },
 };
 
@@ -38,7 +39,8 @@ export default function BookPage() {
         <SectionHeader
           kicker="Booking"
           title="Book a Consultation"
-          lede="One-to-one sessions for research students, and scoping calls for organisations. Pick a time that suits you below."
+          level={1}
+          lede="One-to-one sessions for students and faculty working on a thesis, a paper or an analysis. Pick a time that suits you below."
         />
       </Section>
 
@@ -79,6 +81,8 @@ export default function BookPage() {
             <BookingEmbed />
           </div>
         </div>
+
+        <PaymentPanel />
       </Section>
     </>
   );

@@ -28,15 +28,16 @@ export const metadata: Metadata = {
     template: `%s | ${profile.name}`,
   },
   description:
-    "Sandip Paudel: Assistant Professor of Finance at Lumbini Banijya Campus and PhD candidate at DDU Gorakhpur University. Research in financial econometrics and market efficiency, and consulting in data analysis, CRM workflows and business strategy.",
+    "Sandip Paudel: Assistant Professor of Finance at Lumbini Banijya Campus and PhD candidate at DDU Gorakhpur University. Research in financial econometrics and market efficiency, and research consultancy, thesis and paper review, data analysis and faculty training.",
   authors: [{ name: profile.name }],
   keywords: [
     "financial econometrics",
     "market efficiency",
     "NEPSE",
     "research consultant Nepal",
-    "data analysis consulting",
-    "business strategy Nepal",
+    "thesis review Nepal",
+    "data analysis for research",
+    "research training faculty Nepal",
   ],
   openGraph: {
     type: "website",

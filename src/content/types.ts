@@ -68,6 +68,13 @@ export interface ServicePackage {
   includes: string[];
   /** Typical engagement shape, e.g. "2-4 weeks". */
   format: string;
+  /**
+   * Headline fee. A fixed hourly rate for general sessions; specialised
+   * work is scoped and quoted, so it reads "By negotiation".
+   */
+  price: string;
+  /** Optional qualifier shown under the price. */
+  priceNote?: string;
   /** Marks the package highlighted on the pricing grid. */
   featured?: boolean;
 }

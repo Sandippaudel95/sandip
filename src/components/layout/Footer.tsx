@@ -37,7 +37,7 @@ export function Footer() {
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               Research in financial econometrics and market efficiency, and
-              consulting for organisations across Nepal.
+              research consultancy, review and training across Nepal.
             </p>
           </div>
 

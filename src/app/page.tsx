@@ -6,7 +6,7 @@ import { Hero } from "@/components/sections/Hero";
 import { About } from "@/components/sections/About";
 import { EducationTimeline } from "@/components/sections/EducationTimeline";
 import { CTA } from "@/components/sections/CTA";
-import { services } from "@/content/services";
+import { services, HOURLY_RATE_NPR } from "@/content/services";
 import { publications } from "@/content/publications";
 
 export default function HomePage() {
@@ -21,13 +21,13 @@ export default function HomePage() {
       {/* Consulting teaser */}
       <Section id="services">
         <SectionHeader
-          kicker="03 / Consulting"
-          title="Consulting services"
-          lede="Independent analysis for organisations that need evidence they can act on and defend."
+          kicker="03 / Services"
+          title="Research consultancy and training"
+          lede={`One-to-one sessions at ${HOURLY_RATE_NPR} per hour, and longer engagements scoped and quoted to the work.`}
         />
 
         <div className="mt-10 grid gap-6 lg:grid-cols-3">
-          {services.map((pkg) => (
+          {services.slice(0, 3).map((pkg) => (
             <article
               key={pkg.id}
               className="flex flex-col rounded-xl border bg-card p-6"
@@ -37,6 +37,9 @@ export default function HomePage() {
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {pkg.summary}
+              </p>
+              <p className="mt-3 font-serif text-base font-semibold text-navy">
+                {pkg.price}
               </p>
               <ul className="mt-4 space-y-1.5">
                 {pkg.includes.slice(0, 3).map((line) => (
@@ -61,7 +64,7 @@ export default function HomePage() {
 
         <Button asChild variant="outline" className="mt-8">
           <Link href="/consulting">
-            All consulting services
+            All services and fees
             <ArrowRight aria-hidden="true" />
           </Link>
         </Button>

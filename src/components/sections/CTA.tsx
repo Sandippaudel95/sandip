@@ -6,7 +6,7 @@ import { profile } from "@/content/profile";
 
 export function CTA({
   title = "Work with me",
-  body = "Whether it is a thesis that has stalled, a dataset nobody has interrogated, or a decision that needs independent analysis, the first conversation is the same: what question are we answering?",
+  body = "Whether it is a thesis that has stalled, a dataset you are not sure how to analyse, or a paper coming back from reviewers, the first conversation is the same: what question are we answering?",
 }: {
   title?: string;
   body?: string;

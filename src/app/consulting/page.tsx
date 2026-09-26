@@ -4,9 +4,9 @@ import { ServicePackages } from "@/components/sections/ServicePackages";
 import { CTA } from "@/components/sections/CTA";
 
 export const metadata: Metadata = {
-  title: "Consulting Services",
+  title: "Research Consultancy and Training",
   description:
-    "Consulting in data analysis and econometrics, CRM and operational workflows, and business and economic strategy, for organisations in Nepal and beyond.",
+    "Research consultation, thesis and paper review, data analysis, commissioned research and faculty training with Sandip Paudel. General consultation Rs. 5,000 per hour; other work quoted by negotiation.",
   alternates: { canonical: "/consulting" },
 };
 
@@ -33,7 +33,7 @@ const process = [
     step: "04",
     title: "Handover",
     detail:
-      "Report, underlying scripts and a walkthrough session, so your team can rerun the analysis later.",
+      "Report, feedback or analysis files, plus a session to walk through them so you can carry the work forward yourself.",
   },
 ];
 
@@ -42,9 +42,10 @@ export default function ConsultingPage() {
     <>
       <Section className="pb-0">
         <SectionHeader
-          kicker="Consulting"
-          title="Consulting Services"
-          lede="The same empirical standards I apply to published research, brought to commercial and institutional questions."
+          kicker="Services"
+          title="Research Consultancy and Training"
+          level={1}
+          lede="Support for students, faculty and institutions at every stage of a research project, from designing it to getting it published."
         />
       </Section>
 
@@ -75,8 +76,8 @@ export default function ConsultingPage() {
       </Section>
 
       <CTA
-        title="Start with a scoping call"
-        body="Bring the question and whatever data you have. If the work is not a good fit for me, I will say so and point you elsewhere."
+        title="Start with a conversation"
+        body="Bring the question and whatever you have so far, a draft, a dataset or just a topic. If the work is not a good fit for me, I will say so and point you to someone better placed."
       />
     </>
   );

@@ -49,12 +49,17 @@ export function SectionHeader({
   title,
   lede,
   className,
+  /** Use 1 for the page's own title. Every page needs exactly one h1. */
+  level = 2,
 }: {
   kicker?: string;
   title: string;
   lede?: string;
   className?: string;
+  level?: 1 | 2;
 }) {
+  const Heading = level === 1 ? "h1" : "h2";
+
   return (
     <header className={cn("max-w-3xl", className)}>
       {kicker && (
@@ -62,9 +67,9 @@ export function SectionHeader({
           {kicker}
         </p>
       )}
-      <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+      <Heading className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
         {title}
-      </h2>
+      </Heading>
       {lede && (
         <p className="mt-4 text-lg leading-relaxed text-muted-foreground text-pretty">
           {lede}

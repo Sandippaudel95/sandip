@@ -1,63 +1,122 @@
 import type { ServicePackage } from "./types";
 
 /* ==========================================================================
-   Consulting packages
+   Research consultation, consultancy and training
 
-   PLACEHOLDER CONTENT. The three packages below are built around the areas
-   Sandip named (data analysis, CRM workflows, business strategy) and are
-   written to be edited rather than kept as-is. Changing this array changes
-   the /consulting page and the teaser on the landing page; no markup edits
-   are needed. Add or remove packages freely.
+   SCOPE (confirmed by Sandip): this is academic research work, not business
+   or enterprise consulting. He advises students and faculty, takes on
+   commissioned research, and delivers research training to faculties.
+
+   PRICING (confirmed by Sandip):
+     - General consultation: Rs. 5,000 per hour.
+     - Everything else is scoped and quoted by negotiation.
+
+   Editing this array changes /consulting and the landing page teaser; no
+   markup changes are needed.
    ========================================================================== */
+
+export const HOURLY_RATE_NPR = "Rs. 5,000";
 
 export const services: ServicePackage[] = [
   {
-    id: "data-analysis",
-    name: "Data Analysis and Econometrics",
+    id: "general-consultation",
+    name: "General Consultation",
     summary:
-      "Turning a dataset you already hold into findings you can defend to a board, a regulator or a referee.",
+      "An hour of focused, one-to-one advice on the research problem you are stuck on.",
     audience:
-      "Firms, NGOs and public bodies sitting on operational or survey data, and research teams needing methodological support.",
+      "Bachelor, Master, MPhil and PhD students, and faculty colleagues wanting a second opinion before committing to an approach.",
     includes: [
-      "Scoping session to define the question and the evidence that answers it",
-      "Data cleaning, validation and documentation of the working dataset",
-      "Modelling: panel and time-series methods, forecasting, significance testing",
-      "Written report with interpretation, caveats and limitations stated plainly",
-      "Reproducible scripts in R or Python, handed over with the report",
+      "One-to-one session, online or in person",
+      "Advice on research design, method choice or analysis strategy",
+      "Feedback on the draft, data or output you bring",
+      "A clear view of what to do next",
     ],
-    format: "Typically 2-6 weeks, depending on data condition",
+    format: "Booked by the hour",
+    price: `${HOURLY_RATE_NPR} per hour`,
     featured: true,
   },
   {
-    id: "crm-workflows",
-    name: "CRM and Operational Workflows",
+    id: "thesis-review",
+    name: "Thesis Review",
     summary:
-      "Designing the customer and data workflows that let a growing organisation stop working from spreadsheets.",
+      "A full read of your thesis with written feedback on argument, method and analysis before you submit.",
     audience:
-      "SMEs and institutions scaling past manual record-keeping, or replacing a CRM that nobody uses.",
+      "Master, MPhil and PhD candidates approaching submission, or responding to examiner comments.",
     includes: [
-      "Audit of current workflows, data capture points and where records break down",
-      "Process mapping and a target-state design your team can actually follow",
-      "Platform selection advice, vendor-neutral and matched to your budget",
-      "Data migration planning, including deduplication and field mapping",
-      "Staff walkthrough and written operating documentation",
+      "Structured written feedback across the full manuscript",
+      "Review of methodology and whether the analysis supports the claims",
+      "Comments on structure, argument and clarity",
+      "Follow-up session to work through the feedback",
     ],
-    format: "Typically 3-8 weeks, phased around your operations",
+    format: "Scoped to length and stage",
+    price: "By negotiation",
+    priceNote: "Quoted after seeing the manuscript",
   },
   {
-    id: "business-strategy",
-    name: "Business and Economic Strategy",
+    id: "paper-review",
+    name: "Paper Review",
     summary:
-      "Independent economic analysis behind a decision that is expensive to get wrong.",
+      "Pre-submission review of a journal article, or help responding to reviewers after a revise-and-resubmit.",
     audience:
-      "Leadership teams weighing an investment, a market entry, a pricing change or a funding case.",
+      "Researchers and faculty preparing a manuscript for submission, or revising after peer review.",
     includes: [
-      "Market and sector analysis grounded in published and primary data",
-      "Financial modelling: scenarios, sensitivities and break-even analysis",
-      "Feasibility assessment and commissioned research reports",
-      "Board-ready presentation of findings and trade-offs",
-      "Follow-up session once the decision is on the table",
+      "Critical read against the target journal's expectations",
+      "Review of methods, results and interpretation",
+      "Help drafting a response-to-reviewers letter",
+      "Advice on journal fit where useful",
     ],
-    format: "Typically 4-8 weeks, or ongoing retainer",
+    format: "Scoped to manuscript and journal",
+    price: "By negotiation",
+    priceNote: "Quoted after seeing the manuscript",
+  },
+  {
+    id: "data-analysis",
+    name: "Data Analysis",
+    summary:
+      "Getting from collected data to results you can defend in a viva or to a referee.",
+    audience:
+      "Research students and faculty who have data in hand and need the analysis done properly, or checked.",
+    includes: [
+      "Data cleaning, coding and validation",
+      "Choosing methods that actually suit the data and the question",
+      "Estimation and diagnostics in R or Python, or the package your department uses",
+      "Interpretation of output, with assumptions and limitations stated",
+      "Help writing up the results and methods sections",
+    ],
+    format: "Scoped to the dataset and methods",
+    price: "By negotiation",
+  },
+  {
+    id: "research-consultancy",
+    name: "Research Consultancy",
+    summary:
+      "Commissioned studies for campuses, institutions and associations that need independent evidence.",
+    audience:
+      "Colleges, institutions, chambers and organisations commissioning a study or an evaluation.",
+    includes: [
+      "Study design, sampling strategy and instrument development",
+      "Fieldwork planning and oversight",
+      "Analysis and interpretation",
+      "A written report for your board, funder or membership",
+    ],
+    format: "Scoped per study",
+    price: "By negotiation",
+    priceNote: "Recent example: Butwal Industrial Trade Fair effectiveness study",
+  },
+  {
+    id: "research-training",
+    name: "Research Training and Workshops",
+    summary:
+      "Hands-on sessions for faculty and graduate students on research methods, data analysis and publishing.",
+    audience:
+      "Campuses and departments running faculty development programmes, often UGC supported.",
+    includes: [
+      "Quantitative methods and research design",
+      "Data analysis workshops, worked on participants' own data",
+      "AI tools in research and publication, and research ethics",
+      "Sessions sized to a half day, a full day or a multi-day cohort",
+    ],
+    format: "Scoped to cohort size and duration",
+    price: "By negotiation",
   },
 ];

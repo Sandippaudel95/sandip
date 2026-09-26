@@ -41,7 +41,7 @@ No markup changes needed. Everything lives in `src/content/`:
 | `conferences.ts` | Conference presentations |
 | `training.ts` | Training and workshops |
 | `education.ts` | Degrees |
-| `services.ts` | Consulting packages — **placeholder copy, needs your wording** |
+| `services.ts` | Services and fees. `HOURLY_RATE_NPR` sets the hourly rate shown on `/`, `/consulting` and `/book` |
 
 ## Deploying
 
@@ -53,6 +53,10 @@ Two files in `public/` must stay there:
 
 - `CNAME` — the custom domain unbinds on the first deploy without it
 - `.nojekyll` — without it Jekyll strips the `_next/` directory and the site loses all CSS and JS
+
+## Adding the payment QR
+
+Save the image as `public/images/payment-qr.png` (`.jpg` and `.webp` also work) and rebuild. `PaymentPanel` checks for the file at build time, so there is no config flag to set, and if the file is absent the panel simply omits the QR rather than showing a broken image.
 
 ## Replacing the portrait
 
