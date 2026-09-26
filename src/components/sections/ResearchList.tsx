@@ -183,8 +183,24 @@ export function ResearchList() {
               )}
               <h3 className="font-semibold">{item.title}</h3>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                {item.detail}
+                {item.organizer}
               </p>
+              {item.detail && (
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+                  {item.detail}
+                </p>
+              )}
+              <Badge
+                variant="outline"
+                className={cn(
+                  "mt-2.5 text-xs",
+                  item.role === "Trainee"
+                    ? "bg-secondary text-muted-foreground border-transparent"
+                    : "bg-navy-50 text-navy border-navy/20",
+                )}
+              >
+                {item.role}
+              </Badge>
             </div>
           </li>
         ))}

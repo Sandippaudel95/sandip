@@ -56,10 +56,24 @@ export interface Conference {
   featured?: boolean;
 }
 
+/** Whether Sandip delivered the session or attended it. */
+export type TrainingRole =
+  | "Session Expert"
+  | "Trainer"
+  | "Editor-in-Chief"
+  | "Trainee"
+  | "Certified Master Trainer";
+
 export interface Training {
+  /** As printed on the programme, e.g. "30-31 January 2026". */
   date: string;
+  /** Held separately from `date`, which is free text, for sorting. */
+  year: number;
   title: string;
-  detail: string;
+  organizer: string;
+  role: TrainingRole;
+  /** Extra context: modules covered, cohort, scores. */
+  detail?: string;
   /** A formal qualification rather than a session delivered or attended. */
   credential?: boolean;
   /** Short award line shown on a highlighted entry, e.g. "UGC certified". */

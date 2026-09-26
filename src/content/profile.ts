@@ -1,6 +1,7 @@
 import type { ProfileLink, ResearchInterest, Stat } from "./types";
 import { conferences } from "./conferences";
 import { publications } from "./publications";
+import { training } from "./training";
 
 export const profile = {
   name: "Sandip Paudel",
@@ -61,12 +62,11 @@ export const researchInterests: ResearchInterest[] = [
   },
 ];
 
-/* Publication and conference counts are derived, so the headline figures
-   can never drift from the lists further down the page. The training
-   figure is the real career total; the site shows a selection of it. */
+/* All three counts are derived from their arrays, so the headline figures
+   can never drift from the lists further down the page. */
 export const stats: Stat[] = [
   { value: "100+", label: "Students Mentored" },
   { value: String(publications.length), label: "Peer-Reviewed Articles" },
   { value: String(conferences.length), label: "Conference Presentations" },
-  { value: "13", label: "Research Trainings" },
+  { value: String(training.length), label: "Research Trainings" },
 ];
