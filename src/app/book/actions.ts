@@ -1,0 +1,165 @@
+"use server";
+
+import { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/prisma";
+import { bookingSchema, fieldErrorsOf, type ActionResult } from "@/lib/validation";
+import {
+  configuredTimes,
+  dailyCapMessage,
+  earliestStart,
+  hoursBookedBy,
+  lastBookableDate,
+} from "@/lib/slots";
+import { addHours, nepalToUtc } from "@/lib/time";
+import {
+  sendAdminNotice,
+  sendBookingReceived,
+  type BookingEmailData,
+} from "@/lib/email";
+import { MAX_HOURS_PER_CLIENT_PER_DAY } from "@/content/availability";
+
+const SLOT_TAKEN =
+  "That time has just been taken by someone else. Please choose another slot.";
+
+export async function createBooking(
+  _prev: ActionResult | null,
+  formData: FormData,
+): Promise<ActionResult> {
+  const parsed = bookingSchema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) {
+    return {
+      ok: false,
+      message: "Please check the highlighted fields.",
+      fieldErrors: fieldErrorsOf(parsed.error),
+    };
+  }
+
+  const input = parsed.data;
+
+  // Honeypot. Silently accept so a bot learns nothing, but save nothing.
+  if (input.website) return { ok: true, reference: "ok" };
+
+  const {
+    date,
+    timeSlot,
+    durationHours,
+    clientName,
+    clientEmail,
+    consultationTopic,
+    transactionId,
+  } = input;
+
+  const startsAt = nepalToUtc(date, timeSlot);
+  const endsAt = nepalToUtc(date, addHours(timeSlot, durationHours));
+
+  // The slot must be one we actually offer, and every hour it spans must be
+  // inside opening hours. Without this a crafted POST could book 03:00.
+  const offered = configuredTimes(date);
+  for (let h = 0; h < durationHours; h += 1) {
+    if (!offered.includes(addHours(timeSlot, h))) {
+      return { ok: false, message: "That time is not available for booking." };
+    }
+  }
+
+  if (startsAt < earliestStart()) {
+    return {
+      ok: false,
+      message: "That time is too soon. Please choose a later slot.",
+    };
+  }
+
+  if (date > lastBookableDate()) {
+    return { ok: false, message: "That date is too far ahead." };
+  }
+
+  const [y, m, d] = date.split("-").map(Number);
+
+  let created;
+  try {
+    created = await prisma.$transaction(async (tx) => {
+      // Serialise concurrent submissions from the same person for the same
+      // day. Under READ COMMITTED both could otherwise read the old total and
+      // both pass the cap. The lock is held to the end of the transaction and
+      // only blocks this one email-and-date pair.
+      const lockKey = `${clientEmail.toLowerCase()}|${date}`;
+      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${lockKey}))`;
+
+      // Daily cap, per client, read on the transaction's own connection.
+      const already = await hoursBookedBy(clientEmail, date, tx);
+      if (already + durationHours > MAX_HOURS_PER_CLIENT_PER_DAY) {
+        throw new CapExceeded(dailyCapMessage(already));
+      }
+
+      return tx.booking.create({
+        data: {
+          clientName,
+          clientEmail,
+          consultationTopic,
+          date: new Date(Date.UTC(y, m - 1, d)),
+          timeSlot,
+          durationHours,
+          startsAt,
+          endsAt,
+          transactionId,
+        },
+      });
+    });
+  } catch (err) {
+    if (err instanceof CapExceeded) {
+      return { ok: false, message: err.message };
+    }
+    // The exclusion constraint rejected an overlap: someone booked this slot
+    // between the availability query and this insert. This is the race the
+    // constraint exists to catch, and it is expected under load.
+    if (isOverlapViolation(err)) {
+      return { ok: false, message: SLOT_TAKEN };
+    }
+    console.error("[booking] create failed:", err);
+    return {
+      ok: false,
+      message: "Something went wrong saving your booking. Please try again.",
+    };
+  }
+
+  // Email must never fail the booking: it is already saved.
+  const payload: BookingEmailData = {
+    id: created.id,
+    clientName: created.clientName,
+    clientEmail: created.clientEmail,
+    consultationTopic: created.consultationTopic,
+    dateKey: date,
+    timeSlot: created.timeSlot,
+    durationHours: created.durationHours,
+    transactionId: created.transactionId,
+  };
+
+  const [toClient, toAdmin] = await Promise.all([
+    sendBookingReceived(payload),
+    sendAdminNotice(payload),
+  ]);
+
+  if (!toClient || !toAdmin) {
+    await prisma.booking
+      .update({ where: { id: created.id }, data: { emailFailed: true } })
+      .catch((e) => console.error("[booking] could not flag email failure:", e));
+  }
+
+  return { ok: true, reference: created.id };
+}
+
+class CapExceeded extends Error {}
+
+/** Postgres raises 23P01 (exclusion_violation) when the ranges overlap. */
+function isOverlapViolation(err: unknown): boolean {
+  if (err instanceof Prisma.PrismaClientKnownRequestError) {
+    // P2010 wraps a raw database error; P2002 is a unique violation.
+    if (err.code === "P2002") return true;
+    const meta = err.meta as { code?: string } | undefined;
+    if (meta?.code === "23P01") return true;
+  }
+  return (
+    err instanceof Error &&
+    (err.message.includes("23P01") ||
+      err.message.includes("Booking_no_overlap"))
+  );
+}

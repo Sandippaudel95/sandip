@@ -1,13 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // GitHub Pages serves static files only: no SSR, API routes or server actions.
-  output: "export",
+  // Runs as a Node server on Vercel. The booking system needs Server
+  // Actions, cookies and middleware, none of which a static export
+  // supports, so `output: "export"` was removed here.
 
-  // Static export runs no image optimizer, so images ship as authored.
-  images: { unoptimized: true },
-
-  // Emit /book/index.html rather than /book.html, which Pages resolves cleanly.
+  // Kept from the static build so existing URLs stay valid.
   trailingSlash: true,
 };
 

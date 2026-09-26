@@ -1,0 +1,64 @@
+// Booking system for sandipaudel.com.np
+//
+// Times are stored in UTC and rendered in Asia/Kathmandu, matching how the
+// rest of the site formats dates.
+//
+// Overlap prevention is enforced by a Postgres exclusion constraint added in
+// the migration, not by application code. See prisma/migrations for the SQL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PaymentStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+model Booking {
+  id                String @id @default(cuid())
+  clientName        String
+  clientEmail       String
+  consultationTopic String
+
+  /// Calendar date in Nepal time, for the per-client daily cap.
+  date          DateTime @db.Date
+  /// Start time in Nepal time, "HH:mm".
+  timeSlot      String
+  durationHours Int      @default(1)
+
+  /// UTC instants derived from date + timeSlot in createBooking. These are
+  /// what the overlap constraint operates on; nothing else should write them.
+  startsAt DateTime
+  endsAt   DateTime
+
+  transactionId String
+
+  paymentStatus PaymentStatus @default(PENDING)
+  bookingStatus BookingStatus @default(PENDING)
+
+  /// Reason shown to the client when rejecting or cancelling.
+  adminNote String?
+
+  /// Set when a notification email could not be sent, so the dashboard can
+  /// flag that the client was never told.
+  emailFailed Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+  @@index([clientEmail, date])
+  @@index([bookingStatus, createdAt])
+}
