@@ -19,10 +19,15 @@ export function ConferenceCard({ item }: { item: Conference }) {
         </p>
       )}
       <p className="text-sm text-muted-foreground">{item.date}</p>
+
       <h3 className="mt-1.5 text-base leading-snug font-semibold">
         {item.paper}
       </h3>
-      <p className="mt-auto pt-3 text-sm text-muted-foreground">{item.venue}</p>
+
+      <div className="mt-auto pt-3 text-sm">
+        <p className="font-medium text-navy">{item.conference}</p>
+        <p className="mt-0.5 text-muted-foreground">{item.venue}</p>
+      </div>
     </article>
   );
 }

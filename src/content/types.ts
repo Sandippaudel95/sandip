@@ -32,9 +32,15 @@ export interface Publication {
 }
 
 export interface Conference {
-  date: string;
-  paper: string;
+  /** Name of the event itself. */
+  conference: string;
+  /** Host institution and place. */
   venue: string;
+  paper: string;
+  /** As printed on the programme, e.g. "20-21 February 2026". */
+  date: string;
+  /** Held separately from `date`, which is free text, for sorting. */
+  year: number;
   /** Present only where an award was given. */
   award?: string;
   /**

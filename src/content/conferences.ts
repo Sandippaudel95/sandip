@@ -1,94 +1,162 @@
 import type { Conference } from "./types";
 
-/* Selected conference presentations, newest first. */
+/* ==========================================================================
+   Conference presentations, newest first.
+
+   Paper titles are set in sentence case to match the publication list;
+   acronyms and proper nouns are preserved as given.
+
+   `featured: true` surfaces an entry on /research. Keep it to two or three
+   — currently both award winners and the most recent international paper.
+   Everything here appears on /research/conferences.
+   ========================================================================== */
+
 export const conferences: Conference[] = [
   {
-    date: "March 2026",
+    year: 2026,
+    date: "23-24 March 2026",
+    conference: "1st National Conference",
+    venue: "Rapti Babai Campus, Dang, Nepal",
     paper:
       "Towards Industry 5.0: a bibliometric analysis of green finance, digital transformation, and ESG research",
-    venue: "1st National Conference, Rapti Babai Campus, Dang, Nepal",
   },
   {
-    date: "February 2026",
+    year: 2026,
+    date: "20-21 February 2026",
+    conference:
+      "1st International Conference on the Future of Work: Innovations and Sustainability in Global Management Practices",
+    venue: "Birgunj Public College, Birgunj, Nepal",
     paper:
       "Market efficiency under permanent short-sale bans: comparative evidence from Nepal, India, and Pakistan",
-    venue:
-      "1st International Conference on the Future of Work, Birgunj Public College",
     featured: true,
   },
   {
-    date: "February 2026",
+    year: 2026,
+    date: "20-21 February 2026",
+    conference:
+      "1st International Conference on the Future of Work: Innovations and Sustainability in Global Management Practices",
+    venue: "Birgunj Public College, Birgunj, Nepal",
     paper:
       "Socio-cultural drivers of women's empowerment in rural Nepal: the mediating role of family support",
-    venue:
-      "1st International Conference on the Future of Work, Birgunj Public College",
   },
   {
-    date: "February 2026",
+    year: 2026,
+    date: "20-21 February 2026",
+    conference:
+      "1st International Conference on the Future of Work: Innovations and Sustainability in Global Management Practices",
+    venue: "Birgunj Public College, Birgunj, Nepal",
     paper:
-      "An experimental study of learning method in financial concept retention among BBA-FA students",
-    venue:
-      "1st International Conference on the Future of Work, Birgunj Public College",
+      "An experimental study of learning method in financial concept retention among BBA-FA students of Lumbini Banijya Campus",
   },
   {
-    date: "September 2025",
+    year: 2025,
+    date: "6-7 September 2025",
+    conference: "RUEC 1st International Research Conference 2025",
+    venue: "Rajshahi University Education Club, Rajshahi, Bangladesh",
     paper:
-      "Non-linear properties of the Nepalese capital market: an MFDFA approach",
-    venue:
-      "RUEC 1st International Research Conference, Rajshahi, Bangladesh",
+      "Non-linear properties of Nepalese capital market: a multifractal detrended fluctuation (MFDFA) approach",
     award: "Best Oral Presenter",
     featured: true,
   },
   {
-    date: "June 2025",
+    year: 2025,
+    date: "20-21 June 2025",
+    conference:
+      "1st National Conference on Bridging Knowledge & Practice: Management & Social Science for Sustainable Localization",
+    venue: "Butwal Kalika Campus, Butwal, Rupandehi, Nepal",
     paper:
-      "Role of energy consumption in enhancing economic growth: evidence from Nepal",
-    venue: "Butwal Kalika Campus, Rupandehi, Nepal",
+      "Role of energy consumption to enhance economic growth: evidence from Nepal",
   },
   {
-    date: "May 2025",
-    paper:
-      "Quantitative trading strategies, backtesting, and performance analysis of NEPSE using Python",
+    year: 2025,
+    date: "30 May 2025",
+    conference:
+      "1st National Conference on Management, IT, Education & Social Science",
     venue: "Mahakavi Devkota Campus, Sunwal, Nawalparasi, Nepal",
+    paper:
+      "Quantitative trading strategies, back-testing and performance analysis of the NEPSE using Python: a data-driven market exploration",
   },
   {
-    date: "May 2025",
+    year: 2025,
+    date: "10-11 May 2025",
+    conference: "1st National Conference 2025",
+    venue: "Marsyangdi Multiple Campus, Besishahar, Lamjung, Nepal",
     paper:
-      "Multifractal properties in the Nepalese stock market through DFA: a comprehensive exploration",
-    venue: "Marsyangdi Multiple Campus, Lamjung, Nepal",
+      "Multifractal properties in the Nepalese stock market through detrended fluctuation analysis (DFA): a comprehensive exploration",
   },
   {
-    date: "February 2025",
-    paper:
-      "Navigating personal finance: how financial literacy, behavior, and attitude shape financial management among college students",
+    year: 2025,
+    date: "27-28 February 2025",
+    conference:
+      "1st International Conference on Emerging Research Trends in Education, Humanities, Management and Science",
     venue: "Kailali Multiple Campus, Dhangadhi, Nepal",
+    paper:
+      "Navigating personal finance: how financial literacy, behavior, and attitude shape financial management among college students of Rupandehi District",
   },
   {
-    date: "July 2024",
+    year: 2024,
+    date: "29-30 November 2024",
+    conference:
+      "4th International Conference on Global Innovations in Management and Social Science",
+    venue: "Lumbini Banijya Campus, Butwal, Rupandehi, Nepal",
+    paper: "Financial inclusion in Nepal: a case of Rampur, Palpa",
+  },
+  {
+    year: 2024,
+    date: "5-6 July 2024",
+    conference:
+      "International Conference on Sustainable Business and Management 2024",
+    venue: "Gupteshwor Mahadev Multiple Campus, Pokhara, Kaski, Nepal",
     paper:
       "Predictive modeling of Nepal Stock Exchange index: an ARIMA approach",
-    venue:
-      "International Conference on Sustainable Business and Management, Pokhara",
-    award: "Best Paper Presenter",
+    award: "Best Paper Presenter of Technical Session",
     featured: true,
+  },
+  {
+    year: 2023,
+    date: "14-15 December 2023",
+    conference: "National Conference on Nepalese Higher Education",
+    venue: "Balkumari College, Narayangarh, Chitwan, Nepal",
+    paper:
+      "People's experience towards corruption in public sectors' service delivery",
+  },
+  {
+    year: 2020,
+    date: "4 December 2020",
+    conference:
+      "One Day International Webinar on Recent Developments in Business Management & Social Sciences",
+    venue: "Lumbini Banijya Campus, Butwal, Rupandehi, Nepal",
+    paper:
+      "The relationship among the inflation, broad money, and economic growth: evidence from Nepal",
+  },
+  {
+    year: 2018,
+    date: "16-17 November 2018",
+    conference:
+      "International Seminar on Redefining Management Education in Nepal",
+    venue: "Lumbini Banijya Campus, Butwal, Rupandehi, Nepal",
+    paper:
+      "Determinants of profitability in commercial bank: empirical evidence from Nepal",
+  },
+  {
+    year: 2018,
+    date: "6-9 August 2018",
+    conference:
+      "11th Triennial Conference of the Association of Asia Pacific Operational Research Societies (APORS) on Operations Research and Development",
+    venue: "Operational Research Society of Nepal",
+    paper: "Import, export and economic growth of Nepal: empirical analysis",
   },
 ];
 
-/** Year parsed from the trailing token of `date`, e.g. "March 2026" -> 2026. */
-export function conferenceYear(c: Conference): number {
-  return Number(c.date.trim().split(/\s+/).pop());
-}
-
 export const featuredConferences = conferences.filter((c) => c.featured);
 
-/** All conferences, newest year first, for /research/conferences. */
+/** All conferences grouped by year, newest year first. */
 export function conferencesByYear(): { year: number; items: Conference[] }[] {
   const groups = new Map<number, Conference[]>();
   for (const c of conferences) {
-    const y = conferenceYear(c);
-    const bucket = groups.get(y);
+    const bucket = groups.get(c.year);
     if (bucket) bucket.push(c);
-    else groups.set(y, [c]);
+    else groups.set(c.year, [c]);
   }
   return [...groups.entries()]
     .sort((a, b) => b[0] - a[0])
