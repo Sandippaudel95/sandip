@@ -10,6 +10,7 @@ export const publications: Publication[] = [
     citation:
       "Paudel, S. (2026). Non-linear properties of Nepalese capital market: A multifractal detrended fluctuation analysis approach.",
     outlet: "Social Sciences & Humanities Open, 14.",
+    quartile: "Q1",
     // The old link carried a trailing period, which 404s at doi.org.
     doi: "https://doi.org/10.1016/j.ssaho.2026.103174",
   },

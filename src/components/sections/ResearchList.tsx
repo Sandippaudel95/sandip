@@ -16,6 +16,16 @@ import { researchInterests } from "@/content/profile";
 
 /* Status badges reuse the restrained status palette from the old site
    rather than introducing new hues. */
+const quartileStyles: Record<
+  NonNullable<Publication["quartile"]>,
+  string
+> = {
+  Q1: "bg-[#d1fae5] text-[#065f46] border-[#065f46]/20",
+  Q2: "bg-[#dbeafe] text-[#1e40af] border-[#1e40af]/20",
+  Q3: "bg-[#fef3c7] text-[#b45309] border-[#b45309]/20",
+  Q4: "bg-secondary text-secondary-foreground border-transparent",
+};
+
 const statusStyles: Record<PublicationStatus, string> = {
   published: "bg-[#d1fae5] text-[#065f46] border-transparent",
   "under-review": "bg-[#dbeafe] text-[#1e40af] border-transparent",
@@ -25,12 +35,30 @@ const statusStyles: Record<PublicationStatus, string> = {
 
 function Citation({ item }: { item: Publication }) {
   return (
-    <li className="border-b py-5 last:border-b-0">
+    <li
+      className={cn(
+        "border-b py-5 last:border-b-0",
+        item.quartile === "Q1" &&
+          "-mx-4 rounded-lg border-b-0 bg-[#d1fae5]/25 px-4",
+      )}
+    >
       <div className="flex flex-wrap items-center gap-2">
         {item.year && (
           <span className="font-serif text-sm font-semibold text-navy tabular-nums">
             {item.year}
           </span>
+        )}
+        {item.quartile && (
+          <Badge
+            variant="outline"
+            className={cn(
+              "text-xs font-semibold",
+              quartileStyles[item.quartile],
+            )}
+            title={`${item.quartile} journal`}
+          >
+            {item.quartile} journal
+          </Badge>
         )}
         {item.statusLabel && (
           <Badge

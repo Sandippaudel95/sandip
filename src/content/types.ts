@@ -20,6 +20,11 @@ export interface Publication {
   /** Journal or outlet, rendered in the serif accent. */
   outlet?: string;
   doi?: string;
+  /**
+   * Journal ranking quartile (Scimago/JCR). Rendered as a coloured badge,
+   * so set it on any paper whose outlet is ranked.
+   */
+  quartile?: "Q1" | "Q2" | "Q3" | "Q4";
   /** Shown instead of a DOI for work not yet published. */
   statusLabel?: string;
   /** Scope or method caveats we want stated plainly alongside the title. */
