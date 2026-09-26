@@ -36,7 +36,13 @@ export interface Conference {
   conference: string;
   /** Host institution and place. */
   venue: string;
-  paper: string;
+  /**
+   * Title of the paper presented. Absent for an attendance-only
+   * appearance, where the event name becomes the card's heading.
+   */
+  paper?: string;
+  /** Track or stream, where the event ran them. */
+  track?: string;
   /** As printed on the programme, e.g. "20-21 February 2026". */
   date: string;
   /** Held separately from `date`, which is free text, for sorting. */
@@ -54,6 +60,10 @@ export interface Training {
   date: string;
   title: string;
   detail: string;
+  /** A formal qualification rather than a session delivered or attended. */
+  credential?: boolean;
+  /** Short award line shown on a highlighted entry, e.g. "UGC certified". */
+  badge?: string;
 }
 
 export interface EducationEntry {

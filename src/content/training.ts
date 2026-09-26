@@ -3,6 +3,14 @@ import type { Training } from "./types";
 /* Selected training delivered and received, newest first. */
 export const training: Training[] = [
   {
+    date: "Jan 2026",
+    title: "Master Training of Trainers (MTOT), Faculty Professional Development Programme",
+    detail:
+      "Certified Master Trainer. University Grants Commission (UGC), Nepal. Modules covered teaching excellence, curriculum design, student-centered pedagogies, assessment and feedback, inclusive teaching, digital and blended learning, research supervision, the Scholarship of Teaching and Learning (SOTL), and institutional quality assurance.",
+    credential: true,
+    badge: "UGC certified",
+  },
+  {
     date: "Jun 2026",
     title: "ICT Integration in Research",
     detail:

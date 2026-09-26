@@ -14,6 +14,16 @@ import type { Conference } from "./types";
 export const conferences: Conference[] = [
   {
     year: 2026,
+    date: "23 August 2026",
+    conference: "Alumni Conclave 2026",
+    venue:
+      "Vinod Gupta School of Management, Indian Institute of Technology Kharagpur, India",
+    track: "Economics, Strategy & Management (ESTM)",
+    // Certificate records participation in the ESTM track and names no
+    // paper, so none is claimed here.
+  },
+  {
+    year: 2026,
     date: "23-24 March 2026",
     conference: "1st National Conference",
     venue: "Rapti Babai Campus, Dang, Nepal",
@@ -149,6 +159,9 @@ export const conferences: Conference[] = [
 ];
 
 export const featuredConferences = conferences.filter((c) => c.featured);
+
+/** Appearances where a paper was presented, as opposed to attended. */
+export const presentations = conferences.filter((c) => c.paper);
 
 /** All conferences grouped by year, newest year first. */
 export function conferencesByYear(): { year: number; items: Conference[] }[] {

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ExternalLink, ArrowRight } from "lucide-react";
+import { ExternalLink, ArrowRight, BadgeCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ConferenceCard } from "./ConferenceCard";
 import { Badge } from "@/components/ui/badge";
@@ -155,23 +155,32 @@ export function ResearchList() {
       </div>
       <Button asChild variant="outline" className="mt-6">
         <Link href="/research/conferences">
-          See all {conferences.length} conference presentations
+          See all {conferences.length} conferences
           <ArrowRight aria-hidden="true" />
         </Link>
       </Button>
 
       {/* Training */}
-      <Subhead>Selected training and workshops</Subhead>
+      <Subhead>Training, credentials and workshops</Subhead>
       <ul className="mt-6 divide-y rounded-lg border bg-card">
         {training.map((item) => (
           <li
             key={`${item.date}-${item.title}`}
-            className="grid gap-1 p-5 sm:grid-cols-[8rem_1fr] sm:gap-5"
+            className={cn(
+              "grid gap-1 p-5 sm:grid-cols-[8rem_1fr] sm:gap-5",
+              item.credential && "bg-accent/50",
+            )}
           >
             <p className="text-sm font-medium text-muted-foreground">
               {item.date}
             </p>
             <div>
+              {item.badge && (
+                <Badge className="mb-2 bg-navy text-white hover:bg-navy">
+                  <BadgeCheck className="size-3.5" aria-hidden="true" />
+                  {item.badge}
+                </Badge>
+              )}
               <h3 className="font-semibold">{item.title}</h3>
               <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                 {item.detail}

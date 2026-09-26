@@ -111,6 +111,7 @@ export const services: ServicePackage[] = [
     audience:
       "Campuses and departments running faculty development programmes, often UGC supported.",
     includes: [
+      "Delivered by a UGC-certified Master Trainer (MTOT)",
       "Quantitative methods and research design",
       "Data analysis workshops, worked on participants' own data",
       "AI tools in research and publication, and research ethics",

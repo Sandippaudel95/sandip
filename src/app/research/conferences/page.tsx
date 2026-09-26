@@ -33,7 +33,7 @@ export default function ConferencesPage() {
           kicker="Research"
           title="Conference Presentations"
           level={1}
-          lede={`${conferences.length} presentations at national and international conferences${
+          lede={`${conferences.length} appearances at national and international conferences${
             awards ? `, including ${awards} presentation awards` : ""
           }.`}
         />
@@ -46,7 +46,7 @@ export default function ConferencesPage() {
               {group.year}
               <span className="text-sm font-normal text-muted-foreground">
                 {group.items.length}{" "}
-                {group.items.length === 1 ? "presentation" : "presentations"}
+                {group.items.length === 1 ? "conference" : "conferences"}
               </span>
             </h2>
 
