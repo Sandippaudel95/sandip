@@ -5,7 +5,7 @@ export const profile = {
   role: "Assistant Professor of Finance",
   affiliations: [
     "Lumbini Banijya Campus, Tribhuvan University",
-    "PhD Candidate, DDU Gorakhpur University",
+    "PhD Candidate, DDUG University",
   ],
 
   /** One-line positioning used in the hero and page metadata. */
@@ -32,7 +32,7 @@ export const profileLinks: ProfileLink[] = [
 
 /** Long-form bio, rendered as consecutive paragraphs. */
 export const bio: string[] = [
-  "I am an Assistant Professor in the Department of Finance at Lumbini Banijya Campus, Butwal, where I have taught since 2019. I am concurrently pursuing a PhD at DDU Gorakhpur University. My teaching covers Corporate Finance, Financial Institutions and Markets, Financial Management, Entrepreneurial Finance and Venture Capital, and Research Methodology at both undergraduate and postgraduate levels.",
+  "I am an Assistant Professor in the Department of Finance at Lumbini Banijya Campus, Butwal, where I have taught since 2019. I am concurrently pursuing a PhD at DDUG University. My teaching covers Corporate Finance, Financial Institutions and Markets, Financial Management, Entrepreneurial Finance and Venture Capital, and Research Methodology at both undergraduate and postgraduate levels.",
   "Over the past several years I have supervised more than one hundred final-year projects and theses, and I run workshops on quantitative methods and data analysis for faculty and graduate students across Nepal.",
   "Alongside teaching I work as a research consultant: advising students and faculty on design and analysis, reviewing theses and manuscripts before submission, taking on commissioned studies, and running research training for departments across Nepal.",
 ];

@@ -5,7 +5,7 @@ export const education: EducationEntry[] = [
   {
     period: "In progress",
     degree: "PhD in Management (ongoing)",
-    institution: "DDU Gorakhpur University, India",
+    institution: "DDUG University, India",
     detail: "Coursework completed; research stage.",
   },
   {
@@ -17,15 +17,5 @@ export const education: EducationEntry[] = [
     period: "2019",
     degree: "MBA in Banking and Finance",
     institution: "Lumbini Banijya Campus, Tribhuvan University, Nepal",
-  },
-  {
-    period: "2015",
-    degree: "Bachelor of Business Studies",
-    institution: "Aims College, Tribhuvan University, Nepal",
-  },
-  {
-    period: "2012",
-    degree: "Higher Secondary (10+2)",
-    institution: "Aims English Higher Secondary School, HSEB, Nepal",
   },
 ];
