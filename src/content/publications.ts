@@ -9,7 +9,7 @@ export const publications: Publication[] = [
     status: "published",
     citation:
       "Paudel, S. (2026). Non-linear properties of Nepalese capital market: A multifractal detrended fluctuation analysis approach.",
-    outlet: "Social Sciences & Humanities Open, 14.",
+    outlet: "Social Sciences & Humanities Open, 14, 103174.",
     quartile: "Q1",
     // The old link carried a trailing period, which 404s at doi.org.
     doi: "https://doi.org/10.1016/j.ssaho.2026.103174",
@@ -18,8 +18,17 @@ export const publications: Publication[] = [
     year: 2026,
     status: "published",
     citation:
-      "Paudel, S. (2026). Towards Industry 5.0: a bibliometric analysis of research linking green finance, digital transformation, and ESG.",
-    // TODO: journal name, volume, pages, DOI and quartile still to be added.
+      "Bhandari, O. P., Paudel, S., and Paudel, S. (2026). Green finance instruments and sustainable industrial transformation in the age of Industry 5.0.",
+    outlet: "Academia Journal of Humanities & Social Sciences, 3, 282-309.",
+    doi: "https://doi.org/10.3126/ajhss.v3i1.96860",
+  },
+  {
+    year: 2026,
+    status: "published",
+    citation:
+      "Paudel, S., Gyawali, B., Paudel, S., and Khanal, M. N. (2026). Towards Industry 5.0: a bibliometric analysis of green finance, digital transformation, and ESG research.",
+    outlet: "The Lumbini Journal of Business and Economics, 14(1), 69-87.",
+    doi: "https://doi.org/10.3126/ljbe.v14i1.92007",
   },
   {
     year: 2025,
