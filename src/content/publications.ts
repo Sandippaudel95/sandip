@@ -31,6 +31,14 @@ export const publications: Publication[] = [
     doi: "https://doi.org/10.3126/ljbe.v14i1.92007",
   },
   {
+    year: 2026,
+    status: "published",
+    citation:
+      "Adhikari, L., Sapkota, P., Paudel, S., and Bhandari, N. R. (2026). Risk reward: unveiling credit risk and performance of commercial banks in Nepal.",
+    outlet: "Janabhawana Research Journal, 5(1), 124-143.",
+    doi: "https://doi.org/10.3126/jrj.v5i1.97906",
+  },
+  {
     year: 2025,
     status: "published",
     citation:
