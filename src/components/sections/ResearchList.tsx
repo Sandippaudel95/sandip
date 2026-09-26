@@ -1,13 +1,16 @@
-import { Award, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { ExternalLink, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { ConferenceCard } from "./ConferenceCard";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import type { Conference, Publication, PublicationStatus } from "@/content/types";
+import type { Publication, PublicationStatus } from "@/content/types";
 import {
   publications,
   workingPapers,
   consultancyReports,
 } from "@/content/publications";
-import { conferences } from "@/content/conferences";
+import { conferences, featuredConferences } from "@/content/conferences";
 import { training } from "@/content/training";
 import { researchInterests } from "@/content/profile";
 
@@ -65,29 +68,6 @@ function Citation({ item }: { item: Publication }) {
   );
 }
 
-function ConferenceCard({ item }: { item: Conference }) {
-  return (
-    <article
-      className={cn(
-        "flex h-full flex-col rounded-lg border bg-card p-5",
-        item.award && "border-navy/25 bg-accent/40",
-      )}
-    >
-      {item.award && (
-        <p className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-navy uppercase">
-          <Award className="size-3.5" aria-hidden="true" />
-          {item.award}
-        </p>
-      )}
-      <p className="text-sm text-muted-foreground">{item.date}</p>
-      <h3 className="mt-1.5 text-base leading-snug font-semibold">
-        {item.paper}
-      </h3>
-      <p className="mt-auto pt-3 text-sm text-muted-foreground">{item.venue}</p>
-    </article>
-  );
-}
-
 function Subhead({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="mt-16 border-b pb-3 text-2xl font-semibold tracking-tight first:mt-0">
@@ -138,13 +118,19 @@ export function ResearchList() {
         ))}
       </ol>
 
-      {/* Conferences */}
-      <Subhead>Selected conference presentations</Subhead>
+      {/* Conferences: highlights only, full list on its own page. */}
+      <Subhead>Conference presentations</Subhead>
       <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {conferences.map((item) => (
+        {featuredConferences.map((item) => (
           <ConferenceCard key={`${item.date}-${item.paper}`} item={item} />
         ))}
       </div>
+      <Button asChild variant="outline" className="mt-6">
+        <Link href="/research/conferences">
+          See all {conferences.length} conference presentations
+          <ArrowRight aria-hidden="true" />
+        </Link>
+      </Button>
 
       {/* Training */}
       <Subhead>Selected training and workshops</Subhead>

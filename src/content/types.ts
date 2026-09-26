@@ -32,6 +32,11 @@ export interface Conference {
   venue: string;
   /** Present only where an award was given. */
   award?: string;
+  /**
+   * Surfaced on /research as a highlight. Keep this to two or three;
+   * the rest live on /research/conferences.
+   */
+  featured?: boolean;
 }
 
 export interface Training {

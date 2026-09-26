@@ -14,6 +14,7 @@ export const conferences: Conference[] = [
       "Market efficiency under permanent short-sale bans: comparative evidence from Nepal, India, and Pakistan",
     venue:
       "1st International Conference on the Future of Work, Birgunj Public College",
+    featured: true,
   },
   {
     date: "February 2026",
@@ -36,6 +37,7 @@ export const conferences: Conference[] = [
     venue:
       "RUEC 1st International Research Conference, Rajshahi, Bangladesh",
     award: "Best Oral Presenter",
+    featured: true,
   },
   {
     date: "June 2025",
@@ -68,5 +70,27 @@ export const conferences: Conference[] = [
     venue:
       "International Conference on Sustainable Business and Management, Pokhara",
     award: "Best Paper Presenter",
+    featured: true,
   },
 ];
+
+/** Year parsed from the trailing token of `date`, e.g. "March 2026" -> 2026. */
+export function conferenceYear(c: Conference): number {
+  return Number(c.date.trim().split(/\s+/).pop());
+}
+
+export const featuredConferences = conferences.filter((c) => c.featured);
+
+/** All conferences, newest year first, for /research/conferences. */
+export function conferencesByYear(): { year: number; items: Conference[] }[] {
+  const groups = new Map<number, Conference[]>();
+  for (const c of conferences) {
+    const y = conferenceYear(c);
+    const bucket = groups.get(y);
+    if (bucket) bucket.push(c);
+    else groups.set(y, [c]);
+  }
+  return [...groups.entries()]
+    .sort((a, b) => b[0] - a[0])
+    .map(([year, items]) => ({ year, items }));
+}
