@@ -134,8 +134,17 @@ export async function createBooking(
         throw new CapExceeded(dailyCapMessage(already));
       }
 
+      // Every booking belongs to a client record, so the CRM has a person
+      // to hang history on rather than a loose email string.
+      const client = await tx.client.upsert({
+        where: { email: clientEmail.trim().toLowerCase() },
+        update: { name: clientName },
+        create: { email: clientEmail.trim().toLowerCase(), name: clientName },
+      });
+
       return tx.booking.create({
         data: {
+          clientId: client.id,
           clientName,
           clientEmail,
           consultationTopic,

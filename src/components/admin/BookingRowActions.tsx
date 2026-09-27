@@ -1,18 +1,24 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Check, X, Loader2 } from "lucide-react";
+import { Check, CheckCheck, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { confirmBooking, rejectBooking } from "@/app/admin/actions";
+import {
+  confirmBooking,
+  markCompleted,
+  rejectBooking,
+} from "@/app/admin/actions";
 
 /* Confirm is a single click. Reject asks for a reason first, because the
    reason is emailed to the client and "no reason given" is a poor message
    to receive about money. */
 export function BookingRowActions({
   id,
+  status,
   disabled,
 }: {
   id: string;
+  status?: string;
   disabled?: boolean;
 }) {
   const [pending, startTransition] = useTransition();
@@ -26,6 +32,33 @@ export function BookingRowActions({
       setFeedback(result.message ?? null);
       if (result.ok) setAsking(false);
     });
+  }
+
+  // A confirmed session that has happened is closed off here rather than
+  // in the pending queue, so the two actions never appear together.
+  if (status === "CONFIRMED") {
+    return (
+      <div className="space-y-2">
+        <Button
+          size="sm"
+          variant="outline"
+          disabled={pending}
+          onClick={() => run(() => markCompleted(id))}
+        >
+          {pending ? (
+            <Loader2 className="animate-spin" aria-hidden="true" />
+          ) : (
+            <CheckCheck aria-hidden="true" />
+          )}
+          Mark completed
+        </Button>
+        {feedback && (
+          <p role="status" className="text-xs text-muted-foreground">
+            {feedback}
+          </p>
+        )}
+      </div>
+    );
   }
 
   if (disabled) return null;

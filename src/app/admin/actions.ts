@@ -127,6 +127,29 @@ export async function rejectBooking(
   };
 }
 
+/** Close off a session that has already happened. */
+export async function markCompleted(id: string): Promise<AdminActionResult> {
+  await requireAdmin();
+
+  const current = await prisma.booking.findUnique({ where: { id } });
+  if (!current) return { ok: false, message: "Booking not found." };
+  if (current.bookingStatus !== "CONFIRMED") {
+    return {
+      ok: false,
+      message: `Only a confirmed booking can be marked completed; this one is ${current.bookingStatus.toLowerCase()}.`,
+    };
+  }
+
+  await prisma.booking.update({
+    where: { id },
+    data: { bookingStatus: "COMPLETED" },
+  });
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/admin/bookings");
+  return { ok: true, message: "Marked completed." };
+}
+
 export async function signInAction(
   _prev: string | null,
   formData: FormData,

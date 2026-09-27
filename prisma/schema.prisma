@@ -23,6 +23,34 @@ enum PaymentStatus {
 enum BookingStatus {
   PENDING
   CONFIRMED
+  /// The session has happened. Distinct from CONFIRMED so "upcoming" means
+  /// something and past work can be counted as delivered.
+  COMPLETED
+  CANCELLED
+}
+
+enum ClientStatus {
+  LEAD
+  ACTIVE
+  PAST
+  ARCHIVED
+}
+
+enum EngagementType {
+  THESIS_REVIEW
+  PAPER_REVIEW
+  DATA_ANALYSIS
+  RESEARCH_CONSULTANCY
+  TRAINING
+  OTHER
+}
+
+enum EngagementStatus {
+  ENQUIRY
+  QUOTED
+  AGREED
+  IN_PROGRESS
+  DELIVERED
   CANCELLED
 }
 
@@ -63,11 +91,81 @@ model Booking {
   /// flag that the client was never told.
   emailFailed Boolean @default(false)
 
+  /// Set for every booking. Nullable only so the backfill could run.
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
   createdAt DateTime @default(now()) @db.Timestamptz(3)
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
+  @@index([clientId])
   @@index([date])
   @@index([clientEmail, date])
   @@index([bookingStatus, createdAt])
   @@index([couponCode])
+}
+
+/// A person or institution Sandip works with. Created automatically from a
+/// booking, or by hand for work that arrives by email.
+model Client {
+  id   String @id @default(cuid())
+  name String
+
+  /// Always stored lowercase. Lookups must lowercase too, or the unique
+  /// constraint turns two spellings of one address into a crash.
+  email String @unique
+
+  phone        String?
+  organisation String?
+  /// Bachelor, Master, MPhil, PhD, Faculty, Institution, Other.
+  level        String?
+
+  status ClientStatus @default(ACTIVE)
+  tags   String[]     @default([])
+  notes  String?
+
+  /// What to do next for this client, and when it is due. Anything due or
+  /// overdue is surfaced on the dashboard.
+  nextAction     String?
+  nextActionDate DateTime? @db.Date
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  bookings    Booking[]
+  engagements Engagement[]
+
+  @@index([status])
+  @@index([nextActionDate])
+}
+
+/// Work agreed outside the booking flow: reviews, analysis, commissioned
+/// studies, training. Deliberately never created from a Booking, so the two
+/// revenue streams stay disjoint and cannot double-count.
+model Engagement {
+  id       String @id @default(cuid())
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  type   EngagementType
+  title  String
+  status EngagementStatus @default(ENQUIRY)
+
+  /// Agreed fee and how much of it has arrived. Kept apart because
+  /// negotiated work is often part-paid, and what is outstanding matters.
+  feeNpr        Int @default(0)
+  amountPaidNpr Int @default(0)
+
+  startedAt   DateTime? @db.Date
+  dueAt       DateTime? @db.Date
+  completedAt DateTime? @db.Date
+
+  notes String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([clientId])
+  @@index([status])
+  @@index([dueAt])
 }

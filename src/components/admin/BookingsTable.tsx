@@ -17,6 +17,7 @@ const paymentStyles: Record<Booking["paymentStatus"], string> = {
 const bookingStyles: Record<Booking["bookingStatus"], string> = {
   PENDING: "bg-[#dbeafe] text-[#1e40af] border-transparent",
   CONFIRMED: "bg-[#d1fae5] text-[#065f46] border-transparent",
+  COMPLETED: "bg-[#ede9fe] text-[#5b21b6] border-transparent",
   CANCELLED: "bg-secondary text-muted-foreground border-transparent",
 };
 
@@ -140,7 +141,11 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
               <div className="w-full sm:w-auto">
                 <BookingRowActions
                   id={b.id}
-                  disabled={b.bookingStatus !== "PENDING"}
+                  status={b.bookingStatus}
+                  disabled={
+                    b.bookingStatus !== "PENDING" &&
+                    b.bookingStatus !== "CONFIRMED"
+                  }
                 />
               </div>
             </div>
