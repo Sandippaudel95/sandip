@@ -1,11 +1,16 @@
 "use client";
 
-import { ArrowRight, CalendarX } from "lucide-react";
+import { ArrowRight, CalendarX, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { DayAvailability } from "@/lib/slots";
-import { sessionLengths } from "@/content/availability";
-import { formatDateKey, formatTime, addHours } from "@/lib/time";
+import {
+  BOOKING_WINDOW_DAYS,
+  MINIMUM_NOTICE_HOURS,
+  sessionLengths,
+} from "@/content/availability";
+import { addHours, formatDateKey, formatTime } from "@/lib/time";
+import { Calendar } from "./Calendar";
 import type { Draft } from "./BookingWizard";
 
 export function StepDateTime({
@@ -56,7 +61,9 @@ export function StepDateTime({
           ))}
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
-          Up to 2 hours per person per day.
+          Up to 2 hours per person per day. Booking opens{" "}
+          {MINIMUM_NOTICE_HOURS} hours ahead and runs {BOOKING_WINDOW_DAYS}{" "}
+          days out.
         </p>
       </fieldset>
 
@@ -67,7 +74,8 @@ export function StepDateTime({
             aria-hidden="true"
           />
           <p className="font-medium">
-            No {draft.durationHours}-hour slots are open at the moment.
+            No {draft.durationHours}-hour slots are open in the next{" "}
+            {BOOKING_WINDOW_DAYS} days.
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
             {draft.durationHours > 1
@@ -76,82 +84,83 @@ export function StepDateTime({
           </p>
         </div>
       ) : (
-        <>
-          <fieldset>
-            <legend className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
-              Date
-            </legend>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {days.slice(0, 21).map((day) => (
-                <label
-                  key={day.date}
-                  className={cn(
-                    "cursor-pointer rounded-md border px-3 py-2 text-sm transition-colors",
-                    draft.date === day.date
-                      ? "border-navy bg-navy text-white"
-                      : "hover:bg-muted",
-                  )}
-                >
-                  <input
-                    type="radio"
-                    name="date"
-                    value={day.date}
-                    checked={draft.date === day.date}
-                    onChange={() =>
-                      onChange({ date: day.date, timeSlot: "" })
-                    }
-                    className="sr-only"
-                  />
-                  {formatDateKey(day.date).replace(/,? \d{4}$/, "")}
-                </label>
-              ))}
-            </div>
-          </fieldset>
+        <div className="grid gap-6 lg:grid-cols-[minmax(0,20rem)_1fr] lg:gap-8">
+          <Calendar
+            availableDates={days.map((d) => d.date)}
+            selected={draft.date}
+            onSelect={(date) => onChange({ date, timeSlot: "" })}
+            windowDays={BOOKING_WINDOW_DAYS}
+          />
 
-          {selectedDay && (
-            <fieldset>
-              <legend className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
-                Start time
-              </legend>
-              <p className="mt-1 text-sm text-muted-foreground">
-                All times are Nepal time (NPT).
+          <div>
+            <h3 className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+              {selectedDay ? "Start time" : "Pick a date"}
+            </h3>
+
+            {selectedDay ? (
+              <>
+                <p className="mt-1.5 text-sm text-muted-foreground">
+                  {formatDateKey(selectedDay.date)} · all times Nepal time
+                  (NPT)
+                </p>
+                <div
+                  className="mt-4 grid gap-2 sm:grid-cols-2"
+                  role="radiogroup"
+                  aria-label="Start time"
+                >
+                  {selectedDay.times.map((time) => {
+                    const isSelected = draft.timeSlot === time;
+                    return (
+                      <label
+                        key={time}
+                        className={cn(
+                          "flex cursor-pointer items-center gap-2.5 rounded-md border px-3.5 py-3 text-sm transition-colors",
+                          isSelected
+                            ? "border-navy bg-navy text-white"
+                            : "hover:bg-muted",
+                        )}
+                      >
+                        <input
+                          type="radio"
+                          name="timeSlot"
+                          value={time}
+                          checked={isSelected}
+                          onChange={() => onChange({ timeSlot: time })}
+                          className="sr-only"
+                        />
+                        <Clock
+                          className={cn(
+                            "size-4 shrink-0",
+                            isSelected ? "text-white/70" : "text-navy",
+                          )}
+                          aria-hidden="true"
+                        />
+                        <span className="font-medium">
+                          {formatTime(time)}
+                        </span>
+                        <span
+                          className={cn(
+                            "ml-auto text-xs",
+                            isSelected
+                              ? "text-white/70"
+                              : "text-muted-foreground",
+                          )}
+                        >
+                          to {formatTime(addHours(time, draft.durationHours))}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </>
+            ) : (
+              <p className="mt-4 rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
+                Choose a highlighted day in the calendar to see the times
+                open on it.
               </p>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {selectedDay.times.map((time) => (
-                  <label
-                    key={time}
-                    className={cn(
-                      "cursor-pointer rounded-md border px-3.5 py-2.5 text-sm transition-colors",
-                      draft.timeSlot === time
-                        ? "border-navy bg-navy text-white"
-                        : "hover:bg-muted",
-                    )}
-                  >
-                    <input
-                      type="radio"
-                      name="timeSlot"
-                      value={time}
-                      checked={draft.timeSlot === time}
-                      onChange={() => onChange({ timeSlot: time })}
-                      className="sr-only"
-                    />
-                    {formatTime(time)}
-                    <span
-                      className={cn(
-                        "ml-1.5 text-xs",
-                        draft.timeSlot === time
-                          ? "text-white/70"
-                          : "text-muted-foreground",
-                      )}
-                    >
-                      to {formatTime(addHours(time, draft.durationHours))}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </fieldset>
-          )}
-        </>
+            )}
+          </div>
+        </div>
       )}
 
       <Button onClick={onNext} disabled={!canContinue} size="lg">

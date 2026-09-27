@@ -28,10 +28,10 @@ export const sessionLengths = [1, 2] as const;
 export type SessionLength = (typeof sessionLengths)[number];
 
 /** No booking may start within this many hours from now. */
-export const MINIMUM_NOTICE_HOURS = 12;
+export const MINIMUM_NOTICE_HOURS = 24;
 
-/** How far ahead the calendar opens. */
-export const BOOKING_WINDOW_DAYS = 60;
+/** How far ahead the calendar opens: one month. */
+export const BOOKING_WINDOW_DAYS = 30;
 
 /** Total hours one client may hold on a single day. */
 export const MAX_HOURS_PER_CLIENT_PER_DAY = 2;
