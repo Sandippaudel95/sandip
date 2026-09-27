@@ -34,8 +34,8 @@ export function Section({
     <section
       id={id}
       className={cn(
-        "scroll-mt-20 py-16 sm:py-20 lg:py-24",
-        alt && "bg-muted/50",
+        "relative scroll-mt-24 py-20 sm:py-24 lg:py-28",
+        alt && "bg-white/[0.025]",
         className,
       )}
     >
@@ -62,16 +62,12 @@ export function SectionHeader({
 
   return (
     <header className={cn("max-w-3xl", className)}>
-      {kicker && (
-        <p className="text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
-          {kicker}
-        </p>
-      )}
-      <Heading className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+      {kicker && <p className="pill-label">{kicker}</p>}
+      <Heading className="mt-6 text-4xl leading-[1.1] font-normal tracking-tight sm:text-5xl">
         {title}
       </Heading>
       {lede && (
-        <p className="mt-4 text-lg leading-relaxed text-muted-foreground text-pretty">
+        <p className="mt-5 text-lg leading-relaxed text-muted-foreground text-pretty">
           {lede}
         </p>
       )}

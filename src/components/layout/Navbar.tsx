@@ -39,22 +39,24 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full bg-background/90 backdrop-blur transition-shadow",
-        scrolled && "border-b shadow-[0_1px_3px_rgba(10,37,64,0.06)]",
+        "sticky top-0 z-50 w-full transition-colors",
+        scrolled
+          ? "border-b border-white/10 bg-ink/80 backdrop-blur-xl"
+          : "bg-transparent",
       )}
     >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
           className="flex items-center gap-2.5 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
         >
           <span
-            className="grid size-9 place-items-center rounded-md bg-navy font-serif text-sm font-semibold text-white"
+            className="grid size-9 place-items-center rounded-lg bg-gradient-to-br from-violet to-violet-light text-sm font-semibold text-white"
             aria-hidden="true"
           >
             SP
           </span>
-          <span className="font-serif text-base font-semibold tracking-tight">
+          <span className="font-display text-lg font-medium tracking-tight">
             Sandip Paudel
           </span>
         </Link>
@@ -70,16 +72,19 @@ export function Navbar() {
               href={item.href}
               aria-current={isActive(item.href) ? "page" : undefined}
               className={cn(
-                "rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                "rounded-full px-4 py-2 text-sm transition-colors",
                 isActive(item.href)
-                  ? "text-navy"
-                  : "text-muted-foreground hover:text-navy",
+                  ? "text-foreground"
+                  : "text-muted-foreground hover:text-foreground",
               )}
             >
               {item.label}
             </Link>
           ))}
-          <Button asChild size="sm" className="ml-2">
+          <Button
+            asChild
+            className="ml-2 bg-white text-ink hover:bg-white/90"
+          >
             <Link href="/book">Book a Consultation</Link>
           </Button>
         </nav>
@@ -93,7 +98,7 @@ export function Navbar() {
           </SheetTrigger>
           <SheetContent side="right" className="w-[min(20rem,85vw)]">
             <SheetHeader>
-              <SheetTitle className="font-serif">Menu</SheetTitle>
+              <SheetTitle className="font-display">Menu</SheetTitle>
             </SheetHeader>
             <nav aria-label="Mobile" className="flex flex-col gap-1 px-4">
               {navItems.map((item) => (
@@ -103,16 +108,16 @@ export function Navbar() {
                   onClick={() => setOpen(false)}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
-                    "rounded-md px-3 py-3 text-base font-medium transition-colors",
+                    "rounded-xl px-4 py-3 text-base transition-colors",
                     isActive(item.href)
-                      ? "bg-accent text-navy"
-                      : "text-muted-foreground hover:bg-muted hover:text-navy",
+                      ? "bg-accent text-accent-foreground"
+                      : "text-muted-foreground hover:bg-white/5 hover:text-foreground",
                   )}
                 >
                   {item.label}
                 </Link>
               ))}
-              <Button asChild className="mt-4">
+              <Button asChild className="mt-4 bg-white text-ink hover:bg-white/90">
                 <Link href="/book" onClick={() => setOpen(false)}>
                   Book a Consultation
                 </Link>

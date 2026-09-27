@@ -85,19 +85,19 @@ export function Calendar({
   ];
 
   return (
-    <div className="rounded-xl border bg-card p-4 sm:p-5">
+    <div className="panel p-4 sm:p-5">
       <div className="flex items-center justify-between gap-2">
         <button
           type="button"
           onClick={() => shift(-1)}
           disabled={!canGoBack}
           aria-label="Previous month"
-          className="grid size-9 place-items-center rounded-md border transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-35"
+          className="grid size-9 place-items-center rounded-full border transition-colors hover:bg-white/10 disabled:pointer-events-none disabled:opacity-30"
         >
           <ChevronLeft className="size-4" aria-hidden="true" />
         </button>
 
-        <h3 aria-live="polite" className="font-serif text-base font-semibold">
+        <h3 aria-live="polite" className="font-display text-base font-semibold">
           {monthLabel.format(new Date(Date.UTC(viewYear, viewMonthIndex, 1)))}
         </h3>
 
@@ -106,7 +106,7 @@ export function Calendar({
           onClick={() => shift(1)}
           disabled={!canGoForward}
           aria-label="Next month"
-          className="grid size-9 place-items-center rounded-md border transition-colors hover:bg-muted disabled:pointer-events-none disabled:opacity-35"
+          className="grid size-9 place-items-center rounded-full border transition-colors hover:bg-white/10 disabled:pointer-events-none disabled:opacity-30"
         >
           <ChevronRight className="size-4" aria-hidden="true" />
         </button>
@@ -147,16 +147,16 @@ export function Calendar({
               )}${isOpen ? "" : ", not available"}`}
               className={cn(
                 "relative aspect-square rounded-md text-sm transition-colors",
-                isSelected && "bg-navy font-semibold text-white",
-                !isSelected && isOpen && "hover:bg-accent font-medium",
-                !isOpen && "text-muted-foreground/40",
-                isToday && !isSelected && "ring-1 ring-navy/30",
+                isSelected && "bg-violet font-medium text-white",
+                !isSelected && isOpen && "font-medium text-foreground hover:bg-white/10",
+                !isOpen && "text-muted-foreground/30",
+                isToday && !isSelected && "ring-1 ring-violet/50",
               )}
             >
               {day}
               {isOpen && !isSelected && (
                 <span
-                  className="absolute inset-x-0 bottom-1.5 mx-auto size-1 rounded-full bg-navy"
+                  className="absolute inset-x-0 bottom-1.5 mx-auto size-1 rounded-full bg-violet"
                   aria-hidden="true"
                 />
               )}
@@ -167,7 +167,7 @@ export function Calendar({
 
       <p className="mt-4 flex items-center gap-2 border-t pt-3 text-xs text-muted-foreground">
         <span
-          className="size-1.5 rounded-full bg-navy"
+          className="size-1.5 rounded-full bg-violet"
           aria-hidden="true"
         />
         Days with open times

@@ -15,14 +15,14 @@ export function ServicePackages() {
           key={pkg.id}
           id={pkg.id}
           className={cn(
-            "relative flex scroll-mt-24 flex-col rounded-xl border bg-card p-6 sm:p-7",
-            pkg.featured && "border-navy/30 ring-1 ring-navy/10",
+            "relative flex scroll-mt-24 flex-col rounded-2xl border bg-white/[0.035] p-6 sm:p-7",
+            pkg.featured && "border-violet/40 ring-1 ring-violet/20",
           )}
         >
           {/* Taken out of flow so the badge does not push this card's
               content down relative to the others in the row. */}
           {pkg.featured && (
-            <Badge className="absolute -top-2.5 left-6 bg-navy text-white hover:bg-navy sm:left-7">
+            <Badge className="absolute -top-2.5 left-6 bg-violet text-white hover:bg-violet/85 sm:left-7">
               Start here
             </Badge>
           )}
@@ -39,7 +39,7 @@ export function ServicePackages() {
           </p>
 
           <div className="mt-4 border-y py-3">
-            <p className="font-serif text-lg font-semibold text-navy">
+            <p className="font-display text-lg font-semibold text-violet-light">
               {pkg.price}
             </p>
             {pkg.priceNote && (
@@ -50,7 +50,7 @@ export function ServicePackages() {
           </div>
 
           <div className="mt-5">
-            <h4 className="text-xs font-semibold tracking-[0.12em] text-navy uppercase">
+            <h4 className="text-xs font-semibold tracking-[0.12em] text-violet-light uppercase">
               Who it is for
             </h4>
             <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
@@ -59,14 +59,14 @@ export function ServicePackages() {
           </div>
 
           <div className="mt-5 mb-5">
-            <h4 className="text-xs font-semibold tracking-[0.12em] text-navy uppercase">
+            <h4 className="text-xs font-semibold tracking-[0.12em] text-violet-light uppercase">
               What is included
             </h4>
             <ul className="mt-2.5 space-y-2">
               {pkg.includes.map((line) => (
                 <li key={line} className="flex gap-2.5 text-sm leading-relaxed">
                   <Check
-                    className="mt-0.5 size-4 shrink-0 text-navy"
+                    className="mt-0.5 size-4 shrink-0 text-violet-light"
                     aria-hidden="true"
                   />
                   <span>{line}</span>

@@ -30,7 +30,7 @@ export function StepDateTime({
   return (
     <div className="space-y-8">
       <fieldset>
-        <legend className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+        <legend className="text-sm font-semibold tracking-[0.12em] text-violet-light uppercase">
           Session length
         </legend>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -38,10 +38,10 @@ export function StepDateTime({
             <label
               key={h}
               className={cn(
-                "cursor-pointer rounded-md border px-4 py-2.5 text-sm transition-colors",
+                "cursor-pointer rounded-full border px-5 py-2.5 text-sm transition-colors",
                 draft.durationHours === h
-                  ? "border-navy bg-navy text-white"
-                  : "hover:bg-muted",
+                  ? "border-violet bg-violet text-white"
+                  : "border-input hover:border-violet/50 hover:bg-white/5",
               )}
             >
               <input
@@ -93,7 +93,7 @@ export function StepDateTime({
           />
 
           <div>
-            <h3 className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+            <h3 className="text-sm font-semibold tracking-[0.12em] text-violet-light uppercase">
               {selectedDay ? "Start time" : "Pick a date"}
             </h3>
 
@@ -114,10 +114,10 @@ export function StepDateTime({
                       <label
                         key={time}
                         className={cn(
-                          "flex cursor-pointer items-center gap-2.5 rounded-md border px-3.5 py-3 text-sm transition-colors",
+                          "flex cursor-pointer items-center gap-2.5 rounded-xl border px-4 py-3 text-sm transition-colors",
                           isSelected
-                            ? "border-navy bg-navy text-white"
-                            : "hover:bg-muted",
+                            ? "border-violet bg-violet text-white"
+                            : "border-input hover:border-violet/50 hover:bg-white/5",
                         )}
                       >
                         <input
@@ -131,7 +131,7 @@ export function StepDateTime({
                         <Clock
                           className={cn(
                             "size-4 shrink-0",
-                            isSelected ? "text-white/70" : "text-navy",
+                            isSelected ? "text-white/70" : "text-violet-light",
                           )}
                           aria-hidden="true"
                         />

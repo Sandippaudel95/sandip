@@ -62,8 +62,8 @@ export default function ConsultingPage() {
 
         <ol className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {process.map((item) => (
-            <li key={item.step} className="rounded-lg border bg-card p-5">
-              <span className="font-serif text-2xl font-semibold text-navy/30 tabular-nums">
+            <li key={item.step} className="rounded-2xl border bg-white/[0.035] p-5">
+              <span className="font-display text-2xl font-semibold text-violet/40 tabular-nums">
                 {item.step}
               </span>
               <h3 className="mt-2 font-semibold">{item.title}</h3>

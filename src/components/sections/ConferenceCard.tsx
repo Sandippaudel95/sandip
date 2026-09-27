@@ -13,12 +13,12 @@ export function ConferenceCard({ item }: { item: Conference }) {
   return (
     <article
       className={cn(
-        "flex h-full flex-col rounded-lg border bg-card p-5",
-        item.award && "border-navy/25 bg-accent/40",
+        "flex h-full flex-col rounded-2xl border bg-white/[0.035] p-5",
+        item.award && "border-violet/30 bg-accent/40",
       )}
     >
       {item.award && (
-        <p className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-navy uppercase">
+        <p className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold tracking-wide text-violet-light uppercase">
           <Award className="size-3.5" aria-hidden="true" />
           {item.award}
         </p>
@@ -32,7 +32,7 @@ export function ConferenceCard({ item }: { item: Conference }) {
 
       <div className="mt-auto pt-3 text-sm">
         {hasPaper && (
-          <p className="font-medium text-navy">{item.conference}</p>
+          <p className="font-medium text-violet-light">{item.conference}</p>
         )}
         {item.track && (
           <p className={cn("text-muted-foreground", hasPaper && "mt-0.5")}>

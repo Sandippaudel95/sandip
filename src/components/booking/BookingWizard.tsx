@@ -5,7 +5,7 @@ import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { DayAvailability } from "@/lib/slots";
 import type { ActionResult } from "@/lib/validation";
-import { createBooking } from "@/app/book/actions";
+import { createBooking } from "@/app/(site)/book/actions";
 import { StepDateTime } from "./StepDateTime";
 import { StepDetails } from "./StepDetails";
 import { StepPayment } from "./StepPayment";
@@ -98,9 +98,9 @@ function Wizard({
                 aria-current={i === step ? "step" : undefined}
                 className={cn(
                   "flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors",
-                  state === "current" && "bg-accent font-medium text-navy",
+                  state === "current" && "bg-violet/15 font-medium text-violet-light ring-1 ring-violet/30",
                   state === "done" &&
-                    "text-navy hover:bg-muted cursor-pointer",
+                    "cursor-pointer text-violet-light hover:bg-white/5",
                   state === "upcoming" && "text-muted-foreground",
                 )}
               >
@@ -108,8 +108,8 @@ function Wizard({
                   className={cn(
                     "grid size-5 place-items-center rounded-full text-xs font-semibold",
                     state === "upcoming"
-                      ? "bg-secondary text-muted-foreground"
-                      : "bg-navy text-white",
+                      ? "bg-white/10 text-muted-foreground"
+                      : "bg-violet text-white",
                   )}
                   aria-hidden="true"
                 >

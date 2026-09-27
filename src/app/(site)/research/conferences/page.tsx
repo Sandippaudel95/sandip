@@ -22,7 +22,7 @@ export default function ConferencesPage() {
       <Section className="pb-0">
         <Link
           href="/research"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground underline-offset-4 hover:text-navy hover:underline"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground underline-offset-4 hover:text-violet-light hover:underline"
         >
           <ArrowLeft className="size-4" aria-hidden="true" />
           Back to research
@@ -42,7 +42,7 @@ export default function ConferencesPage() {
       <Section className="pt-10">
         {groups.map((group) => (
           <section key={group.year} className="mb-12 last:mb-0">
-            <h2 className="flex items-baseline gap-3 border-b pb-3 font-serif text-2xl font-semibold">
+            <h2 className="flex items-baseline gap-3 border-b pb-3 font-display text-2xl font-semibold">
               {group.year}
               <span className="text-sm font-normal text-muted-foreground">
                 {group.items.length}{" "}

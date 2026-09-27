@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { formatSession } from "@/lib/time";
 import { npr } from "@/content/services";
 import type { ActionResult } from "@/lib/validation";
-import { previewCoupon } from "@/app/book/actions";
+import { previewCoupon } from "@/app/(site)/book/actions";
 import { SubmitButton } from "./SubmitButton";
 import type { Draft } from "./BookingWizard";
 
@@ -106,7 +106,7 @@ export function StepPayment({
         className="absolute left-[-9999px] size-0"
       />
 
-      <div className="rounded-lg border bg-muted/50 p-4 text-sm">
+      <div className="panel p-4 text-sm">
         <p className="font-medium">
           {formatSession(draft.date, draft.timeSlot, draft.durationHours)}
         </p>
@@ -116,17 +116,17 @@ export function StepPayment({
       </div>
 
       {/* ---------------- Coupon ---------------- */}
-      <div className="rounded-xl border p-5">
-        <h2 className="flex items-center gap-2.5 text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+      <div className="panel p-5">
+        <h2 className="flex items-center gap-2.5 text-sm font-semibold tracking-[0.12em] text-violet-light uppercase">
           <TicketPercent className="size-4" aria-hidden="true" />
           Coupon code
         </h2>
 
         {applied ? (
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[#065f46]/25 bg-[#d1fae5]/40 p-3.5">
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-lime/30 bg-lime/10 p-3.5">
             <p className="flex items-center gap-2 text-sm">
               <Check
-                className="size-4 shrink-0 text-[#065f46]"
+                className="size-4 shrink-0 text-lime"
                 aria-hidden="true"
               />
               <span>
@@ -137,7 +137,7 @@ export function StepPayment({
             <button
               type="button"
               onClick={clearCoupon}
-              className="inline-flex items-center gap-1 text-sm text-muted-foreground underline-offset-4 hover:text-navy hover:underline"
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground underline-offset-4 hover:text-violet-light hover:underline"
             >
               <X className="size-3.5" aria-hidden="true" />
               Remove
@@ -167,7 +167,7 @@ export function StepPayment({
                 aria-invalid={Boolean(couponError)}
                 aria-describedby={couponError ? "coupon-error" : undefined}
                 className={cn(
-                  "min-w-0 flex-1 rounded-md border bg-background px-3 py-2.5 text-[0.9375rem] tracking-wide uppercase",
+                  "min-w-0 flex-1 rounded-full border border-input bg-white/[0.04] px-5 py-2.5 text-[0.9375rem] tracking-wide uppercase",
                   "focus:outline-2 focus:outline-offset-1 focus:outline-ring",
                   couponError && "border-destructive",
                 )}
@@ -194,9 +194,9 @@ export function StepPayment({
       </div>
 
       {/* ---------------- Amount and QR ---------------- */}
-      <div className="rounded-xl border p-6">
+      <div className="panel p-6">
         <h2 className="flex items-center gap-2.5 text-lg font-semibold">
-          <QrCode className="size-5 text-navy" aria-hidden="true" />
+          <QrCode className="size-5 text-violet-light" aria-hidden="true" />
           Pay {npr(total)}
         </h2>
 
@@ -204,7 +204,7 @@ export function StepPayment({
           <div className="mx-auto sm:mx-0">
             {qrSrc ? (
               <>
-                <div className="rounded-lg border bg-white p-3">
+                <div className="rounded-xl bg-white p-3">
                   <Image
                     src={qrSrc}
                     alt="QR code for payment"
@@ -219,7 +219,7 @@ export function StepPayment({
                 </p>
               </>
             ) : (
-              <div className="grid size-[214px] place-items-center rounded-lg border border-dashed bg-muted/50 p-4 text-center">
+              <div className="grid size-[214px] place-items-center rounded-xl border border-dashed border-white/20 bg-white/[0.03] p-4 text-center">
                 <p className="text-xs leading-relaxed text-muted-foreground">
                   The payment QR is not available yet. Submit the booking and
                   payment details will be sent to you by email.
@@ -239,7 +239,7 @@ export function StepPayment({
                 <dd className="tabular-nums">{npr(basePriceNpr)}</dd>
               </div>
               {applied && applied.discountNpr > 0 && (
-                <div className="flex justify-between gap-4 text-[#065f46]">
+                <div className="flex justify-between gap-4 text-lime">
                   <dt>Discount ({applied.code})</dt>
                   <dd className="tabular-nums">
                     &minus;{npr(applied.discountNpr)}
@@ -248,15 +248,15 @@ export function StepPayment({
               )}
               <div className="flex justify-between gap-4 border-t pt-2">
                 <dt className="font-medium">Total</dt>
-                <dd className="font-serif text-xl font-semibold text-navy tabular-nums">
+                <dd className="font-display text-xl font-semibold text-violet-light tabular-nums">
                   {npr(total)}
                 </dd>
               </div>
             </dl>
 
-            <div className="mt-4 flex gap-3 rounded-lg border border-navy/20 bg-accent/50 p-4 text-sm">
+            <div className="mt-4 flex gap-3 rounded-xl border border-violet/25 bg-violet/[0.08] p-4 text-sm">
               <Info
-                className="mt-0.5 size-4 shrink-0 text-navy"
+                className="mt-0.5 size-4 shrink-0 text-violet-light"
                 aria-hidden="true"
               />
               <p>
@@ -283,7 +283,7 @@ export function StepPayment({
                 placeholder="From your payment receipt"
                 aria-invalid={Boolean(failed?.fieldErrors?.transactionId)}
                 className={cn(
-                  "mt-1.5 w-full rounded-md border bg-background px-3 py-2.5 text-[0.9375rem]",
+                  "mt-1.5 w-full rounded-xl border border-input bg-white/[0.04] px-4 py-3 text-[0.9375rem]",
                   "focus:outline-2 focus:outline-offset-1 focus:outline-ring",
                   failed?.fieldErrors?.transactionId && "border-destructive",
                 )}
@@ -313,7 +313,7 @@ export function StepPayment({
               <button
                 type="button"
                 onClick={onPickAnotherTime}
-                className="mt-2 font-medium text-navy underline underline-offset-4"
+                className="mt-2 font-medium text-violet-light underline underline-offset-4"
               >
                 Choose another time
               </button>

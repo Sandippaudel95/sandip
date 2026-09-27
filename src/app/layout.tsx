@@ -1,21 +1,20 @@
 import type { Metadata } from "next";
-import { Inter, Lora } from "next/font/google";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
+import { Inter, Outfit } from "next/font/google";
 import { profile } from "@/content/profile";
 import "./globals.css";
 
-/* Self-hosted by next/font, which removes the two Google Fonts preconnects
-   and the render-blocking stylesheet the previous site carried. */
+/* Self-hosted by next/font. Outfit stands in for the reference site's
+   Aeonik, which is commercially licensed: both are geometric sans faces
+   that hold up at large sizes in light weights. */
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
 });
 
-const lora = Lora({
+const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-lora",
+  variable: "--font-outfit",
   display: "swap",
 });
 
@@ -53,19 +52,15 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${lora.variable}`}>
-      <body className="flex min-h-dvh flex-col">
+    <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
+      <body>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-navy focus:px-4 focus:py-2 focus:text-white"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[60] focus:rounded-full focus:bg-violet focus:px-4 focus:py-2 focus:text-white"
         >
           Skip to content
         </a>
-        <Navbar />
-        <main id="main" className="flex-1">
-          {children}
-        </main>
-        <Footer />
+        {children}
       </body>
     </html>
   );

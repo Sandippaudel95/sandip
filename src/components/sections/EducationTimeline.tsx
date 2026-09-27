@@ -14,7 +14,7 @@ export function EducationTimeline() {
           >
             {/* Node on the rail */}
             <span
-              className="absolute -left-[7px] top-1.5 size-3 rounded-full border-2 border-background bg-navy"
+              className="absolute -left-[7px] top-1.5 size-3 rounded-full border-2 border-background bg-violet"
               aria-hidden="true"
             />
 

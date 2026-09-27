@@ -20,17 +20,17 @@ const quartileStyles: Record<
   NonNullable<Publication["quartile"]>,
   string
 > = {
-  Q1: "bg-[#d1fae5] text-[#065f46] border-[#065f46]/20",
-  Q2: "bg-[#dbeafe] text-[#1e40af] border-[#1e40af]/20",
-  Q3: "bg-[#fef3c7] text-[#b45309] border-[#b45309]/20",
-  Q4: "bg-secondary text-secondary-foreground border-transparent",
+  Q1: "bg-lime/15 text-lime border-lime/30",
+  Q2: "bg-violet/15 text-violet-light border-violet/30",
+  Q3: "bg-amber-400/15 text-amber-300 border-amber-400/30",
+  Q4: "bg-white/10 text-muted-foreground border-white/15",
 };
 
 const statusStyles: Record<PublicationStatus, string> = {
-  published: "bg-[#d1fae5] text-[#065f46] border-transparent",
-  "under-review": "bg-[#dbeafe] text-[#1e40af] border-transparent",
-  revising: "bg-[#fef3c7] text-[#b45309] border-transparent",
-  "in-progress": "bg-secondary text-secondary-foreground border-transparent",
+  published: "bg-lime/15 text-lime border-lime/25",
+  "under-review": "bg-violet/15 text-violet-light border-violet/25",
+  revising: "bg-amber-400/15 text-amber-300 border-amber-400/25",
+  "in-progress": "bg-white/10 text-muted-foreground border-white/15",
 };
 
 function Citation({ item }: { item: Publication }) {
@@ -39,12 +39,12 @@ function Citation({ item }: { item: Publication }) {
       className={cn(
         "border-b py-5 last:border-b-0",
         item.quartile === "Q1" &&
-          "-mx-4 rounded-lg border-b-0 bg-[#d1fae5]/25 px-4",
+          "-mx-4 rounded-2xl border-b-0 bg-lime/[0.07] px-4 ring-1 ring-lime/20",
       )}
     >
       <div className="flex flex-wrap items-center gap-2">
         {item.year && (
-          <span className="font-serif text-sm font-semibold text-navy tabular-nums">
+          <span className="font-display text-sm font-semibold text-violet-light tabular-nums">
             {item.year}
           </span>
         )}
@@ -86,7 +86,7 @@ function Citation({ item }: { item: Publication }) {
           href={item.doi}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-2 inline-flex items-center gap-1.5 text-sm text-navy underline-offset-4 hover:underline"
+          className="mt-2 inline-flex items-center gap-1.5 text-sm text-violet-light underline-offset-4 hover:underline"
         >
           {item.doi.replace(/^https?:\/\//, "")}
           <ExternalLink className="size-3.5" aria-hidden="true" />
@@ -111,8 +111,8 @@ export function ResearchList() {
       <Subhead>Research focus areas</Subhead>
       <ul className="mt-6 grid gap-5 sm:grid-cols-2">
         {researchInterests.map((interest) => (
-          <li key={interest.title} className="rounded-lg border bg-card p-5">
-            <h3 className="font-serif text-base font-semibold text-navy">
+          <li key={interest.title} className="rounded-2xl border bg-white/[0.035] p-5">
+            <h3 className="font-display text-base font-semibold text-violet-light">
               {interest.title}
             </h3>
             <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
@@ -162,13 +162,13 @@ export function ResearchList() {
 
       {/* Training */}
       <Subhead>Training, credentials and workshops</Subhead>
-      <ul className="mt-6 divide-y rounded-lg border bg-card">
+      <ul className="mt-6 divide-y rounded-2xl border bg-white/[0.035]">
         {training.map((item) => (
           <li
             key={`${item.date}-${item.title}`}
             className={cn(
               "grid gap-1 p-5 sm:grid-cols-[8rem_1fr] sm:gap-5",
-              item.credential && "bg-accent/50",
+              item.credential && "bg-violet/[0.08]",
             )}
           >
             <p className="text-sm font-medium text-muted-foreground">
@@ -176,7 +176,7 @@ export function ResearchList() {
             </p>
             <div>
               {item.badge && (
-                <Badge className="mb-2 bg-navy text-white hover:bg-navy">
+                <Badge className="mb-2 bg-violet text-white hover:bg-violet/85">
                   <BadgeCheck className="size-3.5" aria-hidden="true" />
                   {item.badge}
                 </Badge>
@@ -195,8 +195,8 @@ export function ResearchList() {
                 className={cn(
                   "mt-2.5 text-xs",
                   item.role === "Trainee"
-                    ? "bg-secondary text-muted-foreground border-transparent"
-                    : "bg-navy-50 text-navy border-navy/20",
+                    ? "bg-white/8 text-muted-foreground border-white/15"
+                    : "bg-violet/15 text-violet-light border-violet/30",
                 )}
               >
                 {item.role}

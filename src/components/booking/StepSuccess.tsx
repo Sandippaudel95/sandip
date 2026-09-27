@@ -16,12 +16,12 @@ export function StepSuccess({
   onBookAnother: () => void;
 }) {
   return (
-    <div className="rounded-xl border bg-muted/40 p-8 text-center sm:p-12">
+    <div className="panel glow relative overflow-hidden p-8 text-center sm:p-12">
       <div
-        className="mx-auto grid size-14 place-items-center rounded-full bg-accent"
+        className="relative z-10 mx-auto grid size-16 place-items-center rounded-full bg-violet/15 ring-1 ring-violet/30"
         aria-hidden="true"
       >
-        <Hourglass className="size-6 text-navy" />
+        <Hourglass className="size-7 text-violet-light" />
       </div>
 
       <h2 className="mt-5 text-2xl font-semibold tracking-tight">

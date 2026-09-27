@@ -14,12 +14,12 @@ export function CTA({
   return (
     <section className="py-16 sm:py-20">
       <Container>
-        <div className="rounded-2xl bg-navy px-6 py-12 text-white sm:px-10 sm:py-14 lg:px-14">
-          <div className="max-w-2xl">
-            <h2 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+        <div className="glow relative overflow-hidden rounded-[2rem] border border-violet/25 bg-gradient-to-br from-[#1a1046] via-[#120a35] to-[#0c0530] px-6 py-14 sm:px-12 sm:py-16 lg:px-16">
+          <div className="relative z-10 max-w-2xl">
+            <h2 className="text-4xl leading-[1.1] font-normal tracking-tight text-white sm:text-5xl">
               {title}
             </h2>
-            <p className="mt-4 text-lg leading-relaxed text-white/80 text-pretty">
+            <p className="mt-5 text-lg leading-relaxed text-white/70 text-pretty">
               {body}
             </p>
 
@@ -27,7 +27,7 @@ export function CTA({
               <Button
                 asChild
                 size="lg"
-                className="bg-white text-navy hover:bg-white/90"
+                className="bg-white text-ink hover:bg-white/90"
               >
                 <Link href="/book">
                   Book a Consultation
@@ -38,7 +38,7 @@ export function CTA({
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                className="border-white/25 bg-transparent text-white hover:border-white/50 hover:bg-white/10 hover:text-white"
               >
                 <a href={`mailto:${profile.emails[0]}`}>
                   <Mail aria-hidden="true" />

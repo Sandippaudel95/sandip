@@ -51,7 +51,7 @@ export function StepDetails({
         aria-invalid={Boolean(errors[name])}
         aria-describedby={errors[name] ? `${name}-error` : undefined}
         className={cn(
-          "mt-1.5 w-full rounded-md border bg-background px-3 py-2.5 text-[0.9375rem]",
+          "mt-1.5 w-full rounded-xl border border-input bg-white/[0.04] px-4 py-3 text-[0.9375rem]",
           "focus:outline-2 focus:outline-offset-1 focus:outline-ring",
           errors[name] && "border-destructive",
         )}
@@ -67,7 +67,7 @@ export function StepDetails({
 
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border bg-muted/50 p-4 text-sm">
+      <div className="panel p-4 text-sm">
         <p className="font-medium">
           {formatSession(draft.date, draft.timeSlot, draft.durationHours)}
         </p>

@@ -83,7 +83,7 @@ export default async function BookPage() {
               {expectations.map((item) => (
                 <li key={item.title} className="flex gap-3.5">
                   <item.icon
-                    className="mt-0.5 size-5 shrink-0 text-navy"
+                    className="mt-0.5 size-5 shrink-0 text-violet-light"
                     aria-hidden="true"
                   />
                   <div>
@@ -101,7 +101,7 @@ export default async function BookPage() {
               research and training are quoted separately. Email{" "}
               <a
                 href={`mailto:${profile.emails[0]}`}
-                className="font-medium text-navy underline underline-offset-4"
+                className="font-medium text-violet-light underline underline-offset-4"
               >
                 {profile.emails[0]}
               </a>{" "}
