@@ -18,6 +18,12 @@ import {
 } from "@/lib/email";
 import { MAX_HOURS_PER_CLIENT_PER_DAY } from "@/content/availability";
 
+/* Neon suspends an idle compute and takes several seconds to wake. Prisma
+   waits only 2s for a connection by default, so the first booking after a
+   quiet spell fails with P2028 before any work happens. These give the
+   database room to come back. */
+const TX_OPTIONS = { maxWait: 15_000, timeout: 20_000 };
+
 const SLOT_TAKEN =
   "That time has just been taken by someone else. Please choose another slot.";
 
@@ -103,7 +109,7 @@ export async function createBooking(
           transactionId,
         },
       });
-    });
+    }, TX_OPTIONS);
   } catch (err) {
     if (err instanceof CapExceeded) {
       return { ok: false, message: err.message };

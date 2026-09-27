@@ -39,6 +39,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null;
         }
 
+        // A bcrypt hash is 60 characters and starts with $2a/$2b/$2y. Next
+        // expands $NAME in .env files, so an unescaped hash arrives
+        // truncated and every sign-in fails for no visible reason. Say so
+        // rather than leaving it to look like a wrong password.
+        if (!/^\$2[aby]\$\d{2}\$.{53}$/.test(ADMIN_PASSWORD_HASH)) {
+          console.error(
+            "[auth] ADMIN_PASSWORD_HASH is not a valid bcrypt hash (got " +
+              ADMIN_PASSWORD_HASH.length +
+              " chars, expected 60). In .env files each $ must be escaped as \$ " +
+              "because Next.js expands $NAME. Refusing all sign-ins.",
+          );
+          return null;
+        }
+
         const emailMatches = email === ADMIN_EMAIL.trim().toLowerCase();
 
         // Always run a comparison, even when the email is wrong, so the
