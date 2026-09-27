@@ -31,14 +31,35 @@ const EMPTY: Draft = {
 
 const STEPS = ["Time", "Your details", "Payment"] as const;
 
-export function BookingWizard({
-  availability,
-  qrSrc,
-}: {
+interface WizardProps {
   /** Keyed by session length, computed on the server at request time. */
   availability: Record<number, DayAvailability[]>;
   qrSrc: string | null;
-}) {
+  hourlyRate: number;
+}
+
+/* Starting a second booking remounts the wizard rather than clearing state
+   piecemeal. useActionState holds its result until the next submission, so
+   resetting only the draft left the success screen rendering against an
+   empty date. A new key resets the draft, the step and the action result
+   together. */
+export function BookingWizard(props: WizardProps) {
+  const [instance, setInstance] = useState(0);
+  return (
+    <Wizard
+      key={instance}
+      {...props}
+      onBookAnother={() => setInstance((n) => n + 1)}
+    />
+  );
+}
+
+function Wizard({
+  availability,
+  qrSrc,
+  hourlyRate,
+  onBookAnother,
+}: WizardProps & { onBookAnother: () => void }) {
   const [step, setStep] = useState(0);
   const [draft, setDraft] = useState<Draft>(EMPTY);
 
@@ -52,17 +73,12 @@ export function BookingWizard({
     [availability, draft.durationHours],
   );
 
-  const done = state?.ok === true;
-
-  if (done) {
+  if (state?.ok === true) {
     return (
       <StepSuccess
         reference={state.reference}
         draft={draft}
-        onBookAnother={() => {
-          setDraft(EMPTY);
-          setStep(0);
-        }}
+        onBookAnother={onBookAnother}
       />
     );
   }
@@ -133,6 +149,7 @@ export function BookingWizard({
         <StepPayment
           draft={draft}
           qrSrc={qrSrc}
+          basePriceNpr={hourlyRate * draft.durationHours}
           formAction={formAction}
           result={state}
           onBack={() => setStep(1)}

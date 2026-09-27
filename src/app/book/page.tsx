@@ -7,7 +7,7 @@ import { BookingWizard } from "@/components/booking/BookingWizard";
 import { getAvailability, type DayAvailability } from "@/lib/slots";
 import { sessionLengths } from "@/content/availability";
 import { profile } from "@/content/profile";
-import { HOURLY_RATE_NPR } from "@/content/services";
+import { HOURLY_RATE, HOURLY_RATE_NPR } from "@/content/services";
 
 export const metadata: Metadata = {
   title: "Book a Consultation",
@@ -110,7 +110,11 @@ export default async function BookPage() {
           </aside>
 
           <div className="min-w-0">
-            <BookingWizard availability={availability} qrSrc={findQr()} />
+            <BookingWizard
+              availability={availability}
+              qrSrc={findQr()}
+              hourlyRate={HOURLY_RATE}
+            />
           </div>
         </div>
       </Section>

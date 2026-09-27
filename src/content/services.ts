@@ -15,7 +15,15 @@ import type { ServicePackage } from "./types";
    markup changes are needed.
    ========================================================================== */
 
-export const HOURLY_RATE_NPR = "Rs. 5,000";
+/** The rate as a number, for arithmetic. Everything else derives from it. */
+export const HOURLY_RATE = 5000;
+
+/** Formats rupees for display: 5000 -> "Rs. 5,000". */
+export function npr(amount: number): string {
+  return "Rs. " + amount.toLocaleString("en-IN");
+}
+
+export const HOURLY_RATE_NPR = npr(HOURLY_RATE);
 
 export const services: ServicePackage[] = [
   {

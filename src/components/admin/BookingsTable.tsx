@@ -3,6 +3,7 @@ import type { Booking } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { formatSession, nepalDateKey } from "@/lib/time";
+import { npr } from "@/content/services";
 import { BookingRowActions } from "./BookingRowActions";
 
 /* Status colours reuse the palette already on the site rather than adding
@@ -105,6 +106,18 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
                     <dt className="text-muted-foreground">Transaction</dt>
                     <dd className="font-mono text-xs break-all">
                       {b.transactionId}
+                    </dd>
+                  </div>
+                  <div className="flex gap-2">
+                    <dt className="text-muted-foreground">Amount</dt>
+                    <dd className="font-medium">
+                      {npr(b.amountNpr)}
+                      {b.discountNpr > 0 && (
+                        <span className="ml-1.5 text-muted-foreground">
+                          ({npr(b.discountNpr)} off
+                          {b.couponCode ? ` · ${b.couponCode}` : ""})
+                        </span>
+                      )}
                     </dd>
                   </div>
                   <div className="flex gap-2 sm:col-span-2">

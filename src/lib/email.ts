@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 import { formatSession } from "./time";
 import { profile } from "@/content/profile";
-import { HOURLY_RATE_NPR } from "@/content/services";
+import { npr } from "@/content/services";
 
 /* ==========================================================================
    Notification email.
@@ -31,6 +31,9 @@ export interface BookingEmailData {
   timeSlot: string;
   durationHours: number;
   transactionId: string;
+  amountNpr: number;
+  discountNpr: number;
+  couponCode: string | null;
 }
 
 const esc = (s: string) =>
@@ -110,6 +113,15 @@ const sessionRows = (b: BookingEmailData): [string, string][] => [
   ["When", formatSession(b.dateKey, b.timeSlot, b.durationHours)],
   ["Duration", `${b.durationHours} hour${b.durationHours > 1 ? "s" : ""}`],
   ["Topic", b.consultationTopic],
+  ["Amount", npr(b.amountNpr)],
+  ...(b.discountNpr > 0
+    ? ([
+        [
+          "Discount",
+          `${npr(b.discountNpr)} off${b.couponCode ? ` (${b.couponCode})` : ""}`,
+        ],
+      ] as [string, string][])
+    : []),
   ["Transaction ID", b.transactionId],
   ["Reference", b.id],
 ];
@@ -148,7 +160,6 @@ export function sendAdminNotice(b: BookingEmailData): Promise<boolean> {
           ["Name", b.clientName],
           ["Email", b.clientEmail],
           ...sessionRows(b),
-          ["Expected", `${HOURLY_RATE_NPR} per hour`],
         ]),
     ),
     b.clientEmail,

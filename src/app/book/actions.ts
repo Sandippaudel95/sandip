@@ -16,6 +16,12 @@ import {
   sendBookingReceived,
   type BookingEmailData,
 } from "@/lib/email";
+import {
+  couponRejectionMessage,
+  quote,
+  quoteOrFullPrice,
+  type Quote,
+} from "@/lib/pricing";
 import { MAX_HOURS_PER_CLIENT_PER_DAY } from "@/content/availability";
 
 /* Neon suspends an idle compute and takes several seconds to wake. Prisma
@@ -26,6 +32,32 @@ const TX_OPTIONS = { maxWait: 15_000, timeout: 20_000 };
 
 const SLOT_TAKEN =
   "That time has just been taken by someone else. Please choose another slot.";
+
+export type CouponPreview =
+  | { ok: true; quote: Quote }
+  | { ok: false; message: string };
+
+/**
+ * Check a coupon and return the price it produces.
+ *
+ * Only ever a preview: createBooking recomputes the quote itself, so a
+ * client that fakes or replays this result still pays the right amount.
+ */
+export async function previewCoupon(
+  code: string,
+  durationHours: number,
+): Promise<CouponPreview> {
+  const hours = Number(durationHours);
+  if (!Number.isInteger(hours) || hours < 1 || hours > 3) {
+    return { ok: false, message: "Choose a session length first." };
+  }
+
+  const result = await quote(hours, code);
+  if ("rejected" in result) {
+    return { ok: false, message: couponRejectionMessage[result.rejected] };
+  }
+  return { ok: true, quote: result.quote };
+}
 
 export async function createBooking(
   _prev: ActionResult | null,
@@ -54,6 +86,12 @@ export async function createBooking(
     consultationTopic,
     transactionId,
   } = input;
+
+  // Priced here, never from anything the browser sent. An invalid coupon
+  // is ignored rather than failing the booking: the client has already
+  // paid by this point, and the full price is the safe fallback.
+  const submittedCoupon = String(formData.get("couponCode") ?? "").trim();
+  const q = await quoteOrFullPrice(durationHours, submittedCoupon);
 
   const startsAt = nepalToUtc(date, timeSlot);
   const endsAt = nepalToUtc(date, addHours(timeSlot, durationHours));
@@ -107,6 +145,9 @@ export async function createBooking(
           startsAt,
           endsAt,
           transactionId,
+          amountNpr: q.totalNpr,
+          discountNpr: q.discountNpr,
+          couponCode: q.couponCode,
         },
       });
     }, TX_OPTIONS);
@@ -137,6 +178,9 @@ export async function createBooking(
     timeSlot: created.timeSlot,
     durationHours: created.durationHours,
     transactionId: created.transactionId,
+    amountNpr: created.amountNpr,
+    discountNpr: created.discountNpr,
+    couponCode: created.couponCode,
   };
 
   const [toClient, toAdmin] = await Promise.all([

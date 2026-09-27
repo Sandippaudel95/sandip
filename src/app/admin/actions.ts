@@ -32,6 +32,9 @@ async function loadForEmail(id: string): Promise<BookingEmailData | null> {
     timeSlot: b.timeSlot,
     durationHours: b.durationHours,
     transactionId: b.transactionId,
+    amountNpr: b.amountNpr,
+    discountNpr: b.discountNpr,
+    couponCode: b.couponCode,
   };
 }
 

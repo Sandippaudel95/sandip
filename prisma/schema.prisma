@@ -46,6 +46,13 @@ model Booking {
 
   transactionId String
 
+  /// What the client was asked to pay, in rupees, computed server-side at
+  /// insert time. Recorded so a later change to the rate or to a coupon
+  /// cannot rewrite history.
+  amountNpr   Int
+  discountNpr Int     @default(0)
+  couponCode  String?
+
   paymentStatus PaymentStatus @default(PENDING)
   bookingStatus BookingStatus @default(PENDING)
 
@@ -62,4 +69,5 @@ model Booking {
   @@index([date])
   @@index([clientEmail, date])
   @@index([bookingStatus, createdAt])
+  @@index([couponCode])
 }
