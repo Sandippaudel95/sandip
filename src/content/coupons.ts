@@ -30,23 +30,14 @@ export interface Coupon {
 }
 
 export const coupons: Coupon[] = [
-  {
-    code: "STUDENT20",
-    label: "Student discount, 20% off",
-    percentOff: 20,
-    active: true,
-  },
-  {
-    code: "LBC50",
-    label: "Lumbini Banijya Campus, Rs. 500 off",
-    amountOff: 500,
-    active: true,
-  },
-  {
-    code: "LONGSESSION",
-    label: "Two-hour session, 10% off",
-    percentOff: 10,
-    minHours: 2,
-    active: true,
-  },
+  // No codes are live. Any code a visitor enters is refused and full price
+  // is charged, which is the safe default: a guessable placeholder left
+  // active is a real discount anyone can claim.
+  //
+  // To add one:
+  //   { code: "STUDENT20", label: "Student discount, 20% off",
+  //     percentOff: 20, active: true },
+  //
+  // percentOff or amountOff, plus optional expires ("YYYY-MM-DD"),
+  // maxRedemptions and minHours.
 ];
