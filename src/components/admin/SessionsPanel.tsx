@@ -66,7 +66,7 @@ export function SessionsPanel({
                   {b.client ? (
                     <Link
                       href={`/admin/clients/${b.client.id}`}
-                      className="font-medium text-navy underline-offset-4 hover:underline"
+                      className="font-medium text-brand underline-offset-4 hover:underline"
                     >
                       {b.clientName}
                     </Link>
@@ -85,10 +85,10 @@ export function SessionsPanel({
                   className={cn(
                     "text-xs",
                     b.bookingStatus === "CONFIRMED"
-                      ? "border-transparent bg-[#d1fae5] text-[#065f46]"
+                      ? "border-transparent bg-success/15 text-success"
                       : b.bookingStatus === "COMPLETED"
-                        ? "border-transparent bg-[#ede9fe] text-[#5b21b6]"
-                        : "border-transparent bg-[#fef3c7] text-[#b45309]",
+                        ? "border-transparent bg-accent text-accent-foreground"
+                        : "border-transparent bg-warning/15 text-warning",
                   )}
                 >
                   {b.bookingStatus === "PENDING"

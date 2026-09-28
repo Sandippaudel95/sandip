@@ -19,13 +19,13 @@ const iconFor: Record<string, typeof ExternalLink> = {
 
 export function Footer() {
   return (
-    <footer className="mt-24 border-t border-white/10 bg-white/[0.02]">
+    <footer className="mt-24 border-t bg-surface">
       <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
         <div className="grid gap-10 md:grid-cols-3">
           <div>
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-3">
               <span
-                className="grid size-9 place-items-center rounded-lg bg-gradient-to-br from-violet to-violet-light text-sm font-semibold text-white"
+                className="grid size-9 place-items-center rounded-lg bg-gradient-to-br from-brand/30 to-brand text-sm font-semibold text-primary-foreground"
                 aria-hidden="true"
               >
                 SP
@@ -42,13 +42,13 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold tracking-wide text-violet-light uppercase">
+            <h2 className="text-sm font-semibold tracking-wide text-brand uppercase">
               Contact
             </h2>
             <ul className="mt-4 space-y-3 text-sm">
               <li className="flex gap-3">
                 <Mail
-                  className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+                  className="mt-1 size-4 shrink-0 text-muted-foreground"
                   aria-hidden="true"
                 />
                 <span className="flex flex-col gap-1">
@@ -56,7 +56,7 @@ export function Footer() {
                     <a
                       key={email}
                       href={`mailto:${email}`}
-                      className="break-all text-muted-foreground underline-offset-4 hover:text-violet-light hover:underline"
+                      className="break-all text-muted-foreground underline-offset-4 hover:text-brand hover:underline"
                     >
                       {email}
                     </a>
@@ -65,19 +65,19 @@ export function Footer() {
               </li>
               <li className="flex gap-3">
                 <Phone
-                  className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+                  className="mt-1 size-4 shrink-0 text-muted-foreground"
                   aria-hidden="true"
                 />
                 <a
                   href={profile.phoneHref}
-                  className="text-muted-foreground underline-offset-4 hover:text-violet-light hover:underline"
+                  className="text-muted-foreground underline-offset-4 hover:text-brand hover:underline"
                 >
                   {profile.phone}
                 </a>
               </li>
               <li className="flex gap-3">
                 <MapPin
-                  className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+                  className="mt-1 size-4 shrink-0 text-muted-foreground"
                   aria-hidden="true"
                 />
                 <span className="text-muted-foreground">{profile.office}</span>
@@ -86,7 +86,7 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className="text-sm font-semibold tracking-wide text-violet-light uppercase">
+            <h2 className="text-sm font-semibold tracking-wide text-brand uppercase">
               Elsewhere
             </h2>
             <ul className="mt-4 space-y-3 text-sm">
@@ -98,7 +98,7 @@ export function Footer() {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-3 text-muted-foreground underline-offset-4 hover:text-violet-light hover:underline"
+                      className="inline-flex items-center gap-3 text-muted-foreground underline-offset-4 hover:text-brand hover:underline"
                     >
                       <Icon className="size-4 shrink-0" aria-hidden="true" />
                       {link.label}
@@ -109,7 +109,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/book"
-                  className="inline-flex items-center gap-3 font-medium text-violet-light underline-offset-4 hover:underline"
+                  className="inline-flex items-center gap-3 font-medium text-brand underline-offset-4 hover:underline"
                 >
                   Book a consultation
                 </Link>
@@ -118,7 +118,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 border-t border-white/10 pt-6 text-sm text-muted-foreground">
+        <div className="mt-12 border-t pt-6 text-sm text-muted-foreground">
           <p>
             &copy; {new Date().getFullYear()} {profile.name}. All rights
             reserved.

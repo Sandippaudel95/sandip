@@ -30,7 +30,7 @@ export function StepDateTime({
   return (
     <div className="space-y-8">
       <fieldset>
-        <legend className="text-sm font-semibold tracking-[0.12em] text-violet-light uppercase">
+        <legend className="text-sm font-semibold tracking-[0.12em] text-brand uppercase">
           Session length
         </legend>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -38,10 +38,10 @@ export function StepDateTime({
             <label
               key={h}
               className={cn(
-                "cursor-pointer rounded-full border px-5 py-2.5 text-sm transition-colors",
+                "cursor-pointer rounded-full border px-5 py-3 text-sm transition-colors",
                 draft.durationHours === h
-                  ? "border-violet bg-violet text-white"
-                  : "border-input hover:border-violet/50 hover:bg-white/5",
+                  ? "border-brand/30 bg-brand text-primary-foreground"
+                  : "border-input hover:border-brand/30 hover:bg-accent/60",
               )}
             >
               <input
@@ -93,13 +93,13 @@ export function StepDateTime({
           />
 
           <div>
-            <h3 className="text-sm font-semibold tracking-[0.12em] text-violet-light uppercase">
+            <h3 className="text-sm font-semibold tracking-[0.12em] text-brand uppercase">
               {selectedDay ? "Start time" : "Pick a date"}
             </h3>
 
             {selectedDay ? (
               <>
-                <p className="mt-1.5 text-sm text-muted-foreground">
+                <p className="mt-2 text-sm text-muted-foreground">
                   {formatDateKey(selectedDay.date)} · all times Nepal time
                   (NPT)
                 </p>
@@ -114,10 +114,10 @@ export function StepDateTime({
                       <label
                         key={time}
                         className={cn(
-                          "flex cursor-pointer items-center gap-2.5 rounded-xl border px-4 py-3 text-sm transition-colors",
+                          "flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-colors",
                           isSelected
-                            ? "border-violet bg-violet text-white"
-                            : "border-input hover:border-violet/50 hover:bg-white/5",
+                            ? "border-brand/30 bg-brand text-primary-foreground"
+                            : "border-input hover:border-brand/30 hover:bg-accent/60",
                         )}
                       >
                         <input
@@ -131,7 +131,7 @@ export function StepDateTime({
                         <Clock
                           className={cn(
                             "size-4 shrink-0",
-                            isSelected ? "text-white/70" : "text-violet-light",
+                            isSelected ? "text-primary-foreground/70" : "text-brand",
                           )}
                           aria-hidden="true"
                         />
@@ -142,7 +142,7 @@ export function StepDateTime({
                           className={cn(
                             "ml-auto text-xs",
                             isSelected
-                              ? "text-white/70"
+                              ? "text-primary-foreground/70"
                               : "text-muted-foreground",
                           )}
                         >

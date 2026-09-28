@@ -51,10 +51,10 @@ export function NextActionCard({
     <div
       className={cn(
         "rounded-xl border bg-card p-5",
-        overdue && "border-[#b45309]/30 bg-[#fef3c7]/40",
+        overdue && "border-warning/30 bg-warning/10",
       )}
     >
-      <h2 className="flex items-center gap-2 text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+      <h2 className="flex items-center gap-2 text-sm font-semibold tracking-[0.12em] text-brand uppercase">
         <BellRing className="size-4" aria-hidden="true" />
         Next action
       </h2>
@@ -66,8 +66,8 @@ export function NextActionCard({
             {dueLabel && (
               <p
                 className={cn(
-                  "mt-0.5 text-sm",
-                  overdue ? "font-medium text-[#b45309]" : "text-muted-foreground",
+                  "mt-1 text-sm",
+                  overdue ? "font-medium text-warning" : "text-muted-foreground",
                 )}
               >
                 Due {dueLabel}

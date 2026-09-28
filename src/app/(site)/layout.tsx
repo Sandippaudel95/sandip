@@ -1,8 +1,8 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 
-/* The public site. Dark tokens are the document default, so this layout only
-   adds the chrome; the admin panel opts out with `.theme-light`. */
+/* The public site: just the chrome. Both themes come from the tokens in
+   globals.css, chosen by the `.dark` class the pre-paint script sets. */
 export default function SiteLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

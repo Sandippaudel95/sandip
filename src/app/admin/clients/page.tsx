@@ -22,7 +22,7 @@ export default async function ClientsPage() {
   return (
     <Container className="py-10 sm:py-14">
       <h1 className="text-3xl font-semibold tracking-tight">Clients</h1>
-      <p className="mt-1.5 text-muted-foreground">
+      <p className="mt-2 text-muted-foreground">
         {summaries.length} {summaries.length === 1 ? "person" : "people"}
       </p>
 

@@ -20,15 +20,15 @@ const TYPE_LABEL: Record<Engagement["type"], string> = {
 };
 
 const STATUS_STYLE: Record<string, string> = {
-  PENDING: "bg-[#fef3c7] text-[#b45309]",
-  CONFIRMED: "bg-[#d1fae5] text-[#065f46]",
-  COMPLETED: "bg-[#ede9fe] text-[#5b21b6]",
+  PENDING: "bg-warning/15 text-warning",
+  CONFIRMED: "bg-success/15 text-success",
+  COMPLETED: "bg-accent text-accent-foreground",
   CANCELLED: "bg-secondary text-muted-foreground",
-  ENQUIRY: "bg-[#dbeafe] text-[#1e40af]",
-  QUOTED: "bg-[#dbeafe] text-[#1e40af]",
-  AGREED: "bg-[#d1fae5] text-[#065f46]",
-  IN_PROGRESS: "bg-[#fef3c7] text-[#b45309]",
-  DELIVERED: "bg-[#ede9fe] text-[#5b21b6]",
+  ENQUIRY: "bg-brand-soft text-brand",
+  QUOTED: "bg-brand-soft text-brand",
+  AGREED: "bg-success/15 text-success",
+  IN_PROGRESS: "bg-warning/15 text-warning",
+  DELIVERED: "bg-accent text-accent-foreground",
 };
 
 const stamp = new Intl.DateTimeFormat("en-GB", {
@@ -74,19 +74,19 @@ export function ClientTimeline({
           return (
             <li key={`b-${b.id}`} className="flex flex-wrap gap-x-4 gap-y-2 p-4">
               <CalendarDays
-                className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+                className="mt-1 size-4 shrink-0 text-muted-foreground"
                 aria-hidden="true"
               />
               <div className="min-w-0 flex-1">
                 <p className="font-medium">Consultation</p>
-                <p className="mt-0.5 text-sm text-muted-foreground">
+                <p className="mt-1 text-sm text-muted-foreground">
                   {formatSession(
                     nepalDateKey(b.startsAt),
                     b.timeSlot,
                     b.durationHours,
                   )}
                 </p>
-                <p className="mt-0.5 text-sm text-muted-foreground">
+                <p className="mt-1 text-sm text-muted-foreground">
                   {b.consultationTopic}
                 </p>
               </div>
@@ -109,22 +109,22 @@ export function ClientTimeline({
         return (
           <li key={`e-${e.id}`} className="flex flex-wrap gap-x-4 gap-y-2 p-4">
             <Briefcase
-              className="mt-0.5 size-4 shrink-0 text-muted-foreground"
+              className="mt-1 size-4 shrink-0 text-muted-foreground"
               aria-hidden="true"
             />
             <div className="min-w-0 flex-1">
               <p className="font-medium">{e.title}</p>
-              <p className="mt-0.5 text-sm text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {TYPE_LABEL[e.type]} · {stamp.format(entry.at)}
               </p>
               {e.notes && (
-                <p className="mt-0.5 text-sm text-muted-foreground">{e.notes}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{e.notes}</p>
               )}
             </div>
             <span className="text-right tabular-nums">
               {npr(e.amountPaidNpr)}
               {due > 0 && (
-                <span className="block text-xs text-[#b45309]">
+                <span className="block text-xs text-warning">
                   {npr(due)} due
                 </span>
               )}

@@ -42,7 +42,7 @@ export default async function ClientPage({
     <Container className="py-10 sm:py-14">
       <Link
         href="/admin/clients"
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground underline-offset-4 hover:text-navy hover:underline"
+        className="inline-flex items-center gap-2 text-sm text-muted-foreground underline-offset-4 hover:text-brand hover:underline"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />
         Back to clients
@@ -53,35 +53,35 @@ export default async function ClientPage({
           <h1 className="text-3xl font-semibold tracking-tight">
             {client.name}
           </h1>
-          <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-muted-foreground">
-            <li className="flex items-center gap-1.5">
+          <ul className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground">
+            <li className="flex items-center gap-2">
               <Mail className="size-4" aria-hidden="true" />
               <a
                 href={`mailto:${client.email}`}
-                className="underline-offset-4 hover:text-navy hover:underline"
+                className="underline-offset-4 hover:text-brand hover:underline"
               >
                 {client.email}
               </a>
             </li>
             {client.phone && (
-              <li className="flex items-center gap-1.5">
+              <li className="flex items-center gap-2">
                 <Phone className="size-4" aria-hidden="true" />
                 <a
                   href={`tel:${client.phone}`}
-                  className="underline-offset-4 hover:text-navy hover:underline"
+                  className="underline-offset-4 hover:text-brand hover:underline"
                 >
                   {client.phone}
                 </a>
               </li>
             )}
             {client.organisation && (
-              <li className="flex items-center gap-1.5">
+              <li className="flex items-center gap-2">
                 <Building2 className="size-4" aria-hidden="true" />
                 {client.organisation}
               </li>
             )}
             {client.level && (
-              <li className="flex items-center gap-1.5">
+              <li className="flex items-center gap-2">
                 <GraduationCap className="size-4" aria-hidden="true" />
                 {client.level}
               </li>
@@ -126,7 +126,7 @@ export default async function ClientPage({
       </div>
 
       <section className="mt-10">
-        <h2 className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+        <h2 className="text-sm font-semibold tracking-[0.12em] text-brand uppercase">
           History
         </h2>
         <div className="mt-4">
@@ -139,7 +139,7 @@ export default async function ClientPage({
 
       {client.notes && (
         <section className="mt-10">
-          <h2 className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+          <h2 className="text-sm font-semibold tracking-[0.12em] text-brand uppercase">
             Notes
           </h2>
           <pre className="mt-4 rounded-xl border bg-card p-5 font-sans text-sm leading-relaxed whitespace-pre-wrap">

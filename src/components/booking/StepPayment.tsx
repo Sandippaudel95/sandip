@@ -117,16 +117,16 @@ export function StepPayment({
 
       {/* ---------------- Coupon ---------------- */}
       <div className="panel p-5">
-        <h2 className="flex items-center gap-2.5 text-sm font-semibold tracking-[0.12em] text-violet-light uppercase">
+        <h2 className="flex items-center gap-3 text-sm font-semibold tracking-[0.12em] text-brand uppercase">
           <TicketPercent className="size-4" aria-hidden="true" />
           Coupon code
         </h2>
 
         {applied ? (
-          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-lime/30 bg-lime/10 p-3.5">
+          <div className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-lg border border-success/30 bg-success/10 p-4">
             <p className="flex items-center gap-2 text-sm">
               <Check
-                className="size-4 shrink-0 text-lime"
+                className="size-4 shrink-0 text-success"
                 aria-hidden="true"
               />
               <span>
@@ -137,9 +137,9 @@ export function StepPayment({
             <button
               type="button"
               onClick={clearCoupon}
-              className="inline-flex items-center gap-1 text-sm text-muted-foreground underline-offset-4 hover:text-violet-light hover:underline"
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground underline-offset-4 hover:text-brand hover:underline"
             >
-              <X className="size-3.5" aria-hidden="true" />
+              <X className="size-4" aria-hidden="true" />
               Remove
             </button>
           </div>
@@ -167,7 +167,7 @@ export function StepPayment({
                 aria-invalid={Boolean(couponError)}
                 aria-describedby={couponError ? "coupon-error" : undefined}
                 className={cn(
-                  "min-w-0 flex-1 rounded-full border border-input bg-white/[0.04] px-5 py-2.5 text-[0.9375rem] tracking-wide uppercase",
+                  "min-w-0 flex-1 rounded-full border border-input bg-card px-5 py-3 text-base tracking-wide uppercase",
                   "focus:outline-2 focus:outline-offset-1 focus:outline-ring",
                   couponError && "border-destructive",
                 )}
@@ -195,8 +195,8 @@ export function StepPayment({
 
       {/* ---------------- Amount and QR ---------------- */}
       <div className="panel p-6">
-        <h2 className="flex items-center gap-2.5 text-lg font-semibold">
-          <QrCode className="size-5 text-violet-light" aria-hidden="true" />
+        <h2 className="flex items-center gap-3 text-lg font-semibold">
+          <QrCode className="size-5 text-brand" aria-hidden="true" />
           Pay {npr(total)}
         </h2>
 
@@ -204,6 +204,8 @@ export function StepPayment({
           <div className="mx-auto sm:mx-0">
             {qrSrc ? (
               <>
+                {/* Stays white in both themes on purpose: a QR code
+                    needs a light quiet zone to stay scannable. */}
                 <div className="rounded-xl bg-white p-3">
                   <Image
                     src={qrSrc}
@@ -219,7 +221,7 @@ export function StepPayment({
                 </p>
               </>
             ) : (
-              <div className="grid size-[214px] place-items-center rounded-xl border border-dashed border-white/20 bg-white/[0.03] p-4 text-center">
+              <div className="grid size-[214px] place-items-center rounded-xl border border-dashed bg-card p-4 text-center">
                 <p className="text-xs leading-relaxed text-muted-foreground">
                   The payment QR is not available yet. Submit the booking and
                   payment details will be sent to you by email.
@@ -229,7 +231,7 @@ export function StepPayment({
           </div>
 
           <div className="min-w-0">
-            <dl className="space-y-1.5 text-sm">
+            <dl className="space-y-2 text-sm">
               <div className="flex justify-between gap-4">
                 <dt className="text-muted-foreground">
                   {draft.durationHours} hour
@@ -239,7 +241,7 @@ export function StepPayment({
                 <dd className="tabular-nums">{npr(basePriceNpr)}</dd>
               </div>
               {applied && applied.discountNpr > 0 && (
-                <div className="flex justify-between gap-4 text-lime">
+                <div className="flex justify-between gap-4 text-success">
                   <dt>Discount ({applied.code})</dt>
                   <dd className="tabular-nums">
                     &minus;{npr(applied.discountNpr)}
@@ -248,15 +250,15 @@ export function StepPayment({
               )}
               <div className="flex justify-between gap-4 border-t pt-2">
                 <dt className="font-medium">Total</dt>
-                <dd className="font-display text-xl font-semibold text-violet-light tabular-nums">
+                <dd className="font-display text-xl font-semibold text-brand tabular-nums">
                   {npr(total)}
                 </dd>
               </div>
             </dl>
 
-            <div className="mt-4 flex gap-3 rounded-xl border border-violet/25 bg-violet/[0.08] p-4 text-sm">
+            <div className="mt-4 flex gap-3 rounded-xl border border-brand/30 bg-brand/[0.08] p-4 text-sm">
               <Info
-                className="mt-0.5 size-4 shrink-0 text-violet-light"
+                className="mt-1 size-4 shrink-0 text-brand"
                 aria-hidden="true"
               />
               <p>
@@ -283,13 +285,13 @@ export function StepPayment({
                 placeholder="From your payment receipt"
                 aria-invalid={Boolean(failed?.fieldErrors?.transactionId)}
                 className={cn(
-                  "mt-1.5 w-full rounded-xl border border-input bg-white/[0.04] px-4 py-3 text-[0.9375rem]",
+                  "mt-2 w-full rounded-xl border border-input bg-card px-4 py-3 text-base",
                   "focus:outline-2 focus:outline-offset-1 focus:outline-ring",
                   failed?.fieldErrors?.transactionId && "border-destructive",
                 )}
               />
               {failed?.fieldErrors?.transactionId && (
-                <p className="mt-1.5 text-sm text-destructive">
+                <p className="mt-2 text-sm text-destructive">
                   {failed.fieldErrors.transactionId}
                 </p>
               )}
@@ -304,7 +306,7 @@ export function StepPayment({
           className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm"
         >
           <AlertCircle
-            className="mt-0.5 size-4 shrink-0 text-destructive"
+            className="mt-1 size-4 shrink-0 text-destructive"
             aria-hidden="true"
           />
           <div>
@@ -313,7 +315,7 @@ export function StepPayment({
               <button
                 type="button"
                 onClick={onPickAnotherTime}
-                className="mt-2 font-medium text-violet-light underline underline-offset-4"
+                className="mt-2 font-medium text-brand underline underline-offset-4"
               >
                 Choose another time
               </button>

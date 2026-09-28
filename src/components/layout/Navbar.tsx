@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu } from "lucide-react";
+import { BookOpen, Briefcase, CalendarCheck, Home, Menu } from "lucide-react";
+import { ThemeToggle } from "@/components/theme/ThemeToggle";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,9 +16,9 @@ import {
 } from "@/components/ui/sheet";
 
 const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/research", label: "Research" },
-  { href: "/consulting", label: "Services" },
+  { href: "/", label: "Home", Icon: Home },
+  { href: "/research", label: "Research", Icon: BookOpen },
+  { href: "/consulting", label: "Services", Icon: Briefcase },
 ] as const;
 
 export function Navbar() {
@@ -41,17 +42,17 @@ export function Navbar() {
       className={cn(
         "sticky top-0 z-50 w-full transition-colors",
         scrolled
-          ? "border-b border-white/10 bg-ink/80 backdrop-blur-xl"
-          : "bg-transparent",
+          ? "border-b bg-background/85 backdrop-blur-xl"
+          : "border-b border-transparent bg-transparent",
       )}
     >
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="flex items-center gap-2.5 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
+          className="flex items-center gap-3 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-ring"
         >
           <span
-            className="grid size-9 place-items-center rounded-lg bg-gradient-to-br from-violet to-violet-light text-sm font-semibold text-white"
+            className="grid size-9 place-items-center rounded-lg bg-gradient-to-br from-brand/30 to-brand text-sm font-semibold text-primary-foreground"
             aria-hidden="true"
           >
             SP
@@ -72,20 +73,25 @@ export function Navbar() {
               href={item.href}
               aria-current={isActive(item.href) ? "page" : undefined}
               className={cn(
-                "rounded-full px-4 py-2 text-sm transition-colors",
+                "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm transition-colors",
                 isActive(item.href)
                   ? "text-foreground"
                   : "text-muted-foreground hover:text-foreground",
               )}
             >
+              <item.Icon className="size-4" aria-hidden="true" />
               {item.label}
             </Link>
           ))}
+          <ThemeToggle className="ml-2" />
           <Button
             asChild
-            className="ml-2 bg-white text-ink hover:bg-white/90"
+            className="ml-2 bg-brand text-primary-foreground hover:bg-brand/90"
           >
-            <Link href="/book">Book a Consultation</Link>
+            <Link href="/book">
+              <CalendarCheck aria-hidden="true" />
+              Book a Consultation
+            </Link>
           </Button>
         </nav>
 
@@ -108,20 +114,29 @@ export function Navbar() {
                   onClick={() => setOpen(false)}
                   aria-current={isActive(item.href) ? "page" : undefined}
                   className={cn(
-                    "rounded-xl px-4 py-3 text-base transition-colors",
+                    "inline-flex items-center gap-3 rounded-xl px-4 py-3 text-base transition-colors",
                     isActive(item.href)
                       ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground hover:bg-white/5 hover:text-foreground",
+                      : "text-muted-foreground hover:bg-accent/60 hover:text-foreground",
                   )}
                 >
+                  <item.Icon className="size-5" aria-hidden="true" />
                   {item.label}
                 </Link>
               ))}
-              <Button asChild className="mt-4 bg-white text-ink hover:bg-white/90">
+              <Button asChild className="mt-4 bg-brand text-primary-foreground hover:bg-brand/90">
                 <Link href="/book" onClick={() => setOpen(false)}>
+                  <CalendarCheck aria-hidden="true" />
                   Book a Consultation
                 </Link>
               </Button>
+
+              <div className="mt-6 border-t pt-6">
+                <p className="mb-3 text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+                  Appearance
+                </p>
+                <ThemeToggle />
+              </div>
             </nav>
           </SheetContent>
         </Sheet>

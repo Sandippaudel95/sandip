@@ -23,7 +23,7 @@ export function LoginForm() {
           type="email"
           required
           autoComplete="username"
-          className="mt-1.5 w-full rounded-md border bg-background px-3 py-2.5 text-[0.9375rem] focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+          className="mt-2 w-full rounded-md border bg-background px-3 py-3 text-base focus:outline-2 focus:outline-offset-1 focus:outline-ring"
         />
       </div>
 
@@ -37,17 +37,17 @@ export function LoginForm() {
           type="password"
           required
           autoComplete="current-password"
-          className="mt-1.5 w-full rounded-md border bg-background px-3 py-2.5 text-[0.9375rem] focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+          className="mt-2 w-full rounded-md border bg-background px-3 py-3 text-base focus:outline-2 focus:outline-offset-1 focus:outline-ring"
         />
       </div>
 
       {error && (
         <p
           role="alert"
-          className="flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm"
+          className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm"
         >
           <AlertCircle
-            className="mt-0.5 size-4 shrink-0 text-destructive"
+            className="mt-1 size-4 shrink-0 text-destructive"
             aria-hidden="true"
           />
           {error}

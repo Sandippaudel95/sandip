@@ -10,11 +10,11 @@ import { profile, profileLinks, stats } from "@/content/profile";
    the headline, following the reference design. */
 export function Hero() {
   return (
-    <section className="glow relative overflow-hidden border-b border-white/10">
+    <section className="glow relative overflow-hidden border-b">
       {/* Faint grid, far back, to stop the dark ground reading as flat. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.18] [background-image:linear-gradient(to_right,#ffffff12_1px,transparent_1px),linear-gradient(to_bottom,#ffffff12_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(70%_50%_at_50%_0%,black,transparent)]"
+        className="pointer-events-none absolute inset-0 opacity-60 [background-image:linear-gradient(to_right,var(--border)_1px,transparent_1px),linear-gradient(to_bottom,var(--border)_1px,transparent_1px)] [background-size:64px_64px] [mask-image:radial-gradient(70%_50%_at_50%_0%,black,transparent)]"
       />
 
       <Container className="relative z-10 py-20 sm:py-24 lg:py-32">
@@ -41,7 +41,7 @@ export function Hero() {
             {/* The two strands, given equal weight. */}
             <div className="mt-10 grid gap-4 sm:grid-cols-2">
               <div className="panel p-6">
-                <BookOpen className="size-5 text-violet-light" aria-hidden="true" />
+                <BookOpen className="size-5 text-brand" aria-hidden="true" />
                 <h2 className="mt-4 font-display text-lg">Academic research</h2>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   Management, economics and finance: market efficiency,
@@ -50,7 +50,7 @@ export function Hero() {
               </div>
 
               <div className="panel p-6">
-                <LineChart className="size-5 text-lime" aria-hidden="true" />
+                <LineChart className="size-5 text-success" aria-hidden="true" />
                 <h2 className="mt-4 font-display text-lg">
                   Research consultancy
                 </h2>
@@ -65,7 +65,7 @@ export function Hero() {
               <Button
                 asChild
                 size="lg"
-                className="bg-white text-ink hover:bg-white/90"
+                className="bg-brand text-primary-foreground hover:bg-brand/90"
               >
                 <Link href="/book">
                   Book a Consultation
@@ -84,7 +84,7 @@ export function Hero() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-muted-foreground underline-offset-4 transition-colors hover:text-violet-light hover:underline"
+                    className="text-muted-foreground underline-offset-4 transition-colors hover:text-brand hover:underline"
                   >
                     {link.label}
                   </a>
@@ -98,9 +98,9 @@ export function Hero() {
               {/* Glow behind the portrait. */}
               <div
                 aria-hidden="true"
-                className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-violet/30 via-violet/5 to-transparent blur-2xl"
+                className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-brand/30 via-brand/10 to-transparent blur-2xl"
               />
-              <div className="relative aspect-square overflow-hidden rounded-[1.75rem] border border-white/15 bg-ink-raised">
+              <div className="relative aspect-square overflow-hidden rounded-2xl border bg-surface-raised">
                 <Image
                   src={profile.photo}
                   alt={`Portrait of ${profile.name}`}
@@ -115,12 +115,12 @@ export function Hero() {
         </div>
 
         {/* Stat row, big and light, as on the reference. */}
-        <dl className="mt-20 grid grid-cols-2 gap-8 border-t border-white/10 pt-12 lg:grid-cols-4">
+        <dl className="mt-20 grid grid-cols-2 gap-8 border-t pt-12 lg:grid-cols-4">
           {stats.map((stat) => (
             <div key={stat.label}>
               <dt className="sr-only">{stat.label}</dt>
               <dd>
-                <span className="block bg-gradient-to-br from-white to-violet-light bg-clip-text font-display text-4xl font-light text-transparent sm:text-5xl">
+                <span className="block font-display text-4xl font-medium text-foreground sm:text-5xl">
                   {stat.value}
                 </span>
                 <span className="mt-2 block text-sm text-muted-foreground">

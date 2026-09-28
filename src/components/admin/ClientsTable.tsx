@@ -10,8 +10,8 @@ import { npr } from "@/content/services";
 import type { ClientSummary } from "@/lib/crm";
 
 const statusStyles: Record<string, string> = {
-  LEAD: "bg-[#dbeafe] text-[#1e40af] border-transparent",
-  ACTIVE: "bg-[#d1fae5] text-[#065f46] border-transparent",
+  LEAD: "bg-brand-soft text-brand border-transparent",
+  ACTIVE: "bg-success/15 text-success border-transparent",
   PAST: "bg-secondary text-muted-foreground border-transparent",
   ARCHIVED: "bg-secondary text-muted-foreground border-transparent",
 };
@@ -56,7 +56,7 @@ export function ClientsTable({ summaries }: { summaries: ClientSummary[] }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by name, email or organisation"
-            className="w-full rounded-full border bg-background py-2.5 pr-4 pl-9 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+            className="w-full rounded-full border bg-background py-3 pr-4 pl-9 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
           />
         </div>
 
@@ -67,9 +67,9 @@ export function ClientsTable({ summaries }: { summaries: ClientSummary[] }) {
               type="button"
               onClick={() => setStatus(s)}
               className={cn(
-                "rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+                "rounded-full px-3 py-2 text-xs font-medium transition-colors",
                 status === s
-                  ? "bg-navy text-white"
+                  ? "bg-brand text-primary-foreground"
                   : "text-muted-foreground hover:bg-muted",
               )}
             >
@@ -131,7 +131,7 @@ export function ClientsTable({ summaries }: { summaries: ClientSummary[] }) {
                 {s.outstandingNpr > 0 && (
                   <Badge
                     variant="outline"
-                    className="border-transparent bg-[#fef3c7] text-xs text-[#b45309]"
+                    className="border-transparent bg-warning/15 text-xs text-warning"
                   >
                     {npr(s.outstandingNpr)} due
                   </Badge>

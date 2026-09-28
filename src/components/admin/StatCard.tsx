@@ -16,7 +16,7 @@ export function StatCard({
     <div
       className={cn(
         "rounded-xl border bg-card p-5",
-        tone === "warn" && "border-[#b45309]/25 bg-[#fef3c7]/40",
+        tone === "warn" && "border-warning/30 bg-warning/10",
       )}
     >
       <p className="text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase">
@@ -25,7 +25,7 @@ export function StatCard({
       <p
         className={cn(
           "mt-2 font-display text-3xl font-semibold tabular-nums",
-          tone === "warn" ? "text-[#b45309]" : "text-navy",
+          tone === "warn" ? "text-warning" : "text-brand",
         )}
       >
         {value}

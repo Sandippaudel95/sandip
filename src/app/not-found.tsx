@@ -5,7 +5,7 @@ import { Container } from "@/components/layout/Section";
 export default function NotFound() {
   return (
     <Container className="py-24 text-center sm:py-32">
-      <p className="font-display text-6xl font-light text-violet/50">404</p>
+      <p className="font-display text-6xl font-light text-brand/50">404</p>
       <h1 className="mt-4 text-4xl font-normal tracking-tight">
         Page not found
       </h1>

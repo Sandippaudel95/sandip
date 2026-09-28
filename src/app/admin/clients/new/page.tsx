@@ -21,7 +21,7 @@ export default async function NewClientPage() {
     <Container className="max-w-3xl py-10 sm:py-14">
       <Link
         href="/admin/clients"
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground underline-offset-4 hover:text-navy hover:underline"
+        className="inline-flex items-center gap-2 text-sm text-muted-foreground underline-offset-4 hover:text-brand hover:underline"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />
         Back to clients
@@ -30,7 +30,7 @@ export default async function NewClientPage() {
       <h1 className="mt-5 text-3xl font-semibold tracking-tight">
         Add a client
       </h1>
-      <p className="mt-1.5 text-muted-foreground">
+      <p className="mt-2 text-muted-foreground">
         For someone who has not booked through the site.
       </p>
 

@@ -19,7 +19,7 @@ export default async function LoginPage() {
     <Container className="py-20 sm:py-28">
       <div className="mx-auto max-w-sm rounded-xl border bg-card p-7">
         <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
-        <p className="mt-1.5 text-sm text-muted-foreground">
+        <p className="mt-2 text-sm text-muted-foreground">
           Booking administration.
         </p>
         <div className="mt-6">

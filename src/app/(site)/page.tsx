@@ -30,7 +30,7 @@ export default function HomePage() {
           {services.slice(0, 3).map((pkg) => (
             <article
               key={pkg.id}
-              className="flex flex-col rounded-2xl border bg-white/[0.035] p-6"
+              className="flex flex-col rounded-2xl border bg-card p-6"
             >
               <h3 className="text-lg font-semibold tracking-tight">
                 {pkg.name}
@@ -38,14 +38,14 @@ export default function HomePage() {
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {pkg.summary}
               </p>
-              <p className="mt-3 font-display text-base font-semibold text-violet-light">
+              <p className="mt-3 font-display text-base font-semibold text-brand">
                 {pkg.price}
               </p>
-              <ul className="mt-4 space-y-1.5">
+              <ul className="mt-4 space-y-2">
                 {pkg.includes.slice(0, 3).map((line) => (
                   <li key={line} className="flex gap-2 text-sm">
                     <Check
-                      className="mt-0.5 size-3.5 shrink-0 text-violet-light"
+                      className="mt-1 size-4 shrink-0 text-brand"
                       aria-hidden="true"
                     />
                     <span className="text-muted-foreground">{line}</span>
@@ -54,7 +54,7 @@ export default function HomePage() {
               </ul>
               <Link
                 href={`/consulting#${pkg.id}`}
-                className="mt-auto pt-5 text-sm font-medium text-violet-light underline-offset-4 hover:underline"
+                className="mt-auto pt-5 text-sm font-medium text-brand underline-offset-4 hover:underline"
               >
                 Read more
               </Link>
@@ -81,7 +81,7 @@ export default function HomePage() {
         <ol className="mt-10 max-w-3xl">
           {recent.map((item) => (
             <li key={item.citation} className="border-b py-5 first:pt-0">
-              <span className="font-display text-sm font-semibold text-violet-light tabular-nums">
+              <span className="font-display text-sm font-semibold text-brand tabular-nums">
                 {item.year}
               </span>
               <p className="prose-academic mt-2">

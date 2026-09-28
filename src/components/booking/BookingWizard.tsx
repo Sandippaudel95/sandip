@@ -97,10 +97,10 @@ function Wizard({
                 disabled={i >= step}
                 aria-current={i === step ? "step" : undefined}
                 className={cn(
-                  "flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm transition-colors",
-                  state === "current" && "bg-violet/15 font-medium text-violet-light ring-1 ring-violet/30",
+                  "flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors",
+                  state === "current" && "bg-brand-soft font-medium text-brand ring-1 ring-brand/30",
                   state === "done" &&
-                    "cursor-pointer text-violet-light hover:bg-white/5",
+                    "cursor-pointer text-brand hover:bg-accent/60",
                   state === "upcoming" && "text-muted-foreground",
                 )}
               >
@@ -108,8 +108,8 @@ function Wizard({
                   className={cn(
                     "grid size-5 place-items-center rounded-full text-xs font-semibold",
                     state === "upcoming"
-                      ? "bg-white/10 text-muted-foreground"
-                      : "bg-violet text-white",
+                      ? "bg-accent text-muted-foreground"
+                      : "bg-brand text-primary-foreground",
                   )}
                   aria-hidden="true"
                 >

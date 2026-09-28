@@ -14,17 +14,17 @@ export function EducationTimeline() {
           >
             {/* Node on the rail */}
             <span
-              className="absolute -left-[7px] top-1.5 size-3 rounded-full border-2 border-background bg-violet"
+              className="absolute -left-[7px] top-2 size-3 rounded-full border-2 border-background bg-brand"
               aria-hidden="true"
             />
 
-            <p className="text-sm font-medium text-muted-foreground sm:pt-0.5">
+            <p className="text-sm font-medium text-muted-foreground sm:pt-1">
               {entry.period}
             </p>
 
             <div>
               <h3 className="text-lg font-semibold">{entry.degree}</h3>
-              <p className="mt-1 text-[0.9375rem] text-muted-foreground">
+              <p className="mt-1 text-base text-muted-foreground">
                 {entry.institution}
               </p>
               {entry.detail && (

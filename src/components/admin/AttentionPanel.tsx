@@ -23,34 +23,34 @@ function Row({
   action,
 }: {
   icon: typeof BellRing;
-  tone: "amber" | "violet" | "red" | "blue";
+  tone: "waiting" | "due" | "overdue" | "info";
   title: string;
   detail: string;
   href: string;
   action: string;
 }) {
   const tones = {
-    amber: "text-[#b45309] bg-[#fef3c7]",
-    violet: "text-[#5b21b6] bg-[#ede9fe]",
-    red: "text-destructive bg-destructive/10",
-    blue: "text-[#1e40af] bg-[#dbeafe]",
+    waiting: "text-warning bg-warning/15",
+    due: "text-accent-foreground bg-accent",
+    overdue: "text-destructive bg-destructive/10",
+    info: "text-brand bg-brand-soft",
   } as const;
 
   return (
-    <li className="flex flex-wrap items-start gap-3 border-b py-3.5 last:border-b-0">
+    <li className="flex flex-wrap items-start gap-3 border-b py-4 last:border-b-0">
       <span
-        className={`mt-0.5 grid size-8 shrink-0 place-items-center rounded-full ${tones[tone]}`}
+        className={`mt-1 grid size-8 shrink-0 place-items-center rounded-full ${tones[tone]}`}
         aria-hidden="true"
       >
         <Icon className="size-4" />
       </span>
       <div className="min-w-0 flex-1">
         <p className="font-medium">{title}</p>
-        <p className="mt-0.5 text-sm text-muted-foreground">{detail}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{detail}</p>
       </div>
       <Link
         href={href}
-        className="shrink-0 self-center text-sm font-medium text-navy underline-offset-4 hover:underline"
+        className="shrink-0 self-center text-sm font-medium text-brand underline-offset-4 hover:underline"
       >
         {action}
       </Link>
@@ -63,7 +63,7 @@ export function AttentionPanel({ attention }: { attention: Attention }) {
     return (
       <div className="rounded-xl border border-dashed p-8 text-center">
         <CheckCircle2
-          className="mx-auto mb-3 size-7 text-[#065f46]"
+          className="mx-auto mb-3 size-7 text-success"
           aria-hidden="true"
         />
         <p className="font-medium">Nothing needs attention</p>
@@ -82,7 +82,7 @@ export function AttentionPanel({ attention }: { attention: Attention }) {
         <Row
           key={`pay-${b.id}`}
           icon={Receipt}
-          tone="amber"
+          tone="waiting"
           title={`Verify payment from ${b.clientName}`}
           detail={`${npr(b.amountNpr)} · ref ${b.transactionId} · ${formatSession(
             nepalDateKey(b.startsAt),
@@ -102,7 +102,7 @@ export function AttentionPanel({ attention }: { attention: Attention }) {
           <Row
             key={`follow-${c.id}`}
             icon={BellRing}
-            tone="violet"
+            tone="due"
             title={c.nextAction ?? `Follow up with ${c.name}`}
             detail={`${c.name} · due ${formatDateKey(due)}${due < today ? " · overdue" : ""}`}
             href={`/admin/clients/${c.id}`}
@@ -115,7 +115,7 @@ export function AttentionPanel({ attention }: { attention: Attention }) {
         <Row
           key={`work-${e.id}`}
           icon={AlertTriangle}
-          tone="red"
+          tone="overdue"
           title={`${e.title} is overdue`}
           detail={`${e.client.name} · was due ${formatDateKey(
             e.dueAt!.toISOString().slice(0, 10),
@@ -129,7 +129,7 @@ export function AttentionPanel({ attention }: { attention: Attention }) {
         <Row
           key={`done-${b.id}`}
           icon={Clock}
-          tone="blue"
+          tone="info"
           title={`Session with ${b.clientName} has finished`}
           detail={`${formatSession(
             nepalDateKey(b.startsAt),

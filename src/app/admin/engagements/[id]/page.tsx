@@ -36,7 +36,7 @@ export default async function EditEngagementPage({
     <Container className="max-w-3xl py-10 sm:py-14">
       <Link
         href="/admin/engagements"
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground underline-offset-4 hover:text-navy hover:underline"
+        className="inline-flex items-center gap-2 text-sm text-muted-foreground underline-offset-4 hover:text-brand hover:underline"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />
         Back to work

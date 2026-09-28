@@ -14,12 +14,14 @@ export function CTA({
   return (
     <section className="py-16 sm:py-20">
       <Container>
-        <div className="glow relative overflow-hidden rounded-[2rem] border border-violet/25 bg-gradient-to-br from-[#1a1046] via-[#120a35] to-[#0c0530] px-6 py-14 sm:px-12 sm:py-16 lg:px-16">
+        {/* A tinted surface, not a solid brand block, so the text uses the
+            ordinary foreground tokens and stays legible in both themes. */}
+        <div className="glow relative overflow-hidden rounded-[2rem] border border-brand/30 bg-gradient-to-br from-brand-soft via-card to-background px-6 py-14 sm:px-12 sm:py-16 lg:px-16">
           <div className="relative z-10 max-w-2xl">
-            <h2 className="text-4xl leading-[1.1] font-normal tracking-tight text-white sm:text-5xl">
+            <h2 className="text-4xl leading-[1.1] font-normal tracking-tight sm:text-5xl">
               {title}
             </h2>
-            <p className="mt-5 text-lg leading-relaxed text-white/70 text-pretty">
+            <p className="mt-5 text-lg leading-relaxed text-muted-foreground text-pretty">
               {body}
             </p>
 
@@ -27,19 +29,14 @@ export function CTA({
               <Button
                 asChild
                 size="lg"
-                className="bg-white text-ink hover:bg-white/90"
+                className="bg-brand text-primary-foreground hover:bg-brand/90"
               >
                 <Link href="/book">
                   Book a Consultation
                   <ArrowRight aria-hidden="true" />
                 </Link>
               </Button>
-              <Button
-                asChild
-                size="lg"
-                variant="outline"
-                className="border-white/25 bg-transparent text-white hover:border-white/50 hover:bg-white/10 hover:text-white"
-              >
+              <Button asChild size="lg" variant="outline">
                 <a href={`mailto:${profile.emails[0]}`}>
                   <Mail aria-hidden="true" />
                   Email me

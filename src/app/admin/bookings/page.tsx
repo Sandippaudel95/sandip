@@ -29,7 +29,7 @@ export default async function BookingsPage() {
   return (
     <Container className="py-10 sm:py-14">
       <h1 className="text-3xl font-semibold tracking-tight">Bookings</h1>
-      <p className="mt-1.5 text-muted-foreground">
+      <p className="mt-2 text-muted-foreground">
         {awaiting.length > 0
           ? `${awaiting.length} awaiting verification`
           : "Nothing awaiting verification"}
@@ -43,10 +43,10 @@ export default async function BookingsPage() {
 
       {awaiting.length > 0 && (
         <section className="mt-10">
-          <h2 className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+          <h2 className="text-sm font-semibold tracking-[0.12em] text-brand uppercase">
             Awaiting verification
           </h2>
-          <p className="mt-1.5 mb-5 text-sm text-muted-foreground">
+          <p className="mt-2 mb-5 text-sm text-muted-foreground">
             Check each transaction ID against your bank or Fonepay app before
             confirming.
           </p>
@@ -55,7 +55,7 @@ export default async function BookingsPage() {
       )}
 
       <section className="mt-12">
-        <h2 className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+        <h2 className="text-sm font-semibold tracking-[0.12em] text-brand uppercase">
           All bookings
         </h2>
         <div className="mt-5">

@@ -15,14 +15,14 @@ export function ServicePackages() {
           key={pkg.id}
           id={pkg.id}
           className={cn(
-            "relative flex scroll-mt-24 flex-col rounded-2xl border bg-white/[0.035] p-6 sm:p-7",
-            pkg.featured && "border-violet/40 ring-1 ring-violet/20",
+            "relative flex scroll-mt-24 flex-col rounded-2xl border bg-card p-6 sm:p-7",
+            pkg.featured && "border-brand/30 ring-1 ring-brand/30",
           )}
         >
           {/* Taken out of flow so the badge does not push this card's
               content down relative to the others in the row. */}
           {pkg.featured && (
-            <Badge className="absolute -top-2.5 left-6 bg-violet text-white hover:bg-violet/85 sm:left-7">
+            <Badge className="absolute -top-3 left-6 bg-brand text-primary-foreground hover:bg-brand/85 sm:left-7">
               Start here
             </Badge>
           )}
@@ -34,39 +34,39 @@ export function ServicePackages() {
 
           {/* Floor sized to the longest summary (4 lines at 3-up), so the
               price band lines up across a row. Raise it if a summary grows. */}
-          <p className="mt-2.5 leading-relaxed text-muted-foreground text-pretty sm:min-h-[6.5rem]">
+          <p className="mt-3 leading-relaxed text-muted-foreground text-pretty sm:min-h-[6.5rem]">
             {pkg.summary}
           </p>
 
           <div className="mt-4 border-y py-3">
-            <p className="font-display text-lg font-semibold text-violet-light">
+            <p className="font-display text-lg font-semibold text-brand">
               {pkg.price}
             </p>
             {pkg.priceNote && (
-              <p className="mt-0.5 text-sm text-muted-foreground">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {pkg.priceNote}
               </p>
             )}
           </div>
 
           <div className="mt-5">
-            <h4 className="text-xs font-semibold tracking-[0.12em] text-violet-light uppercase">
+            <h4 className="text-xs font-semibold tracking-[0.12em] text-brand uppercase">
               Who it is for
             </h4>
-            <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
               {pkg.audience}
             </p>
           </div>
 
           <div className="mt-5 mb-5">
-            <h4 className="text-xs font-semibold tracking-[0.12em] text-violet-light uppercase">
+            <h4 className="text-xs font-semibold tracking-[0.12em] text-brand uppercase">
               What is included
             </h4>
-            <ul className="mt-2.5 space-y-2">
+            <ul className="mt-3 space-y-2">
               {pkg.includes.map((line) => (
-                <li key={line} className="flex gap-2.5 text-sm leading-relaxed">
+                <li key={line} className="flex gap-3 text-sm leading-relaxed">
                   <Check
-                    className="mt-0.5 size-4 shrink-0 text-violet-light"
+                    className="mt-1 size-4 shrink-0 text-brand"
                     aria-hidden="true"
                   />
                   <span>{line}</span>

@@ -51,14 +51,14 @@ export function StepDetails({
         aria-invalid={Boolean(errors[name])}
         aria-describedby={errors[name] ? `${name}-error` : undefined}
         className={cn(
-          "mt-1.5 w-full rounded-xl border border-input bg-white/[0.04] px-4 py-3 text-[0.9375rem]",
+          "mt-2 w-full rounded-xl border border-input bg-card px-4 py-3 text-base",
           "focus:outline-2 focus:outline-offset-1 focus:outline-ring",
           errors[name] && "border-destructive",
         )}
         {...props}
       />
       {errors[name] && (
-        <p id={`${name}-error`} className="mt-1.5 text-sm text-destructive">
+        <p id={`${name}-error`} className="mt-2 text-sm text-destructive">
           {errors[name]}
         </p>
       )}

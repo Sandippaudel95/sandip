@@ -101,7 +101,7 @@ export function BookingRowActions({
             onChange={(e) => setNote(e.target.value)}
             maxLength={500}
             placeholder="e.g. No payment found against this reference."
-            className="w-full rounded-md border bg-background px-2.5 py-2 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+            className="w-full rounded-md border bg-background px-3 py-2 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
           />
           <div className="flex flex-wrap gap-2">
             <Button

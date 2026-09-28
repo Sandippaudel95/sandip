@@ -22,7 +22,7 @@ export default function ConferencesPage() {
       <Section className="pb-0">
         <Link
           href="/research"
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground underline-offset-4 hover:text-violet-light hover:underline"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground underline-offset-4 hover:text-brand hover:underline"
         >
           <ArrowLeft className="size-4" aria-hidden="true" />
           Back to research

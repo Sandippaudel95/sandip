@@ -60,14 +60,14 @@ export function ClientForm({ client }: { client?: Client }) {
         defaultValue={defaultValue}
         aria-invalid={Boolean(errors[name])}
         className={cn(
-          "mt-1.5 w-full rounded-lg border bg-background px-3 py-2.5 text-sm",
+          "mt-2 w-full rounded-lg border bg-background px-3 py-3 text-sm",
           "focus:outline-2 focus:outline-offset-1 focus:outline-ring",
           errors[name] && "border-destructive",
         )}
         {...props}
       />
       {errors[name] && (
-        <p className="mt-1.5 text-sm text-destructive">{errors[name]}</p>
+        <p className="mt-2 text-sm text-destructive">{errors[name]}</p>
       )}
     </div>
   );
@@ -98,7 +98,7 @@ export function ClientForm({ client }: { client?: Client }) {
             id="level"
             name="level"
             defaultValue={client?.level ?? ""}
-            className="mt-1.5 w-full rounded-lg border bg-background px-3 py-2.5 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+            className="mt-2 w-full rounded-lg border bg-background px-3 py-3 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
           >
             <option value="">Not set</option>
             {LEVELS.map((l) => (
@@ -117,7 +117,7 @@ export function ClientForm({ client }: { client?: Client }) {
             id="status"
             name="status"
             defaultValue={client?.status ?? "ACTIVE"}
-            className="mt-1.5 w-full rounded-lg border bg-background px-3 py-2.5 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+            className="mt-2 w-full rounded-lg border bg-background px-3 py-3 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
           >
             {STATUSES.map((s) => (
               <option key={s} value={s}>
@@ -129,10 +129,10 @@ export function ClientForm({ client }: { client?: Client }) {
       </div>
 
       <div className="rounded-xl border bg-muted/40 p-5">
-        <h2 className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+        <h2 className="text-sm font-semibold tracking-[0.12em] text-brand uppercase">
           Next action
         </h2>
-        <p className="mt-1.5 text-sm text-muted-foreground">
+        <p className="mt-2 text-sm text-muted-foreground">
           Anything dated today or earlier appears on the overview.
         </p>
         <div className="mt-4 grid gap-5 sm:grid-cols-[1fr_12rem]">
@@ -161,17 +161,17 @@ export function ClientForm({ client }: { client?: Client }) {
           rows={6}
           defaultValue={client?.notes ?? ""}
           maxLength={5000}
-          className="mt-1.5 w-full rounded-lg border bg-background px-3 py-2.5 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+          className="mt-2 w-full rounded-lg border bg-background px-3 py-3 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
         />
       </div>
 
       {message && (
         <p
           role="alert"
-          className="flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm"
+          className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm"
         >
           <AlertCircle
-            className="mt-0.5 size-4 shrink-0 text-destructive"
+            className="mt-1 size-4 shrink-0 text-destructive"
             aria-hidden="true"
           />
           {message}

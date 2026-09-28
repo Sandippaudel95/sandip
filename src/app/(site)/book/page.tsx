@@ -81,9 +81,9 @@ export default async function BookPage() {
             <h2 className="text-lg font-semibold">What to expect</h2>
             <ul className="mt-5 space-y-6">
               {expectations.map((item) => (
-                <li key={item.title} className="flex gap-3.5">
+                <li key={item.title} className="flex gap-4">
                   <item.icon
-                    className="mt-0.5 size-5 shrink-0 text-violet-light"
+                    className="mt-1 size-5 shrink-0 text-brand"
                     aria-hidden="true"
                   />
                   <div>
@@ -101,7 +101,7 @@ export default async function BookPage() {
               research and training are quoted separately. Email{" "}
               <a
                 href={`mailto:${profile.emails[0]}`}
-                className="font-medium text-violet-light underline underline-offset-4"
+                className="font-medium text-brand underline underline-offset-4"
               >
                 {profile.emails[0]}
               </a>{" "}

@@ -38,7 +38,7 @@ export default async function DashboardPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Overview</h1>
-          <p className="mt-1.5 text-muted-foreground">
+          <p className="mt-2 text-muted-foreground">
             {formatDateKey(nepalDateKey())}
           </p>
         </div>
@@ -81,10 +81,10 @@ export default async function DashboardPage() {
       </div>
 
       <section className="mt-12">
-        <h2 className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+        <h2 className="text-sm font-semibold tracking-[0.12em] text-brand uppercase">
           Needs attention
           {attention.total > 0 && (
-            <span className="ml-2 rounded-full bg-[#fef3c7] px-2 py-0.5 text-[#b45309]">
+            <span className="ml-2 rounded-full bg-warning/15 px-2 py-1 text-warning">
               {attention.total}
             </span>
           )}
@@ -95,7 +95,7 @@ export default async function DashboardPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+        <h2 className="text-sm font-semibold tracking-[0.12em] text-brand uppercase">
           Today
         </h2>
         <div className="mt-4">
@@ -107,7 +107,7 @@ export default async function DashboardPage() {
       </section>
 
       <section className="mt-12">
-        <h2 className="text-sm font-semibold tracking-[0.12em] text-navy uppercase">
+        <h2 className="text-sm font-semibold tracking-[0.12em] text-brand uppercase">
           Next 14 days
         </h2>
         <div className="mt-4">

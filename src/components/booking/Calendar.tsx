@@ -92,7 +92,7 @@ export function Calendar({
           onClick={() => shift(-1)}
           disabled={!canGoBack}
           aria-label="Previous month"
-          className="grid size-9 place-items-center rounded-full border transition-colors hover:bg-white/10 disabled:pointer-events-none disabled:opacity-30"
+          className="grid size-9 place-items-center rounded-full border transition-colors hover:bg-accent disabled:pointer-events-none disabled:opacity-40"
         >
           <ChevronLeft className="size-4" aria-hidden="true" />
         </button>
@@ -106,7 +106,7 @@ export function Calendar({
           onClick={() => shift(1)}
           disabled={!canGoForward}
           aria-label="Next month"
-          className="grid size-9 place-items-center rounded-full border transition-colors hover:bg-white/10 disabled:pointer-events-none disabled:opacity-30"
+          className="grid size-9 place-items-center rounded-full border transition-colors hover:bg-accent disabled:pointer-events-none disabled:opacity-40"
         >
           <ChevronRight className="size-4" aria-hidden="true" />
         </button>
@@ -147,16 +147,16 @@ export function Calendar({
               )}${isOpen ? "" : ", not available"}`}
               className={cn(
                 "relative aspect-square rounded-md text-sm transition-colors",
-                isSelected && "bg-violet font-medium text-white",
-                !isSelected && isOpen && "font-medium text-foreground hover:bg-white/10",
-                !isOpen && "text-muted-foreground/30",
-                isToday && !isSelected && "ring-1 ring-violet/50",
+                isSelected && "bg-brand font-medium text-primary-foreground",
+                !isSelected && isOpen && "font-medium text-foreground hover:bg-accent",
+                !isOpen && "text-muted-foreground/70",
+                isToday && !isSelected && "ring-1 ring-brand/30",
               )}
             >
               {day}
               {isOpen && !isSelected && (
                 <span
-                  className="absolute inset-x-0 bottom-1.5 mx-auto size-1 rounded-full bg-violet"
+                  className="absolute inset-x-0 bottom-2 mx-auto size-1 rounded-full bg-brand"
                   aria-hidden="true"
                 />
               )}
@@ -167,7 +167,7 @@ export function Calendar({
 
       <p className="mt-4 flex items-center gap-2 border-t pt-3 text-xs text-muted-foreground">
         <span
-          className="size-1.5 rounded-full bg-violet"
+          className="size-2 rounded-full bg-brand"
           aria-hidden="true"
         />
         Days with open times

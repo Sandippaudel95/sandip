@@ -35,7 +35,7 @@ export function Section({
       id={id}
       className={cn(
         "relative scroll-mt-24 py-20 sm:py-24 lg:py-28",
-        alt && "bg-white/[0.025]",
+        alt && "bg-surface",
         className,
       )}
     >

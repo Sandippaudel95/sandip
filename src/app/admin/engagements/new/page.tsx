@@ -27,14 +27,14 @@ export default async function NewEngagementPage() {
     <Container className="max-w-3xl py-10 sm:py-14">
       <Link
         href="/admin/engagements"
-        className="inline-flex items-center gap-1.5 text-sm text-muted-foreground underline-offset-4 hover:text-navy hover:underline"
+        className="inline-flex items-center gap-2 text-sm text-muted-foreground underline-offset-4 hover:text-brand hover:underline"
       >
         <ArrowLeft className="size-4" aria-hidden="true" />
         Back to work
       </Link>
 
       <h1 className="mt-5 text-3xl font-semibold tracking-tight">Add work</h1>
-      <p className="mt-1.5 text-muted-foreground">
+      <p className="mt-2 text-muted-foreground">
         A review, analysis, commissioned study or training session.
       </p>
 

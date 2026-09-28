@@ -24,9 +24,9 @@ export function About() {
             {researchInterests.map((interest) => (
               <li
                 key={interest.title}
-                className="border-l-2 border-violet/25 pl-4"
+                className="border-l-2 border-brand/30 pl-4"
               >
-                <p className="font-medium text-violet-light">{interest.title}</p>
+                <p className="font-medium text-brand">{interest.title}</p>
                 <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
                   {interest.description}
                 </p>

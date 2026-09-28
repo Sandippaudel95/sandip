@@ -62,12 +62,17 @@ export default function ConsultingPage() {
 
         <ol className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {process.map((item) => (
-            <li key={item.step} className="rounded-2xl border bg-white/[0.035] p-5">
-              <span className="font-display text-2xl font-semibold text-violet/40 tabular-nums">
+            <li key={item.step} className="rounded-2xl border bg-card p-6">
+              {/* A filled counter rather than a faint large numeral: it reads
+                  as "step n" at a glance and clears contrast in both themes. */}
+              <span
+                aria-hidden="true"
+                className="grid size-8 place-items-center rounded-full bg-brand font-display text-sm font-semibold text-primary-foreground tabular-nums"
+              >
                 {item.step}
               </span>
-              <h3 className="mt-2 font-semibold">{item.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+              <h3 className="mt-4 font-semibold">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                 {item.detail}
               </p>
             </li>

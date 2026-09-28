@@ -18,10 +18,10 @@ export function StepSuccess({
   return (
     <div className="panel glow relative overflow-hidden p-8 text-center sm:p-12">
       <div
-        className="relative z-10 mx-auto grid size-16 place-items-center rounded-full bg-violet/15 ring-1 ring-violet/30"
+        className="relative z-10 mx-auto grid size-16 place-items-center rounded-full bg-brand-soft ring-1 ring-brand/30"
         aria-hidden="true"
       >
-        <Hourglass className="size-7 text-violet-light" />
+        <Hourglass className="size-7 text-brand" />
       </div>
 
       <h2 className="mt-5 text-2xl font-semibold tracking-tight">

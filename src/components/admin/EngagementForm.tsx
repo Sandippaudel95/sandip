@@ -85,14 +85,14 @@ export function EngagementForm({
         defaultValue={defaultValue}
         aria-invalid={Boolean(errors[name])}
         className={cn(
-          "mt-1.5 w-full rounded-lg border bg-background px-3 py-2.5 text-sm",
+          "mt-2 w-full rounded-lg border bg-background px-3 py-3 text-sm",
           "focus:outline-2 focus:outline-offset-1 focus:outline-ring",
           errors[name] && "border-destructive",
         )}
         {...props}
       />
       {errors[name] && (
-        <p className="mt-1.5 text-sm text-destructive">{errors[name]}</p>
+        <p className="mt-2 text-sm text-destructive">{errors[name]}</p>
       )}
     </div>
   );
@@ -108,7 +108,7 @@ export function EngagementForm({
           name="clientId"
           value={clientId}
           onChange={(e) => setClientId(e.target.value)}
-          className="mt-1.5 w-full rounded-lg border bg-background px-3 py-2.5 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+          className="mt-2 w-full rounded-lg border bg-background px-3 py-3 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
         >
           <option value="">— New client —</option>
           {clients.map((c) => (
@@ -139,7 +139,7 @@ export function EngagementForm({
             id="type"
             name="type"
             defaultValue={engagement?.type ?? "THESIS_REVIEW"}
-            className="mt-1.5 w-full rounded-lg border bg-background px-3 py-2.5 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+            className="mt-2 w-full rounded-lg border bg-background px-3 py-3 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
           >
             {TYPES.map(([v, label]) => (
               <option key={v} value={v}>
@@ -157,7 +157,7 @@ export function EngagementForm({
             id="status"
             name="status"
             defaultValue={engagement?.status ?? "ENQUIRY"}
-            className="mt-1.5 w-full rounded-lg border bg-background px-3 py-2.5 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+            className="mt-2 w-full rounded-lg border bg-background px-3 py-3 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
           >
             {STATUSES.map(([v, label]) => (
               <option key={v} value={v}>
@@ -211,17 +211,17 @@ export function EngagementForm({
           rows={4}
           defaultValue={engagement?.notes ?? ""}
           maxLength={5000}
-          className="mt-1.5 w-full rounded-lg border bg-background px-3 py-2.5 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
+          className="mt-2 w-full rounded-lg border bg-background px-3 py-3 text-sm focus:outline-2 focus:outline-offset-1 focus:outline-ring"
         />
       </div>
 
       {message && (
         <p
           role="alert"
-          className="flex items-start gap-2.5 rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm"
+          className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/5 p-3 text-sm"
         >
           <AlertCircle
-            className="mt-0.5 size-4 shrink-0 text-destructive"
+            className="mt-1 size-4 shrink-0 text-destructive"
             aria-hidden="true"
           />
           {message}

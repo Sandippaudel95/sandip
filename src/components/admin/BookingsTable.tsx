@@ -9,15 +9,15 @@ import { BookingRowActions } from "./BookingRowActions";
 /* Status colours reuse the palette already on the site rather than adding
    new ones: see the quartile and role badges in ResearchList. */
 const paymentStyles: Record<Booking["paymentStatus"], string> = {
-  PENDING: "bg-[#fef3c7] text-[#b45309] border-transparent",
-  VERIFIED: "bg-[#d1fae5] text-[#065f46] border-transparent",
+  PENDING: "bg-warning/15 text-warning border-transparent",
+  VERIFIED: "bg-success/15 text-success border-transparent",
   REJECTED: "bg-destructive/10 text-destructive border-transparent",
 };
 
 const bookingStyles: Record<Booking["bookingStatus"], string> = {
-  PENDING: "bg-[#dbeafe] text-[#1e40af] border-transparent",
-  CONFIRMED: "bg-[#d1fae5] text-[#065f46] border-transparent",
-  COMPLETED: "bg-[#ede9fe] text-[#5b21b6] border-transparent",
+  PENDING: "bg-brand-soft text-brand border-transparent",
+  CONFIRMED: "bg-success/15 text-success border-transparent",
+  COMPLETED: "bg-accent text-accent-foreground border-transparent",
   CANCELLED: "bg-secondary text-muted-foreground border-transparent",
 };
 
@@ -51,7 +51,7 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
               "rounded-xl border bg-card p-5",
               // Pending verification is the row that needs action, given the
               // same accent the site uses for its other highlights.
-              awaiting && "border-navy/30 bg-accent/40 ring-1 ring-navy/10",
+              awaiting && "border-brand/30 bg-accent/40 ring-1 ring-brand/30",
             )}
           >
             <div className="flex flex-wrap items-start justify-between gap-4">
@@ -80,19 +80,19 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
                   )}
                 </div>
 
-                <h3 className="mt-2.5 text-lg font-semibold">
+                <h3 className="mt-3 text-lg font-semibold">
                   {b.clientName}
                 </h3>
                 <p className="text-sm text-muted-foreground">
                   <a
                     href={`mailto:${b.clientEmail}`}
-                    className="underline-offset-4 hover:text-navy hover:underline"
+                    className="underline-offset-4 hover:text-brand hover:underline"
                   >
                     {b.clientEmail}
                   </a>
                 </p>
 
-                <dl className="mt-3 grid gap-x-6 gap-y-1.5 text-sm sm:grid-cols-2">
+                <dl className="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
                   <div className="flex gap-2">
                     <dt className="text-muted-foreground">When</dt>
                     <dd className="font-medium">
@@ -114,7 +114,7 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
                     <dd className="font-medium">
                       {npr(b.amountNpr)}
                       {b.discountNpr > 0 && (
-                        <span className="ml-1.5 text-muted-foreground">
+                        <span className="ml-2 text-muted-foreground">
                           ({npr(b.discountNpr)} off
                           {b.couponCode ? ` · ${b.couponCode}` : ""})
                         </span>

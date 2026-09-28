@@ -30,11 +30,11 @@ const TYPE_LABEL: Record<string, string> = {
 };
 
 const STATUS_STYLE: Record<string, string> = {
-  ENQUIRY: "bg-[#dbeafe] text-[#1e40af]",
-  QUOTED: "bg-[#dbeafe] text-[#1e40af]",
-  AGREED: "bg-[#d1fae5] text-[#065f46]",
-  IN_PROGRESS: "bg-[#fef3c7] text-[#b45309]",
-  DELIVERED: "bg-[#ede9fe] text-[#5b21b6]",
+  ENQUIRY: "bg-brand-soft text-brand",
+  QUOTED: "bg-brand-soft text-brand",
+  AGREED: "bg-success/15 text-success",
+  IN_PROGRESS: "bg-warning/15 text-warning",
+  DELIVERED: "bg-accent text-accent-foreground",
   CANCELLED: "bg-secondary text-muted-foreground",
 };
 
@@ -67,7 +67,7 @@ export default async function EngagementsPage() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-3xl font-semibold tracking-tight">Work</h1>
-          <p className="mt-1.5 max-w-xl text-muted-foreground">
+          <p className="mt-2 max-w-xl text-muted-foreground">
             Reviews, analysis, commissioned research and training: everything
             agreed outside the booking page.
           </p>
@@ -153,7 +153,7 @@ export default async function EngagementsPage() {
                   {owed > 0 && (
                     <Badge
                       variant="outline"
-                      className="border-transparent bg-[#fef3c7] text-xs text-[#b45309]"
+                      className="border-transparent bg-warning/15 text-xs text-warning"
                     >
                       {npr(owed)} due
                     </Badge>
