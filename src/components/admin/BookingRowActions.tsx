@@ -1,13 +1,14 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Check, CheckCheck, Loader2, Trash2, X } from "lucide-react";
+import { Check, CheckCheck, Loader2, RotateCcw, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   confirmBooking,
   deleteBooking,
   markCompleted,
   rejectBooking,
+  reopenBooking,
 } from "@/app/admin/actions";
 
 /* Confirm is a single click. Reject asks for a reason first, because the
@@ -127,8 +128,34 @@ export function BookingRowActions({
     );
   }
 
-  // Cancelled and completed bookings have nothing left to decide, but they
-  // can still be cleared away.
+  // Completing is a single click on a row that looks like every other, so
+  // it has to be reversible.
+  if (status === "COMPLETED") {
+    return (
+      <div className="space-y-2">
+        {!confirmingDelete && (
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={pending}
+            onClick={() => run(() => reopenBooking(id))}
+          >
+            {pending ? (
+              <Loader2 className="animate-spin" aria-hidden="true" />
+            ) : (
+              <RotateCcw aria-hidden="true" />
+            )}
+            Mark as not completed
+          </Button>
+        )}
+        {deleteControl}
+        {status_}
+      </div>
+    );
+  }
+
+  // Cancelled bookings have nothing left to decide, but they can still be
+  // cleared away.
   if (disabled) {
     return (
       <div className="space-y-2">

@@ -178,6 +178,35 @@ export async function markCompleted(id: string): Promise<AdminActionResult> {
   return { ok: true, message: "Marked completed." };
 }
 
+/**
+ * Undo a completion, putting the session back to confirmed.
+ *
+ * Marking completed is one click and easy to hit on the wrong row, so it
+ * needs a way back. Only COMPLETED is accepted: reopening a cancelled
+ * booking would silently re-take a slot that has since been given away.
+ */
+export async function reopenBooking(id: string): Promise<AdminActionResult> {
+  await requireAdmin();
+
+  const current = await prisma.booking.findUnique({ where: { id } });
+  if (!current) return { ok: false, message: "Booking not found." };
+  if (current.bookingStatus !== "COMPLETED") {
+    return {
+      ok: false,
+      message: `Only a completed booking can be reopened; this one is ${current.bookingStatus.toLowerCase()}.`,
+    };
+  }
+
+  await prisma.booking.update({
+    where: { id },
+    data: { bookingStatus: "CONFIRMED" },
+  });
+
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/admin/bookings");
+  return { ok: true, message: "Reopened as confirmed." };
+}
+
 export async function signInAction(
   _prev: string | null,
   formData: FormData,

@@ -100,18 +100,14 @@ export function Hero() {
                 aria-hidden="true"
                 className="absolute -inset-6 rounded-[2rem] bg-gradient-to-br from-brand/30 via-brand/10 to-transparent blur-2xl"
               />
-              {/* No card, no border: a hard frame would defeat the point.
-                  The photo is masked to fade out before it reaches its own
-                  edges, so it dissolves into whichever background is behind
-                  it and the glow reads through the soft margin. */}
-              <div className="relative aspect-square">
+              <div className="relative aspect-square overflow-hidden rounded-2xl border bg-surface-raised">
                 <Image
                   src={profile.photo}
                   alt={`Portrait of ${profile.name}`}
                   fill
                   priority
                   sizes="(max-width: 640px) 15rem, (max-width: 1024px) 18rem, 24rem"
-                  className="object-cover [mask-image:radial-gradient(ellipse_at_50%_45%,black_38%,transparent_76%)]"
+                  className="object-cover"
                 />
               </div>
             </div>

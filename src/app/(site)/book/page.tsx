@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type { Metadata } from "next";
 import { Clock, Video, FileText } from "lucide-react";
-import { Section, SectionHeader } from "@/components/layout/Section";
+import { Section } from "@/components/layout/Section";
 import { BookingWizard } from "@/components/booking/BookingWizard";
 import { getAvailability, type DayAvailability } from "@/lib/slots";
 import { sessionLengths } from "@/content/availability";
@@ -66,18 +66,27 @@ export default async function BookPage() {
 
   return (
     <>
-      <Section className="pb-0">
-        <SectionHeader
-          kicker="Booking"
-          title="Book a Consultation"
-          level={1}
-          lede={`One-to-one sessions for students and faculty, at ${HOURLY_RATE_NPR} per hour. Pick a time, pay, and your booking is confirmed once the payment has been verified.`}
-        />
-      </Section>
+      {/* Deliberately tighter and smaller than the other pages' headers.
+          This is a utility page: arriving here from "Book a Consultation"
+          should put the first step of the form on screen, not a title and
+          a scrollbar. */}
+      <Section className="pt-8 sm:pt-10 lg:pt-12">
+        <header className="max-w-3xl">
+          <p className="pill-label">Booking</p>
+          <h1 className="mt-4 text-3xl leading-tight font-normal tracking-tight sm:text-4xl">
+            Book a Consultation
+          </h1>
+          <p className="mt-3 leading-relaxed text-muted-foreground text-pretty">
+            One-to-one sessions for students and faculty, at {HOURLY_RATE_NPR}{" "}
+            per hour. Pick a time, pay, and your booking is confirmed once the
+            payment has been verified.
+          </p>
+        </header>
 
-      <Section className="pt-10">
-        <div className="grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-14">
-          <aside>
+        <div className="mt-10 grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-14">
+          {/* The form leads on narrow screens. Reading three paragraphs of
+              preamble before reaching it is the wrong way round. */}
+          <aside className="order-2 lg:order-1">
             <h2 className="text-lg font-semibold">What to expect</h2>
             <ul className="mt-5 space-y-6">
               {expectations.map((item) => (
@@ -109,7 +118,7 @@ export default async function BookPage() {
             </p>
           </aside>
 
-          <div className="min-w-0">
+          <div className="order-1 min-w-0 lg:order-2">
             <BookingWizard
               availability={availability}
               qrSrc={findQr()}
