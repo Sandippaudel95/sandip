@@ -4,7 +4,12 @@ import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, Building2, GraduationCap, Mail, Phone } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { clientDetail } from "@/lib/crm";
-import { revenue, outstanding } from "@/lib/money";
+import {
+  revenue,
+  outstanding,
+  bookingIsEarned,
+  engagementEarnedNpr,
+} from "@/lib/money";
 import { npr } from "@/content/services";
 import { formatDateKey, nepalDateKey } from "@/lib/time";
 import { Container } from "@/components/layout/Section";
@@ -12,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/admin/StatCard";
 import { ClientTimeline } from "@/components/admin/ClientTimeline";
 import { NextActionCard } from "@/components/admin/NextActionCard";
+import { DeleteClientCard } from "@/components/admin/DeleteClientCard";
 
 export const metadata: Metadata = {
   title: "Client",
@@ -147,6 +153,20 @@ export default async function ClientPage({
           </pre>
         </section>
       )}
+
+      <DeleteClientCard
+        id={client.id}
+        name={client.name}
+        bookingCount={client.bookings.length}
+        engagementCount={client.engagements.length}
+        earnedNpr={
+          client.bookings
+            .filter(bookingIsEarned)
+            .reduce((sum, b) => sum + b.amountNpr, 0) +
+          client.engagements.reduce((sum, e) => sum + engagementEarnedNpr(e), 0)
+        }
+        isArchived={client.status === "ARCHIVED"}
+      />
     </Container>
   );
 }

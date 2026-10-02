@@ -93,6 +93,51 @@ export async function saveClient(
   }
 }
 
+/**
+ * Delete a client and everything attached to them. Irreversible.
+ *
+ * The two relations disagree about what should happen here, so neither
+ * default is used. Booking.clientId is SetNull, which would leave the
+ * sessions behind as orphans still counting towards earnings; Engagement
+ * is Cascade, which would destroy money records silently. "Delete this
+ * client" means neither, so both are removed explicitly and the three
+ * deletes share one transaction: a half-deleted client is worse than a
+ * failed one.
+ *
+ * Archiving is the better move for a real client. This exists for records
+ * that should never have been there.
+ */
+export async function deleteClient(
+  id: string,
+): Promise<{ ok: boolean; message?: string }> {
+  await requireAdmin();
+
+  const client = await prisma.client.findUnique({
+    where: { id },
+    select: { id: true },
+  });
+  if (!client) return { ok: false, message: "Client not found." };
+
+  try {
+    await prisma.$transaction([
+      prisma.engagement.deleteMany({ where: { clientId: id } }),
+      prisma.booking.deleteMany({ where: { clientId: id } }),
+      prisma.client.delete({ where: { id } }),
+    ]);
+  } catch (err) {
+    console.error("[clients] delete failed:", err);
+    return { ok: false, message: "Could not delete. Please try again." };
+  }
+
+  // Earnings and the booking queue both change, so every view that reads
+  // them has to be refreshed, not just the client list.
+  revalidatePath("/admin/clients");
+  revalidatePath("/admin/bookings");
+  revalidatePath("/admin/engagements");
+  revalidatePath("/admin/dashboard");
+  return { ok: true };
+}
+
 /** Clear the next action once it has been dealt with. */
 export async function clearNextAction(id: string): Promise<{ ok: boolean }> {
   await requireAdmin();

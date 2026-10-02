@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { formatSession, nepalDateKey } from "@/lib/time";
 import { npr } from "@/content/services";
+import { bookingIsEarned } from "@/lib/money";
 import { BookingRowActions } from "./BookingRowActions";
 
 /* Status colours reuse the palette already on the site rather than adding
@@ -146,6 +147,7 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
                     b.bookingStatus !== "PENDING" &&
                     b.bookingStatus !== "CONFIRMED"
                   }
+                  earnedLabel={bookingIsEarned(b) ? npr(b.amountNpr) : null}
                 />
               </div>
             </div>

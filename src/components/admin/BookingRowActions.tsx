@@ -1,28 +1,39 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Check, CheckCheck, Loader2, X } from "lucide-react";
+import { Check, CheckCheck, Loader2, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   confirmBooking,
+  deleteBooking,
   markCompleted,
   rejectBooking,
 } from "@/app/admin/actions";
 
 /* Confirm is a single click. Reject asks for a reason first, because the
    reason is emailed to the client and "no reason given" is a poor message
-   to receive about money. */
+   to receive about money.
+
+   Delete is offered on every row, including the cancelled and completed
+   ones that have no other actions left — clearing out test entries and
+   spam is the main reason to reach for it, and those are exactly the rows
+   that are already past their useful actions. */
 export function BookingRowActions({
   id,
   status,
   disabled,
+  earnedLabel,
 }: {
   id: string;
   status?: string;
   disabled?: boolean;
+  /** Set when this booking counts towards revenue, so the confirmation can
+      say what deleting it costs rather than asking a vague "are you sure?". */
+  earnedLabel?: string | null;
 }) {
   const [pending, startTransition] = useTransition();
   const [asking, setAsking] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [note, setNote] = useState("");
   const [feedback, setFeedback] = useState<string | null>(null);
 
@@ -30,65 +41,132 @@ export function BookingRowActions({
     startTransition(async () => {
       const result = await fn();
       setFeedback(result.message ?? null);
-      if (result.ok) setAsking(false);
+      if (result.ok) {
+        setAsking(false);
+        setConfirmingDelete(false);
+      }
     });
   }
 
-  // A confirmed session that has happened is closed off here rather than
-  // in the pending queue, so the two actions never appear together.
-  if (status === "CONFIRMED") {
-    return (
-      <div className="space-y-2">
+  const deleteControl = confirmingDelete ? (
+    <div className="space-y-2 rounded-md border border-destructive/30 bg-destructive/5 p-3">
+      <p className="text-xs leading-relaxed">
+        Delete this booking permanently? It will not be emailed to the client.
+        {earnedLabel && (
+          <span className="mt-1 block font-medium text-destructive">
+            {earnedLabel} will come off your earnings.
+          </span>
+        )}
+      </p>
+      <div className="flex flex-wrap gap-2">
         <Button
           size="sm"
-          variant="outline"
+          variant="destructive"
           disabled={pending}
-          onClick={() => run(() => markCompleted(id))}
+          onClick={() => run(() => deleteBooking(id))}
         >
           {pending ? (
             <Loader2 className="animate-spin" aria-hidden="true" />
           ) : (
-            <CheckCheck aria-hidden="true" />
+            <Trash2 aria-hidden="true" />
           )}
-          Mark completed
+          Delete
         </Button>
-        {feedback && (
-          <p role="status" className="text-xs text-muted-foreground">
-            {feedback}
-          </p>
-        )}
+        <Button
+          size="sm"
+          variant="ghost"
+          disabled={pending}
+          onClick={() => setConfirmingDelete(false)}
+        >
+          Cancel
+        </Button>
       </div>
-    );
-  }
+    </div>
+  ) : (
+    <Button
+      size="sm"
+      variant="ghost"
+      disabled={pending}
+      className="text-muted-foreground hover:text-destructive"
+      onClick={() => setConfirmingDelete(true)}
+    >
+      <Trash2 aria-hidden="true" />
+      Delete
+    </Button>
+  );
 
-  if (disabled) return null;
+  const status_ = feedback && (
+    <p role="status" className="text-xs text-muted-foreground">
+      {feedback}
+    </p>
+  );
 
-  return (
-    <div className="space-y-2">
-      {!asking ? (
-        <div className="flex flex-wrap gap-2">
-          <Button
-            size="sm"
-            disabled={pending}
-            onClick={() => run(() => confirmBooking(id))}
-          >
-            {pending ? (
-              <Loader2 className="animate-spin" aria-hidden="true" />
-            ) : (
-              <Check aria-hidden="true" />
-            )}
-            Verify &amp; confirm
-          </Button>
+  // A confirmed session that has happened is closed off here rather than in
+  // the pending queue, so the two actions never appear together.
+  if (status === "CONFIRMED") {
+    return (
+      <div className="space-y-2">
+        {!confirmingDelete && (
           <Button
             size="sm"
             variant="outline"
             disabled={pending}
-            onClick={() => setAsking(true)}
+            onClick={() => run(() => markCompleted(id))}
           >
-            <X aria-hidden="true" />
-            Reject
+            {pending ? (
+              <Loader2 className="animate-spin" aria-hidden="true" />
+            ) : (
+              <CheckCheck aria-hidden="true" />
+            )}
+            Mark completed
           </Button>
-        </div>
+        )}
+        {deleteControl}
+        {status_}
+      </div>
+    );
+  }
+
+  // Cancelled and completed bookings have nothing left to decide, but they
+  // can still be cleared away.
+  if (disabled) {
+    return (
+      <div className="space-y-2">
+        {deleteControl}
+        {status_}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-2">
+      {!asking ? (
+        <>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              size="sm"
+              disabled={pending}
+              onClick={() => run(() => confirmBooking(id))}
+            >
+              {pending ? (
+                <Loader2 className="animate-spin" aria-hidden="true" />
+              ) : (
+                <Check aria-hidden="true" />
+              )}
+              Verify &amp; confirm
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={pending}
+              onClick={() => setAsking(true)}
+            >
+              <X aria-hidden="true" />
+              Reject
+            </Button>
+          </div>
+          {deleteControl}
+        </>
       ) : (
         <div className="space-y-2 rounded-md border bg-muted/50 p-3">
           <label htmlFor={`note-${id}`} className="block text-xs font-medium">
@@ -127,11 +205,7 @@ export function BookingRowActions({
         </div>
       )}
 
-      {feedback && (
-        <p role="status" className="text-xs text-muted-foreground">
-          {feedback}
-        </p>
-      )}
+      {status_}
     </div>
   );
 }

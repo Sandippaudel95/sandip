@@ -20,6 +20,34 @@ async function requireAdmin(): Promise<void> {
 
 export type AdminActionResult = { ok: boolean; message?: string };
 
+/**
+ * Remove a booking from the record entirely.
+ *
+ * Distinct from rejecting: rejecting cancels the session, frees the slot
+ * and emails the client an explanation. This erases the row, and is for
+ * entries that should never have been in the history — test submissions,
+ * spam, duplicates.
+ *
+ * Deliberately sends nothing. A rejection notice has already gone out if
+ * one was warranted, and there is no sensible message to send a client
+ * about a record being deleted.
+ */
+export async function deleteBooking(id: string): Promise<AdminActionResult> {
+  await requireAdmin();
+  try {
+    await prisma.booking.delete({ where: { id } });
+  } catch (err) {
+    console.error("[admin] booking delete failed:", err);
+    return { ok: false, message: "Could not delete. Please try again." };
+  }
+  // A verified booking counts towards revenue, and the slot it held is
+  // released, so the dashboard and the client's history both change.
+  revalidatePath("/admin/bookings");
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/admin/clients");
+  return { ok: true };
+}
+
 async function loadForEmail(id: string): Promise<BookingEmailData | null> {
   const b = await prisma.booking.findUnique({ where: { id } });
   if (!b) return null;
