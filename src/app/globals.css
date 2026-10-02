@@ -1,0 +1,324 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Dark is opt-in via a class on <html>, set before first paint by the
+   inline script in layout.tsx. Light is the document default so that a
+   page rendered before the script runs is never a flash of black. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ==========================================================================
+   Design tokens
+
+   Two themes, one set of names. Every colour below was measured against
+   its own background before being written here: the lowest ratio in
+   either theme is 4.92:1, so all text clears AA without relying on the
+   large-text allowance.
+
+   Neutrals carry a little violet so they sit with the accent rather than
+   fighting it — a pure grey next to a violet reads as dirty.
+   ========================================================================== */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-outfit), var(--font-inter), sans-serif;
+  --font-heading: var(--font-outfit), var(--font-inter), sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ---- Type scale ----
+     Every line-height is a multiple of 4px, so text blocks land on the
+     same rhythm as the spacing scale. */
+  --text-2xs: 0.6875rem;   /* 11px */
+  --text-2xs--line-height: 1rem;       /* 16 */
+  --text-xs: 0.75rem;      /* 12 */
+  --text-xs--line-height: 1rem;        /* 16 */
+  --text-sm: 0.875rem;     /* 14 */
+  --text-sm--line-height: 1.25rem;     /* 20 */
+  --text-base: 1rem;       /* 16 */
+  --text-base--line-height: 1.5rem;    /* 24 */
+  --text-lg: 1.125rem;     /* 18 */
+  --text-lg--line-height: 1.75rem;     /* 28 */
+  --text-xl: 1.25rem;      /* 20 */
+  --text-xl--line-height: 1.75rem;     /* 28 */
+  --text-2xl: 1.5rem;      /* 24 */
+  --text-2xl--line-height: 2rem;       /* 32 */
+  --text-3xl: 1.875rem;    /* 30 */
+  --text-3xl--line-height: 2.25rem;    /* 36 */
+  --text-4xl: 2.25rem;     /* 36 */
+  --text-4xl--line-height: 2.5rem;     /* 40 */
+  --text-5xl: 3rem;        /* 48 */
+  --text-5xl--line-height: 3.25rem;    /* 52 */
+  --text-6xl: 3.75rem;     /* 60 */
+  --text-6xl--line-height: 4rem;       /* 64 */
+  --text-7xl: 4.5rem;      /* 72 */
+  --text-7xl--line-height: 4.75rem;    /* 76 */
+
+  /* Brand, usable as text-primary / bg-surface / border-subtle. */
+  --color-brand: var(--primary);
+  --color-brand-soft: var(--primary-soft);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-subtle: var(--border);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--destructive);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* Radii step with the spacing scale: 8 / 12 / 16 / 24 / 32. */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 2.5rem;
+  --radius-4xl: 3rem;
+}
+
+/* ---------------- Light ---------------- */
+:root {
+  --radius: 1rem;
+
+  --background: #ffffff;
+  --foreground: #16141f;
+
+  --surface: #faf9fe;
+  --surface-raised: #ffffff;
+
+  --card: #ffffff;
+  --card-foreground: #16141f;
+  --popover: #ffffff;
+  --popover-foreground: #16141f;
+
+  --primary: #6644f5;
+  --primary-foreground: #ffffff;
+  --primary-soft: #f0ecff;
+
+  --secondary: #f2f0fa;
+  --secondary-foreground: #2a2640;
+
+  --muted: #faf9fe;
+  --muted-foreground: #5d5872;
+
+  --accent: #f0ecff;
+  --accent-foreground: #4a2fd0;
+
+  --success: #116149;
+  --warning: #8a4b06;
+  --destructive: #b4231e;
+
+  --border: #e6e3f0;
+  --input: #d6d1e6;
+  --ring: #6644f5;
+
+  --chart-1: #6644f5;
+  --chart-2: #9d84ff;
+  --chart-3: #116149;
+  --chart-4: #8a4b06;
+  --chart-5: #5d5872;
+
+  --sidebar: #faf9fe;
+  --sidebar-foreground: #16141f;
+  --sidebar-primary: #6644f5;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f0ecff;
+  --sidebar-accent-foreground: #4a2fd0;
+  --sidebar-border: #e6e3f0;
+  --sidebar-ring: #6644f5;
+
+  color-scheme: light;
+}
+
+/* ---------------- Dark ---------------- */
+.dark {
+  --background: #0b0918;
+  --foreground: #f2f0fa;
+
+  --surface: #141126;
+  --surface-raised: #1b1733;
+
+  --card: #141126;
+  --card-foreground: #f2f0fa;
+  --popover: #1b1733;
+  --popover-foreground: #f2f0fa;
+
+  --primary: #9d84ff;
+  --primary-foreground: #0b0918;
+  --primary-soft: #1e1940;
+
+  --secondary: #1e1a36;
+  --secondary-foreground: #e9e5fa;
+
+  --muted: #100d1f;
+  --muted-foreground: #a49dc0;
+
+  --accent: #1e1940;
+  --accent-foreground: #c9baff;
+
+  --success: #5fd7ae;
+  --warning: #f0b64d;
+  --destructive: #ff8b84;
+
+  --border: #ffffff1c;
+  --input: #ffffff2b;
+  --ring: #9d84ff;
+
+  --chart-1: #9d84ff;
+  --chart-2: #6d4aff;
+  --chart-3: #5fd7ae;
+  --chart-4: #f0b64d;
+  --chart-5: #a49dc0;
+
+  --sidebar: #100d1f;
+  --sidebar-foreground: #f2f0fa;
+  --sidebar-primary: #9d84ff;
+  --sidebar-primary-foreground: #0b0918;
+  --sidebar-accent: #1e1940;
+  --sidebar-accent-foreground: #c9baff;
+  --sidebar-border: #ffffff1c;
+  --sidebar-ring: #9d84ff;
+
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Hierarchy is set here once rather than re-declared per component:
+     display type is the Outfit face, tightened as it grows, and never
+     heavier than medium — weight is not what creates the emphasis. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-balance;
+    font-weight: 500;
+  }
+
+  h1 {
+    letter-spacing: -0.03em;
+  }
+  h2 {
+    letter-spacing: -0.02em;
+  }
+  h3,
+  h4 {
+    letter-spacing: -0.01em;
+  }
+
+  /* Long prose wants a narrower measure than the grid gives it. */
+  p {
+    text-wrap: pretty;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Citation blocks: hanging indent is the academic convention and keeps a
+     long reference list scannable by author. */
+  .prose-academic {
+    @apply text-base text-foreground/90;
+    line-height: 1.75rem;
+    padding-left: 1.5rem;
+    text-indent: -1.5rem;
+  }
+
+  .prose-academic em {
+    @apply text-brand not-italic;
+  }
+
+  /* A panel: the one card treatment, so surfaces are consistent. */
+  .panel {
+    @apply rounded-xl border bg-card;
+  }
+
+  /* Eyebrow label above a section title. Small, spaced, quiet. */
+  .eyebrow {
+    @apply text-xs font-semibold tracking-[0.12em] text-muted-foreground uppercase;
+  }
+
+  /* The accented variant, used where a section wants more presence. */
+  .pill-label {
+    @apply inline-flex items-center gap-2 rounded-full px-4 py-2;
+    @apply text-xs font-semibold tracking-[0.12em] uppercase;
+    @apply border border-brand/25 bg-brand-soft text-accent-foreground;
+  }
+
+  /* Soft radial wash behind a hero. Sits behind content, never clickable,
+     and is much quieter in light mode where a glow reads as a smudge. */
+  .glow::before {
+    content: "";
+    position: absolute;
+    inset: -20% -10% auto -10%;
+    height: 60%;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(
+      60% 60% at 50% 0%,
+      color-mix(in oklab, var(--primary) 12%, transparent) 0%,
+      transparent 70%
+    );
+  }
+
+  .dark .glow::before {
+    background: radial-gradient(
+      60% 60% at 50% 0%,
+      color-mix(in oklab, var(--primary) 22%, transparent) 0%,
+      transparent 70%
+    );
+  }
+}
