@@ -15,7 +15,11 @@ import { npr } from "@/content/services";
 const apiKey = process.env.RESEND_API_KEY;
 const FROM =
   process.env.FROM_EMAIL ?? "Sandip Paudel <onboarding@resend.dev>";
-const ADMIN_TO = process.env.ADMIN_EMAIL ?? profile.emails[0];
+/* Deliberately not ADMIN_EMAIL: that one is the sign-in identity in
+   lib/auth.ts, and pointing it at whichever inbox is handiest for alerts
+   would quietly change the credentials for the admin panel. */
+const ADMIN_TO =
+  process.env.NOTIFY_EMAIL ?? process.env.ADMIN_EMAIL ?? profile.emails[0];
 const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://sandipaudel.com.np"
 ).replace(/\/$/, "");
