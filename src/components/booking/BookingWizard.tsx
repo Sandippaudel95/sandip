@@ -21,10 +21,9 @@ export interface BookedSession {
 export interface Draft {
   /** Everything chosen so far. One entry is an ordinary single booking. */
   sessions: BookedSession[];
-  /* The in-progress pick. Length and date are chosen first, then a time,
-     and choosing the time is what commits a session to the list. */
+  /** Days chosen in the calendar, before any time is picked on them. */
+  selectedDates: string[];
   durationHours: number;
-  date: string;
   clientName: string;
   clientEmail: string;
   consultationTopic: string;
@@ -32,8 +31,8 @@ export interface Draft {
 
 const EMPTY: Draft = {
   sessions: [],
+  selectedDates: [],
   durationHours: 1,
-  date: "",
   clientName: "",
   clientEmail: "",
   consultationTopic: "",
@@ -53,6 +52,7 @@ interface WizardProps {
   sessionLengths: number[];
   noticeHours: number;
   windowDays: number;
+  maxHoursPerDay: number;
 }
 
 /* Starting a second booking remounts the wizard rather than clearing state
@@ -78,6 +78,7 @@ function Wizard({
   sessionLengths,
   noticeHours,
   windowDays,
+  maxHoursPerDay,
   onBookAnother,
 }: WizardProps & { onBookAnother: () => void }) {
   const [step, setStep] = useState(0);
@@ -156,6 +157,7 @@ function Wizard({
           sessionLengths={sessionLengths}
           noticeHours={noticeHours}
           windowDays={windowDays}
+          maxHoursPerDay={maxHoursPerDay}
         />
       )}
 

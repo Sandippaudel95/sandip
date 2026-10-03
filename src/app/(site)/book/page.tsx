@@ -129,6 +129,7 @@ export default async function BookPage() {
               sessionLengths={rules.sessionLengths}
               noticeHours={rules.minimumNoticeHours}
               windowDays={rules.bookingWindowDays}
+              maxHoursPerDay={rules.maxHoursPerClientPerDay}
             />
           </div>
         </div>

@@ -36,13 +36,14 @@ function monthKey(year: number, monthIndex: number): string {
 export function Calendar({
   availableDates,
   selected,
-  onSelect,
+  onToggle,
   windowDays,
 }: {
   /** Date keys that have at least one free start time. */
   availableDates: string[];
-  selected: string;
-  onSelect: (date: string) => void;
+  /** Every day chosen so far. Days are picked first, times afterwards. */
+  selected: string[];
+  onToggle: (date: string) => void;
   windowDays: number;
 }) {
   const today = nepalDateKey();
@@ -53,9 +54,9 @@ export function Calendar({
     [availableDates],
   );
 
-  // Open on the month holding the selection, else the first free date,
-  // else this month.
-  const initial = monthOf(selected || availableDates[0] || today);
+  // Open on the month holding the first selection, else the first free
+  // date, else this month.
+  const initial = monthOf(selected[0] || availableDates[0] || today);
   const [view, setView] = useState(initial);
 
   const [vy, vm] = view.split("-").map(Number);
@@ -132,7 +133,7 @@ export function Calendar({
 
           const day = Number(date.slice(-2));
           const isOpen = available.has(date);
-          const isSelected = date === selected;
+          const isSelected = selected.includes(date);
           const isToday = date === today;
 
           return (
@@ -140,11 +141,13 @@ export function Calendar({
               key={date}
               type="button"
               disabled={!isOpen}
-              onClick={() => onSelect(date)}
+              onClick={() => onToggle(date)}
               aria-pressed={isSelected}
               aria-label={`${fullDate.format(
                 new Date(Date.UTC(viewYear, viewMonthIndex, day)),
-              )}${isOpen ? "" : ", not available"}`}
+              )}${isOpen ? "" : ", not available"}${
+                isSelected ? ", chosen" : ""
+              }`}
               className={cn(
                 "relative aspect-square rounded-md text-sm transition-colors",
                 isSelected && "bg-brand font-medium text-primary-foreground",

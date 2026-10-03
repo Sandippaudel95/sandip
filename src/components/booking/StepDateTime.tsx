@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, CalendarPlus, CalendarX, Clock } from "lucide-react";
+import { ArrowRight, CalendarX, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { DayAvailability } from "@/lib/slots";
@@ -9,6 +9,13 @@ import { Calendar } from "./Calendar";
 import { SessionList } from "./SessionList";
 import type { BookedSession, Draft } from "./BookingWizard";
 
+/* Days first, then times.
+ *
+ * Choosing one date and immediately picking its time reads fine for a
+ * single session, but it hides that more than one day is possible at all.
+ * Picking the days up front makes the shape of the booking visible before
+ * any time is chosen, and the time pickers below then follow the days in
+ * order. */
 export function StepDateTime({
   days,
   draft,
@@ -17,6 +24,7 @@ export function StepDateTime({
   sessionLengths,
   noticeHours,
   windowDays,
+  maxHoursPerDay,
 }: {
   days: DayAvailability[];
   draft: Draft;
@@ -28,29 +36,50 @@ export function StepDateTime({
   sessionLengths: number[];
   noticeHours: number;
   windowDays: number;
+  maxHoursPerDay: number;
 }) {
-  const selectedDay = days.find((d) => d.date === draft.date);
   const canContinue = draft.sessions.length > 0;
   const totalHours = draft.sessions.reduce((n, s) => n + s.durationHours, 0);
 
-  const overlaps = (a: BookedSession, b: BookedSession) => {
-    if (a.date !== b.date) return false;
-    const toMin = (t: string) => {
-      const [h, m] = t.split(":").map(Number);
-      return h * 60 + m;
-    };
-    const [aS, bS] = [toMin(a.timeSlot), toMin(b.timeSlot)];
-    return (
-      aS < bS + b.durationHours * 60 && bS < aS + a.durationHours * 60
-    );
+  const toMin = (t: string) => {
+    const [h, m] = t.split(":").map(Number);
+    return h * 60 + m;
+  };
+  const overlaps = (a: BookedSession, b: BookedSession) =>
+    a.date === b.date &&
+    toMin(a.timeSlot) < toMin(b.timeSlot) + b.durationHours * 60 &&
+    toMin(b.timeSlot) < toMin(a.timeSlot) + a.durationHours * 60;
+
+  const hoursOn = (date: string) =>
+    draft.sessions
+      .filter((s) => s.date === date)
+      .reduce((n, s) => n + s.durationHours, 0);
+
+  /** Dropping a day takes its chosen times with it. */
+  const toggleDate = (date: string) => {
+    const chosen = draft.selectedDates.includes(date);
+    onChange({
+      selectedDates: chosen
+        ? draft.selectedDates.filter((d) => d !== date)
+        : [...draft.selectedDates, date].sort(),
+      sessions: chosen
+        ? draft.sessions.filter((s) => s.date !== date)
+        : draft.sessions,
+    });
   };
 
-  /* Picking a time commits it. The alternative — select, then press Add —
-     makes the single-session case, which is almost everyone, two clicks
-     longer for no gain. */
-  const addSession = (time: string) => {
+  const toggleTime = (date: string, time: string) => {
+    const existing = draft.sessions.findIndex(
+      (s) => s.date === date && s.timeSlot === time,
+    );
+    if (existing >= 0) {
+      onChange({
+        sessions: draft.sessions.filter((_, i) => i !== existing),
+      });
+      return;
+    }
     const candidate: BookedSession = {
-      date: draft.date,
+      date,
       timeSlot: time,
       durationHours: draft.durationHours,
     };
@@ -63,9 +92,6 @@ export function StepDateTime({
       ),
     });
   };
-
-  const removeSession = (i: number) =>
-    onChange({ sessions: draft.sessions.filter((_, n) => n !== i) });
 
   return (
     <div className="space-y-8">
@@ -90,9 +116,9 @@ export function StepDateTime({
                 value={h}
                 checked={draft.durationHours === h}
                 onChange={() =>
-                  // Changing length invalidates the chosen slot: a 2-hour
+                  // Changing length invalidates everything chosen: a 2-hour
                   // session may not fit where a 1-hour one did.
-                  onChange({ durationHours: h, date: "" })
+                  onChange({ durationHours: h, selectedDates: [], sessions: [] })
                 }
                 className="sr-only"
               />
@@ -101,9 +127,9 @@ export function StepDateTime({
           ))}
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
-          Booking opens{" "}
-          {noticeHours} hours ahead and runs {windowDays}{" "}
-          days out.
+          Up to {maxHoursPerDay} hour{maxHoursPerDay > 1 ? "s" : ""} per person
+          per day. Booking opens {noticeHours} hours ahead and runs{" "}
+          {windowDays} days out.
         </p>
       </fieldset>
 
@@ -119,129 +145,144 @@ export function StepDateTime({
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
             {draft.durationHours > 1
-              ? "Try a 1-hour session, or email to arrange a time."
+              ? "Try a shorter session, or email to arrange a time."
               : "New times open regularly. Email to arrange a time."}
           </p>
         </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[minmax(0,20rem)_1fr] lg:gap-8">
-          <Calendar
-            availableDates={days.map((d) => d.date)}
-            selected={draft.date}
-            onSelect={(date) => onChange({ date })}
-            windowDays={windowDays}
-          />
+          <div>
+            <h3 className="text-sm font-semibold tracking-[0.12em] text-brand uppercase">
+              1. Choose your days
+            </h3>
+            <p className="mt-2 mb-3 text-sm text-muted-foreground">
+              Pick one, or several for a longer piece of work.
+            </p>
+            <Calendar
+              availableDates={days.map((d) => d.date)}
+              selected={draft.selectedDates}
+              onToggle={toggleDate}
+              windowDays={windowDays}
+            />
+          </div>
 
           <div>
             <h3 className="text-sm font-semibold tracking-[0.12em] text-brand uppercase">
-              {selectedDay ? "Start time" : "Pick a date"}
+              2. Choose a time on each day
             </h3>
 
-            {selectedDay ? (
-              <>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {formatDateKey(selectedDay.date)} · all times Nepal time
-                  (NPT)
-                </p>
-                <div
-                  className="mt-4 grid gap-2 sm:grid-cols-2"
-                  role="group"
-                  aria-label="Start time"
-                >
-                  {selectedDay.times.map((time) => {
-                    const candidate: BookedSession = {
-                      date: selectedDay.date,
-                      timeSlot: time,
-                      durationHours: draft.durationHours,
-                    };
-                    const isSelected = draft.sessions.some(
-                      (sn) =>
-                        sn.date === candidate.date &&
-                        sn.timeSlot === time &&
-                        sn.durationHours === candidate.durationHours,
-                    );
-                    const clashes =
-                      !isSelected &&
-                      draft.sessions.some((sn) => overlaps(sn, candidate));
-                    return (
-                      <label
-                        key={time}
-                        className={cn(
-                          "flex items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-colors",
-                          isSelected &&
-                            "border-brand/30 bg-brand text-primary-foreground",
-                          clashes &&
-                            "cursor-not-allowed border-input opacity-40",
-                          !isSelected &&
-                            !clashes &&
-                            "cursor-pointer border-input hover:border-brand/30 hover:bg-accent/60",
-                        )}
-                      >
-                        <input
-                          type="checkbox"
-                          value={time}
-                          checked={isSelected}
-                          disabled={clashes}
-                          onChange={() =>
-                            isSelected
-                              ? removeSession(
-                                  draft.sessions.findIndex(
-                                    (sn) =>
-                                      sn.date === candidate.date &&
-                                      sn.timeSlot === time,
-                                  ),
-                                )
-                              : addSession(time)
-                          }
-                          className="sr-only"
-                        />
-                        <Clock
-                          className={cn(
-                            "size-4 shrink-0",
-                            isSelected ? "text-primary-foreground/70" : "text-brand",
-                          )}
-                          aria-hidden="true"
-                        />
-                        <span className="font-medium">
-                          {formatTime(time)}
-                        </span>
-                        <span
-                          className={cn(
-                            "ml-auto text-xs",
-                            isSelected
-                              ? "text-primary-foreground/70"
-                              : "text-muted-foreground",
-                          )}
-                        >
-                          to {formatTime(addHours(time, draft.durationHours))}
-                        </span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </>
-            ) : (
+            {draft.selectedDates.length === 0 ? (
               <p className="mt-4 rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
-                Choose a highlighted day in the calendar to see the times
-                open on it.
+                Choose a highlighted day in the calendar and its open times
+                will appear here. All times are Nepal time (NPT).
               </p>
+            ) : (
+              <div className="mt-4 space-y-5">
+                {draft.selectedDates.map((date) => {
+                  const day = days.find((d) => d.date === date);
+                  const booked = hoursOn(date);
+                  const atCap = booked + draft.durationHours > maxHoursPerDay;
+
+                  return (
+                    <div key={date} className="rounded-xl border bg-card p-4">
+                      <div className="flex flex-wrap items-baseline justify-between gap-2">
+                        <h4 className="text-sm font-medium">
+                          {formatDateKey(date)}
+                        </h4>
+                        <p className="text-xs text-muted-foreground tabular-nums">
+                          {booked
+                            ? `${booked} of ${maxHoursPerDay} hour${maxHoursPerDay > 1 ? "s" : ""} chosen`
+                            : "No time chosen yet"}
+                        </p>
+                      </div>
+
+                      <div
+                        className="mt-3 grid gap-2 sm:grid-cols-2"
+                        role="group"
+                        aria-label={`Start times on ${formatDateKey(date)}`}
+                      >
+                        {(day?.times ?? []).map((time) => {
+                          const picked = draft.sessions.some(
+                            (s) => s.date === date && s.timeSlot === time,
+                          );
+                          const candidate: BookedSession = {
+                            date,
+                            timeSlot: time,
+                            durationHours: draft.durationHours,
+                          };
+                          const clashes =
+                            !picked &&
+                            (atCap ||
+                              draft.sessions.some((s) =>
+                                overlaps(s, candidate),
+                              ));
+
+                          return (
+                            <label
+                              key={time}
+                              className={cn(
+                                "flex items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-colors",
+                                picked &&
+                                  "border-brand/30 bg-brand text-primary-foreground",
+                                clashes &&
+                                  "cursor-not-allowed border-input opacity-40",
+                                !picked &&
+                                  !clashes &&
+                                  "cursor-pointer border-input hover:border-brand/30 hover:bg-accent/60",
+                              )}
+                            >
+                              <input
+                                type="checkbox"
+                                value={time}
+                                checked={picked}
+                                disabled={clashes}
+                                onChange={() => toggleTime(date, time)}
+                                className="sr-only"
+                              />
+                              <Clock
+                                className={cn(
+                                  "size-4 shrink-0",
+                                  picked
+                                    ? "text-primary-foreground/70"
+                                    : "text-brand",
+                                )}
+                                aria-hidden="true"
+                              />
+                              <span className="font-medium">
+                                {formatTime(time)}
+                              </span>
+                              <span
+                                className={cn(
+                                  "ml-auto text-xs",
+                                  picked
+                                    ? "text-primary-foreground/70"
+                                    : "text-muted-foreground",
+                                )}
+                              >
+                                to{" "}
+                                {formatTime(
+                                  addHours(time, draft.durationHours),
+                                )}
+                              </span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             )}
           </div>
         </div>
       )}
 
-      <SessionList sessions={draft.sessions} onRemove={removeSession} />
-
-      {canContinue && (
-        <p className="flex items-start gap-2 text-sm text-muted-foreground">
-          <CalendarPlus
-            className="mt-0.5 size-4 shrink-0 text-brand"
-            aria-hidden="true"
-          />
-          Need more time? Pick another date and time above to add a second
-          session to this booking. You pay for all of them together.
-        </p>
-      )}
+      <SessionList
+        sessions={draft.sessions}
+        onRemove={(i) =>
+          onChange({ sessions: draft.sessions.filter((_, n) => n !== i) })
+        }
+      />
 
       <Button onClick={onNext} disabled={!canContinue} size="lg">
         Continue
