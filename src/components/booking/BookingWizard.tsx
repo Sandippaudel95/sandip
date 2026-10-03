@@ -36,6 +36,10 @@ interface WizardProps {
   availability: Record<number, DayAvailability[]>;
   qrSrc: string | null;
   hourlyRate: number;
+  /* Admin-editable booking rules, resolved on the server. */
+  sessionLengths: number[];
+  noticeHours: number;
+  windowDays: number;
 }
 
 /* Starting a second booking remounts the wizard rather than clearing state
@@ -58,6 +62,9 @@ function Wizard({
   availability,
   qrSrc,
   hourlyRate,
+  sessionLengths,
+  noticeHours,
+  windowDays,
   onBookAnother,
 }: WizardProps & { onBookAnother: () => void }) {
   const [step, setStep] = useState(0);
@@ -133,6 +140,9 @@ function Wizard({
           draft={draft}
           onChange={(patch) => setDraft((d) => ({ ...d, ...patch }))}
           onNext={() => setStep(1)}
+          sessionLengths={sessionLengths}
+          noticeHours={noticeHours}
+          windowDays={windowDays}
         />
       )}
 

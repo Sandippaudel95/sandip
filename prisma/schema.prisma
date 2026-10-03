@@ -169,3 +169,46 @@ model Engagement {
   @@index([status])
   @@index([dueAt])
 }
+
+/// Booking rules, editable from the admin panel.
+///
+/// One row, id "singleton". These were constants in
+/// src/content/availability.ts, which meant a code change and a deploy to
+/// close a Friday afternoon. That file now holds only the defaults this
+/// row is seeded from.
+model AvailabilitySetting {
+  id String @id @default("singleton")
+
+  /// Start times per weekday, as { "0": ["10:00", ...] } with 0 = Sunday.
+  /// A weekday that is absent or empty is closed. JSON rather than a table
+  /// because it is always read and written whole.
+  openingHours Json
+
+  /// Lengths a client may choose, in hours.
+  sessionLengths Int[] @default([1, 2])
+
+  /// No booking may start within this many hours from now.
+  minimumNoticeHours Int @default(24)
+
+  /// How far ahead the calendar opens.
+  bookingWindowDays Int @default(30)
+
+  /// Total hours one client may hold on a single day, across every session
+  /// of every booking. Enforced under an advisory lock, so raising it here
+  /// cannot be raced by two submissions.
+  maxHoursPerClientPerDay Int @default(2)
+
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+/// A date closed regardless of the weekday's opening hours.
+model BlackoutDate {
+  id     String   @id @default(cuid())
+  /// Nepal-time calendar date, stored as a plain date.
+  date   DateTime @unique @db.Date
+  reason String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([date])
+}

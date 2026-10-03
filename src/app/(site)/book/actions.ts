@@ -22,7 +22,7 @@ import {
   quoteOrFullPrice,
   type Quote,
 } from "@/lib/pricing";
-import { MAX_HOURS_PER_CLIENT_PER_DAY } from "@/content/availability";
+import { getAvailabilitySettings } from "@/lib/availability";
 
 /* Neon suspends an idle compute and takes several seconds to wake. Prisma
    waits only 2s for a connection by default, so the first booking after a
@@ -96,23 +96,31 @@ export async function createBooking(
   const startsAt = nepalToUtc(date, timeSlot);
   const endsAt = nepalToUtc(date, addHours(timeSlot, durationHours));
 
+  // Re-read the rules here rather than trusting anything the form sent:
+  // the admin may have closed this slot since the page was rendered.
+  const rules = await getAvailabilitySettings();
+
+  if (!rules.sessionLengths.includes(durationHours)) {
+    return { ok: false, message: "That session length is not offered." };
+  }
+
   // The slot must be one we actually offer, and every hour it spans must be
   // inside opening hours. Without this a crafted POST could book 03:00.
-  const offered = configuredTimes(date);
+  const offered = configuredTimes(date, rules);
   for (let h = 0; h < durationHours; h += 1) {
     if (!offered.includes(addHours(timeSlot, h))) {
       return { ok: false, message: "That time is not available for booking." };
     }
   }
 
-  if (startsAt < earliestStart()) {
+  if (startsAt < earliestStart(rules)) {
     return {
       ok: false,
       message: "That time is too soon. Please choose a later slot.",
     };
   }
 
-  if (date > lastBookableDate()) {
+  if (date > lastBookableDate(rules)) {
     return { ok: false, message: "That date is too far ahead." };
   }
 
@@ -130,8 +138,10 @@ export async function createBooking(
 
       // Daily cap, per client, read on the transaction's own connection.
       const already = await hoursBookedBy(clientEmail, date, tx);
-      if (already + durationHours > MAX_HOURS_PER_CLIENT_PER_DAY) {
-        throw new CapExceeded(dailyCapMessage(already));
+      if (already + durationHours > rules.maxHoursPerClientPerDay) {
+        throw new CapExceeded(
+          dailyCapMessage(already, rules.maxHoursPerClientPerDay),
+        );
       }
 
       // Every booking belongs to a client record, so the CRM has a person

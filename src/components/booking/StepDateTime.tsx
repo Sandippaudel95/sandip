@@ -4,11 +4,6 @@ import { ArrowRight, CalendarX, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { DayAvailability } from "@/lib/slots";
-import {
-  BOOKING_WINDOW_DAYS,
-  MINIMUM_NOTICE_HOURS,
-  sessionLengths,
-} from "@/content/availability";
 import { addHours, formatDateKey, formatTime } from "@/lib/time";
 import { Calendar } from "./Calendar";
 import type { Draft } from "./BookingWizard";
@@ -18,11 +13,20 @@ export function StepDateTime({
   draft,
   onChange,
   onNext,
+  sessionLengths,
+  noticeHours,
+  windowDays,
 }: {
   days: DayAvailability[];
   draft: Draft;
   onChange: (patch: Partial<Draft>) => void;
   onNext: () => void;
+  /* The booking rules are admin-editable, so they are passed in from the
+     server rather than imported: this component must not describe limits
+     the server is no longer enforcing. */
+  sessionLengths: number[];
+  noticeHours: number;
+  windowDays: number;
 }) {
   const selectedDay = days.find((d) => d.date === draft.date);
   const canContinue = Boolean(draft.date && draft.timeSlot);
@@ -34,7 +38,7 @@ export function StepDateTime({
           Session length
         </legend>
         <div className="mt-3 flex flex-wrap gap-2">
-          {sessionLengths.map((h) => (
+          {sessionLengths.map((h: number) => (
             <label
               key={h}
               className={cn(
@@ -62,7 +66,7 @@ export function StepDateTime({
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
           Up to 2 hours per person per day. Booking opens{" "}
-          {MINIMUM_NOTICE_HOURS} hours ahead and runs {BOOKING_WINDOW_DAYS}{" "}
+          {noticeHours} hours ahead and runs {windowDays}{" "}
           days out.
         </p>
       </fieldset>
@@ -75,7 +79,7 @@ export function StepDateTime({
           />
           <p className="font-medium">
             No {draft.durationHours}-hour slots are open in the next{" "}
-            {BOOKING_WINDOW_DAYS} days.
+            {windowDays} days.
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
             {draft.durationHours > 1
@@ -89,7 +93,7 @@ export function StepDateTime({
             availableDates={days.map((d) => d.date)}
             selected={draft.date}
             onSelect={(date) => onChange({ date, timeSlot: "" })}
-            windowDays={BOOKING_WINDOW_DAYS}
+            windowDays={windowDays}
           />
 
           <div>

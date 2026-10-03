@@ -1,17 +1,15 @@
 import { prisma } from "@/lib/prisma";
-import {
-  BOOKING_WINDOW_DAYS,
-  MAX_HOURS_PER_CLIENT_PER_DAY,
-  MINIMUM_NOTICE_HOURS,
-  blackoutDates,
-  openingHours,
-  type Weekday,
-} from "@/content/availability";
+import { getAvailabilitySettings } from "@/lib/availability";
+import type { AvailabilityRules, Weekday } from "@/content/availability";
 import { addDays, addHours, nepalDateKey, nepalToUtc, weekdayOf } from "./time";
 
 /* Availability is the configured opening hours minus anything already
-   booked, minus anything inside the notice window. There is no slot table:
-   see src/content/availability.ts. */
+   booked, minus anything inside the notice window. There is no slot table.
+
+   The rules come from the database (see src/lib/availability.ts) rather
+   than from constants, so these take them as an argument instead of
+   importing them: that keeps the maths pure and testable, and lets one
+   request reuse a single read across several session lengths. */
 
 export interface DayAvailability {
   /** "YYYY-MM-DD" in Nepal time. */
@@ -21,19 +19,22 @@ export interface DayAvailability {
 }
 
 /** Start times configured for a date, before subtracting bookings. */
-export function configuredTimes(dateStr: string): string[] {
-  if (blackoutDates.includes(dateStr)) return [];
-  return openingHours[weekdayOf(dateStr) as Weekday] ?? [];
+export function configuredTimes(
+  dateStr: string,
+  rules: AvailabilityRules,
+): string[] {
+  if (rules.blackoutDates.includes(dateStr)) return [];
+  return rules.openingHours[weekdayOf(dateStr) as Weekday] ?? [];
 }
 
 /** The earliest instant a session may start. */
-export function earliestStart(): Date {
-  return new Date(Date.now() + MINIMUM_NOTICE_HOURS * 3600_000);
+export function earliestStart(rules: AvailabilityRules): Date {
+  return new Date(Date.now() + rules.minimumNoticeHours * 3600_000);
 }
 
 /** The last date the calendar offers. */
-export function lastBookableDate(): string {
-  return addDays(nepalDateKey(), BOOKING_WINDOW_DAYS);
+export function lastBookableDate(rules: AvailabilityRules): string {
+  return addDays(nepalDateKey(), rules.bookingWindowDays);
 }
 
 /**
@@ -44,10 +45,12 @@ export function lastBookableDate(): string {
  */
 export async function getAvailability(
   durationHours: number,
+  rules?: AvailabilityRules,
 ): Promise<DayAvailability[]> {
+  const settings = rules ?? (await getAvailabilitySettings());
   const from = nepalDateKey();
-  const to = lastBookableDate();
-  const cutoff = earliestStart();
+  const to = lastBookableDate(settings);
+  const cutoff = earliestStart(settings);
 
   const booked = await prisma.booking.findMany({
     where: {
@@ -60,7 +63,8 @@ export async function getAvailability(
   const days: DayAvailability[] = [];
 
   for (let d = from; d <= to; d = addDays(d, 1)) {
-    const times = configuredTimes(d).filter((time) => {
+    const offered = configuredTimes(d, settings);
+    const times = offered.filter((time) => {
       const start = nepalToUtc(d, time);
       const end = nepalToUtc(d, addHours(time, durationHours));
 
@@ -73,7 +77,7 @@ export async function getAvailability(
       // The span must also stay inside the configured hours: every hour it
       // covers has to be an offered start time.
       for (let h = 1; h < durationHours; h += 1) {
-        if (!configuredTimes(d).includes(addHours(time, h))) return false;
+        if (!offered.includes(addHours(time, h))) return false;
       }
 
       return true;
@@ -111,6 +115,6 @@ export async function hoursBookedBy(
   return rows.reduce((sum, r) => sum + r.durationHours, 0);
 }
 
-export function dailyCapMessage(already: number): string {
-  return `You already have ${already} hour${already === 1 ? "" : "s"} booked that day. A maximum of ${MAX_HOURS_PER_CLIENT_PER_DAY} hours per day can be booked per person. Please choose another date.`;
+export function dailyCapMessage(already: number, cap: number): string {
+  return `You already have ${already} hour${already === 1 ? "" : "s"} booked that day. A maximum of ${cap} hours per day can be booked per person. Please choose another date.`;
 }

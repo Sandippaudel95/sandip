@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { sessionLengths } from "@/content/availability";
 
 /* One source of truth for validation, imported by both the form and the
    Server Action, so the client and the server can never disagree about
@@ -30,14 +29,14 @@ export const slotSchema = z.object({
   timeSlot: z
     .string()
     .regex(/^\d{2}:\d{2}$/, "Choose a time."),
+  // Shape only. Which lengths are actually offered is a setting now, so
+  // the authoritative check happens in the action against the live rules;
+  // this schema is shared with the browser and must not go to the database.
   durationHours: z.coerce
     .number()
     .int()
-    .refine(
-      (n): n is (typeof sessionLengths)[number] =>
-        (sessionLengths as readonly number[]).includes(n),
-      "Choose a session length.",
-    ),
+    .min(1, "Choose a session length.")
+    .max(12, "Choose a session length."),
 });
 
 export const paymentSchema = z.object({

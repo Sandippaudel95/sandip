@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { CalendarDays, LayoutDashboard, Users, Briefcase } from "lucide-react";
+import {
+  CalendarDays,
+  LayoutDashboard,
+  Users,
+  Briefcase,
+  Clock,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const tabs = [
@@ -10,6 +16,7 @@ const tabs = [
   { href: "/admin/bookings", label: "Bookings", icon: CalendarDays },
   { href: "/admin/clients", label: "Clients", icon: Users },
   { href: "/admin/engagements", label: "Work", icon: Briefcase },
+  { href: "/admin/availability", label: "Availability", icon: Clock },
 ] as const;
 
 export function AdminNav() {

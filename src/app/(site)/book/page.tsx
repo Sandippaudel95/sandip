@@ -5,7 +5,7 @@ import { Clock, Video, FileText } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { BookingWizard } from "@/components/booking/BookingWizard";
 import { getAvailability, type DayAvailability } from "@/lib/slots";
-import { sessionLengths } from "@/content/availability";
+import { getAvailabilitySettings } from "@/lib/availability";
 import { profile } from "@/content/profile";
 import { HOURLY_RATE, HOURLY_RATE_NPR } from "@/content/services";
 
@@ -56,8 +56,11 @@ const expectations = [
 export default async function BookPage() {
   // One query per offered length: a 2-hour session needs two free hours back
   // to back, so the available sets genuinely differ.
+  const rules = await getAvailabilitySettings();
   const lists = await Promise.all(
-    sessionLengths.map(async (h) => [h, await getAvailability(h)] as const),
+    rules.sessionLengths.map(
+      async (h) => [h, await getAvailability(h, rules)] as const,
+    ),
   );
   const availability = Object.fromEntries(lists) as Record<
     number,
@@ -123,6 +126,9 @@ export default async function BookPage() {
               availability={availability}
               qrSrc={findQr()}
               hourlyRate={HOURLY_RATE}
+              sessionLengths={rules.sessionLengths}
+              noticeHours={rules.minimumNoticeHours}
+              windowDays={rules.bookingWindowDays}
             />
           </div>
         </div>
