@@ -34,8 +34,14 @@ export type AdminActionResult = { ok: boolean; message?: string };
  */
 export async function deleteBooking(id: string): Promise<AdminActionResult> {
   await requireAdmin();
+  const current = await prisma.booking.findUnique({ where: { id } });
+  if (!current) return { ok: false, message: "Booking not found." };
   try {
-    await prisma.booking.delete({ where: { id } });
+    // The whole group goes: it was one payment, and leaving half an order
+    // behind would show a client as owing time they never agreed to.
+    await prisma.booking.deleteMany({
+      where: groupScope(id, current.groupId),
+    });
   } catch (err) {
     console.error("[admin] booking delete failed:", err);
     return { ok: false, message: "Could not delete. Please try again." };
@@ -48,22 +54,51 @@ export async function deleteBooking(id: string): Promise<AdminActionResult> {
   return { ok: true };
 }
 
+/**
+ * Build the email for a booking's whole group.
+ *
+ * Sessions paid for together are decided together, so the client gets one
+ * message listing every day rather than one email per row, and the amount
+ * shown is what they actually paid.
+ */
 async function loadForEmail(id: string): Promise<BookingEmailData | null> {
   const b = await prisma.booking.findUnique({ where: { id } });
   if (!b) return null;
+
+  const group = await groupRows(b.id, b.groupId);
+
   return {
-    id: b.id,
+    id: b.groupId ?? b.id,
     clientName: b.clientName,
     clientEmail: b.clientEmail,
     consultationTopic: b.consultationTopic,
-    dateKey: nepalDateKey(b.startsAt),
-    timeSlot: b.timeSlot,
-    durationHours: b.durationHours,
+    sessions: group.map((g) => ({
+      dateKey: nepalDateKey(g.startsAt),
+      timeSlot: g.timeSlot,
+      durationHours: g.durationHours,
+    })),
     transactionId: b.transactionId,
-    amountNpr: b.amountNpr,
-    discountNpr: b.discountNpr,
+    amountNpr: group.reduce((sum, g) => sum + g.amountNpr, 0),
+    discountNpr: group.reduce((sum, g) => sum + g.discountNpr, 0),
     couponCode: b.couponCode,
   };
+}
+
+/** Every row of a booking's group, oldest session first. */
+async function groupRows(id: string, groupId: string | null) {
+  if (!groupId) {
+    const one = await prisma.booking.findUnique({ where: { id } });
+    return one ? [one] : [];
+  }
+  return prisma.booking.findMany({
+    where: { groupId },
+    orderBy: { startsAt: "asc" },
+  });
+}
+
+/** Scope an update to the whole group, so one payment is one decision. */
+function groupScope(id: string, groupId: string | null) {
+  return groupId ? { groupId } : { id };
 }
 
 /** Verify the payment and confirm the booking. */
@@ -86,8 +121,8 @@ export async function confirmBooking(
     };
   }
 
-  await prisma.booking.update({
-    where: { id },
+  await prisma.booking.updateMany({
+    where: groupScope(id, current.groupId),
     data: {
       paymentStatus: "VERIFIED",
       bookingStatus: "CONFIRMED",
@@ -99,8 +134,8 @@ export async function confirmBooking(
   const sent = payload
     ? await sendBookingConfirmed(payload, note?.trim() || null)
     : false;
-  await prisma.booking.update({
-    where: { id },
+  await prisma.booking.updateMany({
+    where: groupScope(id, current.groupId),
     data: { emailFailed: !sent },
   });
 
@@ -128,8 +163,8 @@ export async function rejectBooking(
 
   // CANCELLED is what frees the slot: the overlap constraint ignores
   // cancelled rows, so the time returns to the pool.
-  await prisma.booking.update({
-    where: { id },
+  await prisma.booking.updateMany({
+    where: groupScope(id, current.groupId),
     data: {
       paymentStatus: "REJECTED",
       bookingStatus: "CANCELLED",
@@ -141,8 +176,8 @@ export async function rejectBooking(
   const sent = payload
     ? await sendBookingRejected(payload, note?.trim() || null)
     : false;
-  await prisma.booking.update({
-    where: { id },
+  await prisma.booking.updateMany({
+    where: groupScope(id, current.groupId),
     data: { emailFailed: !sent },
   });
 

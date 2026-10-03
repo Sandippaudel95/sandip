@@ -21,11 +21,13 @@ const sample: BookingEmailData = {
   clientName: "Test Client",
   clientEmail: CLIENT_INBOX,
   consultationTopic: "Checking that booking email actually arrives",
-  dateKey: "2026-10-09",
-  timeSlot: "16:00",
-  durationHours: 1,
+  // Two sessions, so the multi-day layout is what gets exercised.
+  sessions: [
+    { dateKey: "2026-10-09", timeSlot: "16:00", durationHours: 1 },
+    { dateKey: "2026-10-10", timeSlot: "10:00", durationHours: 2 },
+  ],
   transactionId: "TEST-TXN-0001",
-  amountNpr: 5000,
+  amountNpr: 15000,
   discountNpr: 0,
   couponCode: null,
 };

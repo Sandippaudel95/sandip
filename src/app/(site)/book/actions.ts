@@ -2,7 +2,13 @@
 
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { bookingSchema, fieldErrorsOf, type ActionResult } from "@/lib/validation";
+import { randomUUID } from "node:crypto";
+import {
+  bookingSchema,
+  sessionsSchema,
+  fieldErrorsOf,
+  type ActionResult,
+} from "@/lib/validation";
 import {
   configuredTimes,
   dailyCapMessage,
@@ -10,7 +16,7 @@ import {
   hoursBookedBy,
   lastBookableDate,
 } from "@/lib/slots";
-import { addHours, nepalToUtc } from "@/lib/time";
+import { addHours, formatSession, nepalToUtc } from "@/lib/time";
 import {
   sendAdminNotice,
   sendBookingReceived,
@@ -77,71 +83,122 @@ export async function createBooking(
   // Honeypot. Silently accept so a bot learns nothing, but save nothing.
   if (input.website) return { ok: true, reference: "ok" };
 
-  const {
-    date,
-    timeSlot,
-    durationHours,
-    clientName,
-    clientEmail,
-    consultationTopic,
-    transactionId,
-  } = input;
+  const { clientName, clientEmail, consultationTopic, transactionId } = input;
+
+  // The sessions arrive as one JSON field, built up client-side.
+  let sessions;
+  try {
+    sessions = sessionsSchema.parse(
+      JSON.parse(String(formData.get("sessions") ?? "[]")),
+    );
+  } catch {
+    return { ok: false, message: "Please choose at least one session." };
+  }
+
+  // Re-read the rules rather than trusting anything the form sent: the
+  // admin may have closed a slot since the page was rendered.
+  const rules = await getAvailabilitySettings();
+  const cutoff = earliestStart(rules);
+  const lastDate = lastBookableDate(rules);
+
+  const priced = sessions.map((sn) => ({
+    ...sn,
+    startsAt: nepalToUtc(sn.date, sn.timeSlot),
+    endsAt: nepalToUtc(sn.date, addHours(sn.timeSlot, sn.durationHours)),
+  }));
+
+  for (const sn of priced) {
+    if (!rules.sessionLengths.includes(sn.durationHours)) {
+      return { ok: false, message: "That session length is not offered." };
+    }
+
+    // Every hour the session spans must be inside opening hours. Without
+    // this a crafted POST could book 03:00.
+    const offered = configuredTimes(sn.date, rules);
+    for (let h = 0; h < sn.durationHours; h += 1) {
+      if (!offered.includes(addHours(sn.timeSlot, h))) {
+        return {
+          ok: false,
+          message: `${formatSession(sn.date, sn.timeSlot, sn.durationHours)} is not available for booking.`,
+        };
+      }
+    }
+
+    if (sn.startsAt < cutoff) {
+      return {
+        ok: false,
+        message: "One of those times is too soon. Please choose a later slot.",
+      };
+    }
+    if (sn.date > lastDate) {
+      return { ok: false, message: "One of those dates is too far ahead." };
+    }
+  }
+
+  // Sessions must not overlap each other. The database would catch this
+  // too, but only as "that time has just been taken", which is a baffling
+  // thing to read about a clash you created yourself a moment ago.
+  for (let i = 0; i < priced.length; i += 1) {
+    for (let j = i + 1; j < priced.length; j += 1) {
+      if (
+        priced[i].startsAt < priced[j].endsAt &&
+        priced[j].startsAt < priced[i].endsAt
+      ) {
+        return {
+          ok: false,
+          message: "Two of the sessions you chose overlap. Please adjust them.",
+        };
+      }
+    }
+  }
+
+  const totalHours = priced.reduce((sum, sn) => sum + sn.durationHours, 0);
 
   // Priced here, never from anything the browser sent. An invalid coupon
   // is ignored rather than failing the booking: the client has already
   // paid by this point, and the full price is the safe fallback.
   const submittedCoupon = String(formData.get("couponCode") ?? "").trim();
-  const q = await quoteOrFullPrice(durationHours, submittedCoupon);
+  const q = await quoteOrFullPrice(totalHours, submittedCoupon);
 
-  const startsAt = nepalToUtc(date, timeSlot);
-  const endsAt = nepalToUtc(date, addHours(timeSlot, durationHours));
+  // One payment, but revenue is summed per booking row, so the total is
+  // split across the sessions by hours. The remainder goes on the first
+  // row so the parts add back to exactly what was charged.
+  const shares = splitByHours(q.totalNpr, priced.map((sn) => sn.durationHours));
+  const discounts = splitByHours(
+    q.discountNpr,
+    priced.map((sn) => sn.durationHours),
+  );
 
-  // Re-read the rules here rather than trusting anything the form sent:
-  // the admin may have closed this slot since the page was rendered.
-  const rules = await getAvailabilitySettings();
-
-  if (!rules.sessionLengths.includes(durationHours)) {
-    return { ok: false, message: "That session length is not offered." };
+  // Hours wanted per date, for the cap check.
+  const hoursByDate = new Map<string, number>();
+  for (const sn of priced) {
+    hoursByDate.set(sn.date, (hoursByDate.get(sn.date) ?? 0) + sn.durationHours);
   }
 
-  // The slot must be one we actually offer, and every hour it spans must be
-  // inside opening hours. Without this a crafted POST could book 03:00.
-  const offered = configuredTimes(date, rules);
-  for (let h = 0; h < durationHours; h += 1) {
-    if (!offered.includes(addHours(timeSlot, h))) {
-      return { ok: false, message: "That time is not available for booking." };
-    }
-  }
-
-  if (startsAt < earliestStart(rules)) {
-    return {
-      ok: false,
-      message: "That time is too soon. Please choose a later slot.",
-    };
-  }
-
-  if (date > lastBookableDate(rules)) {
-    return { ok: false, message: "That date is too far ahead." };
-  }
-
-  const [y, m, d] = date.split("-").map(Number);
+  const groupId = randomUUID();
 
   let created;
   try {
     created = await prisma.$transaction(async (tx) => {
       // Serialise concurrent submissions from the same person for the same
-      // day. Under READ COMMITTED both could otherwise read the old total and
-      // both pass the cap. The lock is held to the end of the transaction and
-      // only blocks this one email-and-date pair.
-      const lockKey = `${clientEmail.toLowerCase()}|${date}`;
-      await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${lockKey}))`;
+      // day. Under READ COMMITTED both could otherwise read the old total
+      // and both pass the cap. Locks are taken in sorted date order: two
+      // multi-day submissions that share dates would otherwise be able to
+      // take them in opposite orders and deadlock.
+      for (const dateKey of [...hoursByDate.keys()].sort()) {
+        const lockKey = `${clientEmail.toLowerCase()}|${dateKey}`;
+        await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtext(${lockKey}))`;
+      }
 
-      // Daily cap, per client, read on the transaction's own connection.
-      const already = await hoursBookedBy(clientEmail, date, tx);
-      if (already + durationHours > rules.maxHoursPerClientPerDay) {
-        throw new CapExceeded(
-          dailyCapMessage(already, rules.maxHoursPerClientPerDay),
-        );
+      // Daily cap, per client, per date, read on the transaction's own
+      // connection. Checked for each date this booking touches.
+      for (const [dateKey, wanted] of hoursByDate) {
+        const already = await hoursBookedBy(clientEmail, dateKey, tx);
+        if (already + wanted > rules.maxHoursPerClientPerDay) {
+          throw new CapExceeded(
+            dailyCapMessage(already, rules.maxHoursPerClientPerDay),
+          );
+        }
       }
 
       // Every booking belongs to a client record, so the CRM has a person
@@ -152,23 +209,35 @@ export async function createBooking(
         create: { email: clientEmail.trim().toLowerCase(), name: clientName },
       });
 
-      return tx.booking.create({
-        data: {
-          clientId: client.id,
-          clientName,
-          clientEmail,
-          consultationTopic,
-          date: new Date(Date.UTC(y, m - 1, d)),
-          timeSlot,
-          durationHours,
-          startsAt,
-          endsAt,
-          transactionId,
-          amountNpr: q.totalNpr,
-          discountNpr: q.discountNpr,
-          couponCode: q.couponCode,
-        },
-      });
+      // Created one at a time rather than with createMany, because the
+      // exclusion constraint has to reject an individual overlapping
+      // session and roll the whole group back with it: a half-booked
+      // multi-day order would be worse than none.
+      const rows = [];
+      for (const [i, sn] of priced.entries()) {
+        const [y, m, d] = sn.date.split("-").map(Number);
+        rows.push(
+          await tx.booking.create({
+            data: {
+              groupId,
+              clientId: client.id,
+              clientName,
+              clientEmail,
+              consultationTopic,
+              date: new Date(Date.UTC(y, m - 1, d)),
+              timeSlot: sn.timeSlot,
+              durationHours: sn.durationHours,
+              startsAt: sn.startsAt,
+              endsAt: sn.endsAt,
+              transactionId,
+              amountNpr: shares[i],
+              discountNpr: discounts[i],
+              couponCode: q.couponCode,
+            },
+          }),
+        );
+      }
+      return rows;
     }, TX_OPTIONS);
   } catch (err) {
     if (err instanceof CapExceeded) {
@@ -187,19 +256,24 @@ export async function createBooking(
     };
   }
 
-  // Email must never fail the booking: it is already saved.
+  // Email must never fail the booking: it is already saved. The whole
+  // group goes in one message: the client paid once and should be told
+  // once, not handed one email per day they booked.
+  const first = created[0];
   const payload: BookingEmailData = {
-    id: created.id,
-    clientName: created.clientName,
-    clientEmail: created.clientEmail,
-    consultationTopic: created.consultationTopic,
-    dateKey: date,
-    timeSlot: created.timeSlot,
-    durationHours: created.durationHours,
-    transactionId: created.transactionId,
-    amountNpr: created.amountNpr,
-    discountNpr: created.discountNpr,
-    couponCode: created.couponCode,
+    id: groupId,
+    clientName: first.clientName,
+    clientEmail: first.clientEmail,
+    consultationTopic: first.consultationTopic,
+    sessions: priced.map((sn) => ({
+      dateKey: sn.date,
+      timeSlot: sn.timeSlot,
+      durationHours: sn.durationHours,
+    })),
+    transactionId: first.transactionId,
+    amountNpr: q.totalNpr,
+    discountNpr: q.discountNpr,
+    couponCode: q.couponCode,
   };
 
   const [toClient, toAdmin] = await Promise.all([
@@ -209,11 +283,26 @@ export async function createBooking(
 
   if (!toClient || !toAdmin) {
     await prisma.booking
-      .update({ where: { id: created.id }, data: { emailFailed: true } })
+      .updateMany({ where: { groupId }, data: { emailFailed: true } })
       .catch((e) => console.error("[booking] could not flag email failure:", e));
   }
 
-  return { ok: true, reference: created.id };
+  return { ok: true, reference: first.id };
+}
+
+/**
+ * Divide a total into parts proportional to hours, summing to the total.
+ *
+ * Rounding each share independently would lose or gain a rupee or two, and
+ * the parts have to add back to what was actually charged, because revenue
+ * is summed from the rows. The remainder lands on the first session.
+ */
+function splitByHours(total: number, hours: number[]): number[] {
+  const all = hours.reduce((a, b) => a + b, 0);
+  if (all <= 0) return hours.map(() => 0);
+  const parts = hours.map((h) => Math.floor((total * h) / all));
+  parts[0] += total - parts.reduce((a, b) => a + b, 0);
+  return parts;
 }
 
 class CapExceeded extends Error {}

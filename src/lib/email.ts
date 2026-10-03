@@ -26,14 +26,20 @@ const SITE_URL = (
 
 const resend = apiKey ? new Resend(apiKey) : null;
 
+export interface BookingSessionLine {
+  dateKey: string;
+  timeSlot: string;
+  durationHours: number;
+}
+
 export interface BookingEmailData {
+  /** The group reference, shared by every session that was paid for together. */
   id: string;
   clientName: string;
   clientEmail: string;
   consultationTopic: string;
-  dateKey: string;
-  timeSlot: string;
-  durationHours: number;
+  /** One or more days. A single-day booking has one entry. */
+  sessions: BookingSessionLine[];
   transactionId: string;
   amountNpr: number;
   discountNpr: number;
@@ -113,9 +119,22 @@ async function send(
   }
 }
 
+const totalHours = (b: BookingEmailData): number =>
+  b.sessions.reduce((sum, s) => sum + s.durationHours, 0);
+
 const sessionRows = (b: BookingEmailData): [string, string][] => [
-  ["When", formatSession(b.dateKey, b.timeSlot, b.durationHours)],
-  ["Duration", `${b.durationHours} hour${b.durationHours > 1 ? "s" : ""}`],
+  // One row per day, numbered only when there is more than one, so a
+  // single-session booking reads exactly as it did before.
+  ...b.sessions.map(
+    (s, i): [string, string] => [
+      b.sessions.length > 1 ? `Session ${i + 1}` : "When",
+      formatSession(s.dateKey, s.timeSlot, s.durationHours),
+    ],
+  ),
+  [
+    b.sessions.length > 1 ? "Total time" : "Duration",
+    `${totalHours(b)} hour${totalHours(b) > 1 ? "s" : ""}`,
+  ],
   ["Topic", b.consultationTopic],
   ["Amount", npr(b.amountNpr)],
   ...(b.discountNpr > 0

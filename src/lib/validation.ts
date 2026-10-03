@@ -39,6 +39,23 @@ export const slotSchema = z.object({
     .max(12, "Choose a session length."),
 });
 
+/** One day of a booking. A booking is one or more of these. */
+export const sessionSchema = slotSchema;
+export type SessionInput = z.infer<typeof sessionSchema>;
+
+/**
+ * The sessions of one booking, as sent over the wire.
+ *
+ * A JSON string in a single form field rather than indexed inputs: the
+ * list is built client-side and submitted whole, and parsing one field is
+ * far less error-prone than reassembling session-0-date, session-0-time
+ * and so on from FormData.
+ */
+export const sessionsSchema = z
+  .array(sessionSchema)
+  .min(1, "Add at least one session.")
+  .max(10, "That is more sessions than can be booked at once.");
+
 export const paymentSchema = z.object({
   transactionId: z
     .string()
@@ -48,7 +65,6 @@ export const paymentSchema = z.object({
 });
 
 export const bookingSchema = detailsSchema
-  .merge(slotSchema)
   .merge(paymentSchema)
   .extend({
     // Honeypot: real people leave it empty.

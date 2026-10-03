@@ -30,6 +30,25 @@ const stamp = new Intl.DateTimeFormat("en-GB", {
   minute: "2-digit",
 });
 
+/**
+ * Group the rows that were booked and paid for together.
+ *
+ * Sessions share a groupId when they were one order. Shown as one card per
+ * order rather than one per day, because they carry one payment and one
+ * decision: two cards each offering "Verify" for the same transaction
+ * invites verifying the same money twice.
+ */
+function intoOrders(bookings: Booking[]): Booking[][] {
+  const byGroup = new Map<string, Booking[]>();
+  for (const b of bookings) {
+    const key = b.groupId ?? b.id;
+    byGroup.set(key, [...(byGroup.get(key) ?? []), b]);
+  }
+  return [...byGroup.values()].map((rows) =>
+    [...rows].sort((x, y) => x.startsAt.getTime() - y.startsAt.getTime()),
+  );
+}
+
 export function BookingsTable({ bookings }: { bookings: Booking[] }) {
   if (bookings.length === 0) {
     return (
@@ -41,13 +60,24 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
 
   return (
     <ul className="space-y-4">
-      {bookings.map((b) => {
+      {intoOrders(bookings).map((sessions) => {
+        // Order-level facts are identical across the rows; the first is as
+        // good as any. Money is the exception and has to be summed.
+        const b = sessions[0];
+        const totalNpr = sessions.reduce((sum, s) => sum + s.amountNpr, 0);
+        const totalDiscount = sessions.reduce(
+          (sum, s) => sum + s.discountNpr,
+          0,
+        );
+        const earnedNpr = sessions
+          .filter(bookingIsEarned)
+          .reduce((sum, s) => sum + s.amountNpr, 0);
         const awaiting =
           b.paymentStatus === "PENDING" && b.bookingStatus === "PENDING";
 
         return (
           <li
-            key={b.id}
+            key={b.groupId ?? b.id}
             className={cn(
               "rounded-xl border bg-card p-5",
               // Pending verification is the row that needs action, given the
@@ -94,14 +124,22 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
                 </p>
 
                 <dl className="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
-                  <div className="flex gap-2">
-                    <dt className="text-muted-foreground">When</dt>
+                  <div className="flex gap-2 sm:col-span-2">
+                    <dt className="shrink-0 text-muted-foreground">
+                      {sessions.length > 1
+                        ? `${sessions.length} sessions`
+                        : "When"}
+                    </dt>
                     <dd className="font-medium">
-                      {formatSession(
-                        nepalDateKey(b.startsAt),
-                        b.timeSlot,
-                        b.durationHours,
-                      )}
+                      {sessions.map((s) => (
+                        <span key={s.id} className="block">
+                          {formatSession(
+                            nepalDateKey(s.startsAt),
+                            s.timeSlot,
+                            s.durationHours,
+                          )}
+                        </span>
+                      ))}
                     </dd>
                   </div>
                   <div className="flex gap-2">
@@ -113,10 +151,10 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
                   <div className="flex gap-2">
                     <dt className="text-muted-foreground">Amount</dt>
                     <dd className="font-medium">
-                      {npr(b.amountNpr)}
-                      {b.discountNpr > 0 && (
+                      {npr(totalNpr)}
+                      {totalDiscount > 0 && (
                         <span className="ml-2 text-muted-foreground">
-                          ({npr(b.discountNpr)} off
+                          ({npr(totalDiscount)} off
                           {b.couponCode ? ` · ${b.couponCode}` : ""})
                         </span>
                       )}
@@ -135,7 +173,8 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
                 </dl>
 
                 <p className="mt-3 text-xs text-muted-foreground">
-                  Submitted {stamp.format(b.createdAt)} · {b.id}
+                  Submitted {stamp.format(b.createdAt)} ·{" "}
+                  {b.groupId ?? b.id}
                 </p>
               </div>
 
@@ -147,7 +186,7 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
                     b.bookingStatus !== "PENDING" &&
                     b.bookingStatus !== "CONFIRMED"
                   }
-                  earnedLabel={bookingIsEarned(b) ? npr(b.amountNpr) : null}
+                  earnedLabel={earnedNpr > 0 ? npr(earnedNpr) : null}
                 />
               </div>
             </div>

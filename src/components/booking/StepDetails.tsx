@@ -5,8 +5,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { detailsSchema, fieldErrorsOf } from "@/lib/validation";
-import { formatSession } from "@/lib/time";
 import type { Draft } from "./BookingWizard";
+import { SessionList } from "./SessionList";
 
 /* Validated with the same Zod schema the Server Action uses, so the two can
    never disagree. This is a convenience check only; the server re-validates
@@ -67,11 +67,7 @@ export function StepDetails({
 
   return (
     <div className="space-y-6">
-      <div className="panel p-4 text-sm">
-        <p className="font-medium">
-          {formatSession(draft.date, draft.timeSlot, draft.durationHours)}
-        </p>
-      </div>
+      <SessionList sessions={draft.sessions} />
 
       <div className="grid gap-5 sm:grid-cols-2">
         {field("clientName", "Full name", {

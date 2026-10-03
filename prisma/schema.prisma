@@ -91,6 +91,13 @@ model Booking {
   /// flag that the client was never told.
   emailFailed Boolean @default(false)
 
+  /// Sessions booked and paid for together share this id: one payment, one
+  /// transaction reference, one approval. A single-day booking is a group
+  /// of one. Deliberately not a parent table — the overlap exclusion
+  /// constraint lives on this row and cannot reference another table, so
+  /// splitting would force the status back down here anyway.
+  groupId String?
+
   /// Set for every booking. Nullable only so the backfill could run.
   clientId String?
   client   Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
@@ -99,6 +106,7 @@ model Booking {
   updatedAt DateTime @updatedAt @db.Timestamptz(3)
 
   @@index([clientId])
+  @@index([groupId])
   @@index([date])
   @@index([clientEmail, date])
   @@index([bookingStatus, createdAt])

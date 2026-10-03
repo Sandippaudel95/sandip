@@ -38,7 +38,9 @@ export function StepSuccess({
         <div className="flex justify-between gap-4 border-b pb-2">
           <dt className="text-muted-foreground">When</dt>
           <dd className="text-right font-medium">
-            {formatSession(draft.date, draft.timeSlot, draft.durationHours)}
+            {draft.sessions
+              .map((s) => formatSession(s.date, s.timeSlot, s.durationHours))
+              .join(" · ")}
           </dd>
         </div>
         <div className="flex justify-between gap-4 border-b pb-2">

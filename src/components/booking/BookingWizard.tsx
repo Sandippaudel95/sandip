@@ -11,23 +11,36 @@ import { StepDetails } from "./StepDetails";
 import { StepPayment } from "./StepPayment";
 import { StepSuccess } from "./StepSuccess";
 
-export interface Draft {
+/** One day of a booking. A booking is one or more of these. */
+export interface BookedSession {
   date: string;
   timeSlot: string;
   durationHours: number;
+}
+
+export interface Draft {
+  /** Everything chosen so far. One entry is an ordinary single booking. */
+  sessions: BookedSession[];
+  /* The in-progress pick. Length and date are chosen first, then a time,
+     and choosing the time is what commits a session to the list. */
+  durationHours: number;
+  date: string;
   clientName: string;
   clientEmail: string;
   consultationTopic: string;
 }
 
 const EMPTY: Draft = {
-  date: "",
-  timeSlot: "",
+  sessions: [],
   durationHours: 1,
+  date: "",
   clientName: "",
   clientEmail: "",
   consultationTopic: "",
 };
+
+export const totalHoursOf = (d: Draft): number =>
+  d.sessions.reduce((sum, s) => sum + s.durationHours, 0);
 
 const STEPS = ["Time", "Your details", "Payment"] as const;
 
@@ -159,7 +172,7 @@ function Wizard({
         <StepPayment
           draft={draft}
           qrSrc={qrSrc}
-          basePriceNpr={hourlyRate * draft.durationHours}
+          basePriceNpr={hourlyRate * totalHoursOf(draft)}
           formAction={formAction}
           result={state}
           onBack={() => setStep(1)}

@@ -46,6 +46,10 @@ export function StepPayment({
   onBack: () => void;
   onPickAnotherTime: () => void;
 }) {
+  const totalHours = draft.sessions.reduce(
+    (n, sn) => n + sn.durationHours,
+    0,
+  );
   const failed = result && result.ok === false ? result : null;
   const slotGone = failed?.message.includes("just been taken");
 
@@ -61,7 +65,7 @@ export function StepPayment({
     if (!trimmed) return;
     setCouponError(null);
     startChecking(async () => {
-      const res = await previewCoupon(trimmed, draft.durationHours);
+      const res = await previewCoupon(trimmed, totalHours);
       if (!res.ok) {
         setApplied(null);
         setCouponError(res.message);
@@ -85,9 +89,13 @@ export function StepPayment({
   return (
     <form action={formAction} className="space-y-6">
       {/* Held in wizard state; the action re-validates and re-prices. */}
-      <input type="hidden" name="date" value={draft.date} />
-      <input type="hidden" name="timeSlot" value={draft.timeSlot} />
-      <input type="hidden" name="durationHours" value={draft.durationHours} />
+      {/* The whole list travels as one JSON field: the action validates
+          and prices every session together, as one payment. */}
+      <input
+        type="hidden"
+        name="sessions"
+        value={JSON.stringify(draft.sessions)}
+      />
       <input type="hidden" name="clientName" value={draft.clientName} />
       <input type="hidden" name="clientEmail" value={draft.clientEmail} />
       <input
@@ -108,7 +116,9 @@ export function StepPayment({
 
       <div className="panel p-4 text-sm">
         <p className="font-medium">
-          {formatSession(draft.date, draft.timeSlot, draft.durationHours)}
+          {draft.sessions
+            .map((s) => formatSession(s.date, s.timeSlot, s.durationHours))
+            .join(" · ")}
         </p>
         <p className="mt-1 text-muted-foreground">
           {draft.clientName} · {draft.clientEmail}
@@ -234,9 +244,10 @@ export function StepPayment({
             <dl className="space-y-2 text-sm">
               <div className="flex justify-between gap-4">
                 <dt className="text-muted-foreground">
-                  {draft.durationHours} hour
-                  {draft.durationHours > 1 ? "s" : ""} at{" "}
-                  {npr(basePriceNpr / draft.durationHours)} each
+                  {totalHours} hour{totalHours > 1 ? "s" : ""}
+                  {draft.sessions.length > 1 &&
+                    ` across ${draft.sessions.length} sessions`}{" "}
+                  at {npr(basePriceNpr / Math.max(totalHours, 1))} each
                 </dt>
                 <dd className="tabular-nums">{npr(basePriceNpr)}</dd>
               </div>
