@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { CalendarPlus } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Container } from "@/components/layout/Section";
+import { Button } from "@/components/ui/button";
 import { AdminNav } from "@/components/admin/AdminNav";
 import { BookingsTable } from "@/components/admin/BookingsTable";
 
@@ -28,14 +31,24 @@ export default async function BookingsPage() {
 
   return (
     <Container className="py-10 sm:py-14">
-      <h1 className="text-3xl font-semibold tracking-tight">Bookings</h1>
-      <p className="mt-2 text-muted-foreground">
-        {awaiting.length > 0
-          ? `${awaiting.length} awaiting verification`
-          : "Nothing awaiting verification"}
-        {" · "}
-        {bookings.length} total
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">Bookings</h1>
+          <p className="mt-2 text-muted-foreground">
+            {awaiting.length > 0
+              ? `${awaiting.length} awaiting verification`
+              : "Nothing awaiting verification"}
+            {" · "}
+            {bookings.length} total
+          </p>
+        </div>
+        <Button asChild>
+          <Link href="/admin/bookings/new">
+            <CalendarPlus aria-hidden="true" />
+            Add booking
+          </Link>
+        </Button>
+      </div>
 
       <div className="mt-6">
         <AdminNav />
