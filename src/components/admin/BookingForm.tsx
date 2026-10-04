@@ -2,28 +2,51 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { AlertCircle, CalendarPlus, Loader2 } from "lucide-react";
+import { AlertCircle, CalendarPlus, Loader2, Save } from "lucide-react";
+import type { Booking } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { createManualBooking } from "@/app/admin/bookings/actions";
+import { nepalDateKey } from "@/lib/time";
+import {
+  createManualBooking,
+  updateBooking,
+} from "@/app/admin/bookings/actions";
 
-/* For work agreed off-site: WhatsApp, Facebook, TikTok. The point is to
-   get the time onto the calendar so the booking page stops offering it. */
-export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
+/* Adding and editing take the same fields, so they are the same form.
+   Adding covers work agreed off-site, where the point is to get the time
+   onto the calendar so the booking page stops offering it. Editing covers
+   moving a session when plans change, and fixing payment details. */
+export function BookingForm({
+  hourlyRate,
+  booking,
+  groupSize = 1,
+}: {
+  hourlyRate: number;
+  /** Omitted when adding. */
+  booking?: Booking;
+  /** Sessions in this order, so the form can say what a status change
+      will touch. */
+  groupSize?: number;
+}) {
+  const editing = Boolean(booking);
   const router = useRouter();
   const [pending, start] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [message, setMessage] = useState<string | null>(null);
-  const [hours, setHours] = useState(1);
+  const [hours, setHours] = useState(booking?.durationHours ?? 1);
   // Always controlled: switching between value and defaultValue mid-life
   // makes React drop the input's state.
-  const [amount, setAmount] = useState<number | null>(null);
+  const [amount, setAmount] = useState<number | null>(
+    booking ? booking.amountNpr : null,
+  );
 
   function onSubmit(formData: FormData) {
     setMessage(null);
     setErrors({});
     start(async () => {
-      const res = await createManualBooking(formData);
+      const res = booking
+        ? await updateBooking(booking.id, formData)
+        : await createManualBooking(formData);
       if (!res.ok) {
         setErrors(res.fieldErrors ?? {});
         setMessage(res.message);
@@ -75,6 +98,7 @@ export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
             <input
               id="clientName"
               name="clientName"
+              defaultValue={booking?.clientName}
               required
               maxLength={100}
               className={inputClass("clientName")}
@@ -87,6 +111,7 @@ export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
               id="clientEmail"
               name="clientEmail"
               type="email"
+              defaultValue={booking?.clientEmail}
               required
               maxLength={200}
               className={inputClass("clientEmail")}
@@ -100,6 +125,7 @@ export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
               <input
                 id="consultationTopic"
                 name="consultationTopic"
+                defaultValue={booking?.consultationTopic}
                 required
                 maxLength={300}
                 className={inputClass("consultationTopic")}
@@ -114,9 +140,11 @@ export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
           When
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
+          {editing
+            ? "Change these to move the session."
+            : "You can book any time you have agreed."}{" "}
           Opening hours, the notice period and the daily cap are not applied
-          here — you can book any time you have agreed. Overlapping an
-          existing booking is still refused.
+          here. Overlapping another booking is still refused.
         </p>
         <div className="mt-4 grid gap-5 sm:grid-cols-3">
           {field(
@@ -126,6 +154,7 @@ export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
               id="date"
               name="date"
               type="date"
+              defaultValue={booking ? nepalDateKey(booking.startsAt) : undefined}
               required
               className={inputClass("date")}
             />,
@@ -137,6 +166,7 @@ export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
               id="timeSlot"
               name="timeSlot"
               type="time"
+              defaultValue={booking?.timeSlot}
               required
               step={900}
               className={inputClass("timeSlot")}
@@ -189,13 +219,16 @@ export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
             <select
               id="paymentStatus"
               name="paymentStatus"
-              defaultValue="PENDING"
+              defaultValue={booking?.paymentStatus ?? "PENDING"}
               className={inputClass("paymentStatus")}
             >
               <option value="PENDING">Not paid yet</option>
               <option value="VERIFIED">Paid and verified</option>
+              <option value="REJECTED">Payment rejected</option>
             </select>,
-            "Only verified payments count towards earnings.",
+            groupSize > 1
+              ? `Applies to all ${groupSize} sessions in this booking.`
+              : "Only verified payments count towards earnings.",
           )}
           {field(
             "bookingStatus",
@@ -203,12 +236,13 @@ export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
             <select
               id="bookingStatus"
               name="bookingStatus"
-              defaultValue="CONFIRMED"
+              defaultValue={booking?.bookingStatus ?? "CONFIRMED"}
               className={inputClass("bookingStatus")}
             >
               <option value="CONFIRMED">Confirmed</option>
               <option value="PENDING">Pending</option>
               <option value="COMPLETED">Already happened</option>
+              <option value="CANCELLED">Cancelled</option>
             </select>,
           )}
           <div className="sm:col-span-2">
@@ -218,6 +252,7 @@ export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
               <input
                 id="transactionId"
                 name="transactionId"
+                defaultValue={booking?.transactionId}
                 maxLength={100}
                 className={inputClass("transactionId")}
               />,
@@ -231,6 +266,7 @@ export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
               <input
                 id="adminNote"
                 name="adminNote"
+                defaultValue={booking?.adminNote ?? ""}
                 maxLength={500}
                 placeholder="e.g. Agreed over WhatsApp, paying on the day"
                 className={inputClass("adminNote")}
@@ -247,9 +283,13 @@ export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
             className="mt-0.5 size-4 rounded border-input"
           />
           <span>
-            Email the client a confirmation
+            {editing
+              ? "Email the client about this change"
+              : "Email the client a confirmation"}
             <span className="block text-xs text-muted-foreground">
-              Off by default: you have usually just spoken to them.
+              {editing
+                ? "A moved session gets a reschedule notice, not a confirmation."
+                : "Off by default: you have usually just spoken to them."}
             </span>
           </span>
         </label>
@@ -259,10 +299,12 @@ export function ManualBookingForm({ hourlyRate }: { hourlyRate: number }) {
         <Button type="submit" disabled={pending}>
           {pending ? (
             <Loader2 className="animate-spin" aria-hidden="true" />
+          ) : editing ? (
+            <Save aria-hidden="true" />
           ) : (
             <CalendarPlus aria-hidden="true" />
           )}
-          Add booking
+          {editing ? "Save changes" : "Add booking"}
         </Button>
         {message && (
           <p

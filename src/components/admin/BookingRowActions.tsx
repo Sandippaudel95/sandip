@@ -1,7 +1,16 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Check, CheckCheck, Loader2, RotateCcw, Trash2, X } from "lucide-react";
+import {
+  Check,
+  CheckCheck,
+  Loader2,
+  Pencil,
+  RotateCcw,
+  Trash2,
+  X,
+} from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
   confirmBooking,
@@ -96,6 +105,17 @@ export function BookingRowActions({
     </Button>
   );
 
+  /* Editing is available on every row whatever its state: a cancelled or
+     completed booking is exactly the kind you need to correct. */
+  const editControl = !confirmingDelete && (
+    <Button asChild size="sm" variant="ghost" className="text-muted-foreground">
+      <Link href={`/admin/bookings/${id}/edit`}>
+        <Pencil aria-hidden="true" />
+        Edit
+      </Link>
+    </Button>
+  );
+
   const status_ = feedback && (
     <p role="status" className="text-xs text-muted-foreground">
       {feedback}
@@ -122,7 +142,10 @@ export function BookingRowActions({
             Mark completed
           </Button>
         )}
-        {deleteControl}
+        <div className="flex flex-wrap gap-1">
+          {editControl}
+          {deleteControl}
+        </div>
         {status_}
       </div>
     );
@@ -148,7 +171,10 @@ export function BookingRowActions({
             Mark as not completed
           </Button>
         )}
-        {deleteControl}
+        <div className="flex flex-wrap gap-1">
+          {editControl}
+          {deleteControl}
+        </div>
         {status_}
       </div>
     );
@@ -159,7 +185,10 @@ export function BookingRowActions({
   if (disabled) {
     return (
       <div className="space-y-2">
-        {deleteControl}
+        <div className="flex flex-wrap gap-1">
+          {editControl}
+          {deleteControl}
+        </div>
         {status_}
       </div>
     );
@@ -192,7 +221,10 @@ export function BookingRowActions({
               Reject
             </Button>
           </div>
-          {deleteControl}
+          <div className="flex flex-wrap gap-1">
+            {editControl}
+            {deleteControl}
+          </div>
         </>
       ) : (
         <div className="space-y-2 rounded-md border bg-muted/50 p-3">

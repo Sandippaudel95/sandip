@@ -7,7 +7,11 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { fieldErrorsOf } from "@/lib/validation";
 import { addHours, nepalToUtc } from "@/lib/time";
-import { sendBookingConfirmed, type BookingEmailData } from "@/lib/email";
+import {
+  sendBookingConfirmed,
+  sendBookingRescheduled,
+  type BookingEmailData,
+} from "@/lib/email";
 
 /* Every action re-checks the session: a Server Action is its own endpoint
    and can be POSTed to directly, so the route guard is not enough. */
@@ -163,4 +167,121 @@ export async function createManualBooking(
 function isOverlapViolation(err: unknown): boolean {
   const text = err instanceof Error ? err.message : String(err);
   return text.includes("23P01") || text.includes("Booking_no_overlap");
+}
+
+/**
+ * Edit an existing booking: move it, or correct its payment details.
+ *
+ * Plans change — the admin takes a day off, a client asks for a later
+ * slot — and without this the only way to move a session was to delete it
+ * and retype it, losing the record that it was ever the earlier time.
+ *
+ * Scope is deliberately mixed, and the form says so: the date, time,
+ * length and amount belong to this one session, while the payment and
+ * booking status apply to the whole group, because one order is paid for
+ * and decided once.
+ */
+export async function updateBooking(
+  id: string,
+  formData: FormData,
+): Promise<ManualBookingResult> {
+  await requireAdmin();
+
+  const existing = await prisma.booking.findUnique({ where: { id } });
+  if (!existing) return { ok: false, message: "Booking not found." };
+
+  const parsed = schema.safeParse(Object.fromEntries(formData));
+  if (!parsed.success) {
+    return {
+      ok: false,
+      message: "Please check the highlighted fields.",
+      fieldErrors: fieldErrorsOf(parsed.error),
+    };
+  }
+  const d = parsed.data;
+  const notify = formData.get("notify") === "on";
+
+  const startsAt = nepalToUtc(d.date, d.timeSlot);
+  const endsAt = nepalToUtc(d.date, addHours(d.timeSlot, d.durationHours));
+  const [y, m, day] = d.date.split("-").map(Number);
+
+  const moved =
+    startsAt.getTime() !== existing.startsAt.getTime() ||
+    endsAt.getTime() !== existing.endsAt.getTime();
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.booking.update({
+        where: { id },
+        data: {
+          clientName: d.clientName,
+          clientEmail: d.clientEmail,
+          consultationTopic: d.consultationTopic,
+          date: new Date(Date.UTC(y, m - 1, day)),
+          timeSlot: d.timeSlot,
+          durationHours: d.durationHours,
+          startsAt,
+          endsAt,
+          amountNpr: d.amountNpr,
+          transactionId: d.transactionId || existing.transactionId,
+          adminNote: d.adminNote || null,
+          paymentStatus: d.paymentStatus,
+          bookingStatus: d.bookingStatus,
+        },
+      });
+
+      // One order is paid for once, so the statuses move together even
+      // though the time only moved for this session.
+      if (existing.groupId) {
+        await tx.booking.updateMany({
+          where: { groupId: existing.groupId, id: { not: id } },
+          data: {
+            paymentStatus: d.paymentStatus,
+            bookingStatus: d.bookingStatus,
+          },
+        });
+      }
+    });
+  } catch (err) {
+    if (isOverlapViolation(err)) {
+      return {
+        ok: false,
+        message:
+          "That time overlaps another booking. Pick a different time, or cancel the other one first.",
+      };
+    }
+    console.error("[admin] booking update failed:", err);
+    return { ok: false, message: "Could not save. Please try again." };
+  }
+
+  let emailed = false;
+  if (notify) {
+    const payload: BookingEmailData = {
+      id: existing.groupId ?? existing.id,
+      clientName: d.clientName,
+      clientEmail: d.clientEmail,
+      consultationTopic: d.consultationTopic,
+      sessions: [
+        { dateKey: d.date, timeSlot: d.timeSlot, durationHours: d.durationHours },
+      ],
+      transactionId: d.transactionId || existing.transactionId,
+      amountNpr: d.amountNpr,
+      discountNpr: 0,
+      couponCode: null,
+    };
+    emailed = moved
+      ? await sendBookingRescheduled(payload, d.adminNote || null)
+      : await sendBookingConfirmed(payload, d.adminNote || null);
+    await prisma.booking
+      .update({ where: { id }, data: { emailFailed: !emailed } })
+      .catch(() => {});
+  }
+
+  // The old slot is free again and the new one is taken, so the public
+  // calendar has to be rebuilt either way.
+  revalidatePath("/book");
+  revalidatePath("/admin/bookings");
+  revalidatePath("/admin/dashboard");
+  revalidatePath("/admin/clients");
+  return { ok: true, id, emailed };
 }

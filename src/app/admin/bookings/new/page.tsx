@@ -6,7 +6,7 @@ import { auth } from "@/lib/auth";
 import { HOURLY_RATE } from "@/content/services";
 import { Container } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
-import { ManualBookingForm } from "@/components/admin/ManualBookingForm";
+import { BookingForm } from "@/components/admin/BookingForm";
 
 export const metadata: Metadata = {
   title: "Add booking",
@@ -40,7 +40,7 @@ export default async function NewBookingPage() {
       </header>
 
       <div className="mt-10 max-w-3xl">
-        <ManualBookingForm hourlyRate={HOURLY_RATE} />
+        <BookingForm hourlyRate={HOURLY_RATE} />
       </div>
     </Container>
   );

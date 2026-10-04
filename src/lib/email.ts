@@ -212,6 +212,35 @@ export function sendBookingConfirmed(
   );
 }
 
+/**
+ * To the client when the admin moves a session.
+ *
+ * Its own template rather than reusing the confirmation: a client who
+ * reads "your booking is confirmed" after a time change may well not
+ * notice the time changed, and turn up on the original day.
+ */
+export function sendBookingRescheduled(
+  b: BookingEmailData,
+  note?: string | null,
+): Promise<boolean> {
+  return send(
+    b.clientEmail,
+    `Your session has been moved: ${b.id}`,
+    layout(
+      "Your session has been moved",
+      p(`Dear ${esc(b.clientName)},`) +
+        p(
+          "Your consultation has been rescheduled. The new time is below; please check it against your diary.",
+        ) +
+        details([...sessionRows(b), ["Reason", note ?? ""]]) +
+        p(
+          "If the new time does not work for you, reply to this email and another can be arranged.",
+        ),
+    ),
+    ADMIN_TO,
+  );
+}
+
 /** To the client when the payment could not be verified. */
 export function sendBookingRejected(
   b: BookingEmailData,
