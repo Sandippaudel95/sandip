@@ -23,8 +23,11 @@ export function BookingForm({
   hourlyRate,
   booking,
   groupSize = 1,
+  defaultClient,
 }: {
   hourlyRate: number;
+  /** Prefilled when adding a booking for a client who already exists. */
+  defaultClient?: { name: string; email: string };
   /** Omitted when adding. */
   booking?: Booking;
   /** Sessions in this order, so the form can say what a status change
@@ -146,7 +149,7 @@ export function BookingForm({
             <input
               id="clientName"
               name="clientName"
-              defaultValue={booking?.clientName}
+              defaultValue={booking?.clientName ?? defaultClient?.name}
               required
               maxLength={100}
               className={inputClass("clientName")}
@@ -159,7 +162,7 @@ export function BookingForm({
               id="clientEmail"
               name="clientEmail"
               type="email"
-              defaultValue={booking?.clientEmail}
+              defaultValue={booking?.clientEmail ?? defaultClient?.email}
               required
               maxLength={200}
               className={inputClass("clientEmail")}

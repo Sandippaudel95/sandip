@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search, UserPlus, Users } from "lucide-react";
+import { CalendarPlus, Search, UserPlus, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -101,10 +101,16 @@ export function ClientsTable({ summaries }: { summaries: ClientSummary[] }) {
       ) : (
         <ul className="mt-6 divide-y rounded-xl border bg-card">
           {filtered.map((s) => (
-            <li key={s.client.id}>
+            // The row is a link, so the booking shortcut sits beside it
+            // rather than inside: a link inside a link is invalid, and
+            // clicking Book should not also open the client.
+            <li
+              key={s.client.id}
+              className="flex items-center gap-2 pr-4 transition-colors hover:bg-muted/60"
+            >
               <Link
                 href={`/admin/clients/${s.client.id}`}
-                className="flex flex-wrap items-center gap-x-4 gap-y-2 p-4 transition-colors hover:bg-muted/60"
+                className="flex min-w-0 flex-1 flex-wrap items-center gap-x-4 gap-y-2 p-4"
               >
                 <span className="min-w-0 flex-1">
                   <span className="font-medium">{s.client.name}</span>
@@ -141,6 +147,16 @@ export function ClientsTable({ summaries }: { summaries: ClientSummary[] }) {
                   {s.lastActivity ? stamp.format(s.lastActivity) : "—"}
                 </span>
               </Link>
+
+              <Button asChild size="sm" variant="outline" className="shrink-0">
+                <Link href={`/admin/bookings/new?client=${s.client.id}`}>
+                  <CalendarPlus aria-hidden="true" />
+                  <span className="hidden sm:inline">Book</span>
+                  <span className="sr-only sm:hidden">
+                    Book a session for {s.client.name}
+                  </span>
+                </Link>
+              </Button>
             </li>
           ))}
         </ul>

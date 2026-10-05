@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { ArrowLeft, Building2, GraduationCap, Mail, Phone } from "lucide-react";
+import {
+  ArrowLeft,
+  Building2,
+  CalendarPlus,
+  GraduationCap,
+  Mail,
+  Phone,
+} from "lucide-react";
 import { auth } from "@/lib/auth";
 import { clientDetail } from "@/lib/crm";
 import {
@@ -95,9 +102,17 @@ export default async function ClientPage({
           </ul>
         </div>
 
-        <Button asChild variant="outline" size="sm">
-          <Link href={`/admin/clients/${client.id}/edit`}>Edit details</Link>
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild size="sm">
+            <Link href={`/admin/bookings/new?client=${client.id}`}>
+              <CalendarPlus aria-hidden="true" />
+              Book a session
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link href={`/admin/clients/${client.id}/edit`}>Edit details</Link>
+          </Button>
+        </div>
       </div>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
