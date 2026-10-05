@@ -1,5 +1,5 @@
 import { Resend } from "resend";
-import { formatSession } from "./time";
+import { formatDateKey, formatSession } from "./time";
 import { profile } from "@/content/profile";
 import { npr } from "@/content/services";
 
@@ -210,6 +210,73 @@ export function sendBookingConfirmed(
     ),
     ADMIN_TO,
   );
+}
+
+export interface WorkEnquiryData {
+  id: string;
+  clientName: string;
+  clientEmail: string;
+  type: string;
+  title: string;
+  notes: string;
+  dueAt: string | null;
+}
+
+const WORK_TYPE_LABEL: Record<string, string> = {
+  THESIS_REVIEW: "Thesis review",
+  PAPER_REVIEW: "Paper review",
+  DATA_ANALYSIS: "Data analysis",
+  RESEARCH_CONSULTANCY: "Research consultancy",
+  TRAINING: "Training",
+  OTHER: "Other",
+};
+
+/**
+ * A request for negotiated work, to both sides at once.
+ *
+ * Deliberately promises a quote rather than confirming anything: nothing
+ * has been priced or agreed at this point, and a message that reads like
+ * a confirmation would set the wrong expectation about both.
+ */
+export async function sendWorkEnquiry(d: WorkEnquiryData): Promise<boolean> {
+  const rows: [string, string][] = [
+    ["Work", WORK_TYPE_LABEL[d.type] ?? d.type],
+    ["Title", d.title],
+    ["Needed by", d.dueAt ? formatDateKey(d.dueAt) : "Not specified"],
+    ["Reference", d.id],
+  ];
+
+  const toClient = send(
+    d.clientEmail,
+    `Request received: ${d.title}`,
+    layout(
+      "Your request has been received",
+      p(`Dear ${esc(d.clientName)},`) +
+        p(
+          "Thank you for getting in touch. Work of this kind is quoted individually, so nothing has been priced or scheduled yet. You will receive a quote by email, usually within a couple of days.",
+        ) +
+        details(rows) +
+        p("Reply to this email if you need to add anything."),
+    ),
+    ADMIN_TO,
+  );
+
+  const toAdmin = send(
+    ADMIN_TO,
+    `New work request: ${WORK_TYPE_LABEL[d.type] ?? d.type}`,
+    layout(
+      "A request is waiting for a quote",
+      p(
+        `From ${esc(d.clientName)} (${esc(d.clientEmail)}). It is in the <a href="${SITE_URL}/admin/engagements" style="color:#0a2540">admin panel</a> as an enquiry.`,
+      ) +
+        details(rows) +
+        p(`<strong>What they wrote</strong><br>${esc(d.notes)}`),
+    ),
+    d.clientEmail,
+  );
+
+  const [a, b] = await Promise.all([toClient, toAdmin]);
+  return a && b;
 }
 
 export interface PaymentRequestData {

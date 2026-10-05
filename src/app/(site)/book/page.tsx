@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Clock, Video, FileText } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { BookingWizard } from "@/components/booking/BookingWizard";
+import { BookingModeSwitch } from "@/components/booking/BookingModeSwitch";
 import { getAvailability, type DayAvailability } from "@/lib/slots";
 import { getAvailabilitySettings } from "@/lib/availability";
 import { profile } from "@/content/profile";
@@ -80,9 +81,9 @@ export default async function BookPage() {
             Book a Consultation
           </h1>
           <p className="mt-3 leading-relaxed text-muted-foreground text-pretty">
-            One-to-one sessions for students and faculty, at {HOURLY_RATE_NPR}{" "}
-            per hour. Pick a time, pay, and your booking is confirmed once the
-            payment has been verified.
+            Hourly consultations at {HOURLY_RATE_NPR}, booked and paid for
+            here. Thesis and paper review, data analysis and training are
+            quoted individually — ask below and no payment is taken now.
           </p>
         </header>
 
@@ -122,14 +123,22 @@ export default async function BookPage() {
           </aside>
 
           <div className="order-1 min-w-0 lg:order-2">
-            <BookingWizard
-              availability={availability}
-              qrSrc={findQr()}
-              hourlyRate={HOURLY_RATE}
-              sessionLengths={rules.sessionLengths}
-              noticeHours={rules.minimumNoticeHours}
-              windowDays={rules.bookingWindowDays}
-              maxHoursPerDay={rules.maxHoursPerClientPerDay}
+            {/* The wizard is built on the server and handed to the switch,
+                so choosing "a piece of work" simply does not render it --
+                no calendar, no slots, nothing to pick. */}
+            <BookingModeSwitch
+              email={profile.emails[0]}
+              consultation={
+                <BookingWizard
+                  availability={availability}
+                  qrSrc={findQr()}
+                  hourlyRate={HOURLY_RATE}
+                  sessionLengths={rules.sessionLengths}
+                  noticeHours={rules.minimumNoticeHours}
+                  windowDays={rules.bookingWindowDays}
+                  maxHoursPerDay={rules.maxHoursPerClientPerDay}
+                />
+              }
             />
           </div>
         </div>
