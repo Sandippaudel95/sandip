@@ -322,3 +322,78 @@
     );
   }
 }
+
+/* ==========================================================================
+   Printing a statement.
+
+   The admin panel is dark, and printing it as-is would empty a cartridge
+   and read badly. Print forces the light tokens regardless of the theme
+   in use, and hides everything that is navigation rather than document.
+   ========================================================================== */
+@media print {
+  :root,
+  :root.dark {
+    --background: #ffffff;
+    --foreground: #111111;
+    --card: #ffffff;
+    --surface: #ffffff;
+    --surface-raised: #ffffff;
+    --muted: #f4f4f5;
+    --muted-foreground: #3f3f46;
+    --accent: #f4f4f5;
+    --accent-foreground: #111111;
+    --border: #c9c9cf;
+    --input: #c9c9cf;
+    --primary: #111111;
+    --primary-foreground: #ffffff;
+    --warning: #7a4a05;
+    --destructive: #9b1c17;
+    --success: #0f5132;
+    color-scheme: light;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+
+  /* Navigation, controls, anything that cannot be acted on from paper. */
+  .print-hide,
+  nav,
+  header nav,
+  button:not(.print-keep) {
+    display: none !important;
+  }
+
+  /* Column headings repeat on every page of a long statement, and a row
+     never splits across the fold. */
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-footer-group;
+  }
+
+  tr,
+  img {
+    break-inside: avoid;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* The glow and gradients behind the public pages waste ink and add
+     nothing on paper. */
+  .glow::before,
+  .glow::after {
+    display: none !important;
+  }
+
+  @page {
+    margin: 16mm;
+  }
+}

@@ -5,6 +5,7 @@ import {
   ArrowLeft,
   Building2,
   CalendarPlus,
+  FileText,
   GraduationCap,
   Mail,
   Phone,
@@ -133,6 +134,12 @@ export default async function ClientPage({
             <Link href={`/admin/bookings/new?client=${client.id}`}>
               <CalendarPlus aria-hidden="true" />
               Book a session
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="sm">
+            <Link href={`/admin/clients/${client.id}/ledger`}>
+              <FileText aria-hidden="true" />
+              Statement
             </Link>
           </Button>
           <Button asChild variant="outline" size="sm">
