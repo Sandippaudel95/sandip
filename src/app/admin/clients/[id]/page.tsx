@@ -15,6 +15,7 @@ import {
   outstanding,
   advanceLeftNpr,
   billedNpr,
+  deliveredNpr,
   receivedNpr,
   engagementEarnedNpr,
 } from "@/lib/money";
@@ -47,10 +48,23 @@ export default async function ClientPage({
   const client = await clientDetail(id);
   if (!client) notFound();
 
-  const billed = billedNpr(client.bookings) +
+  /* Four distinct figures, which is the point of showing all of them:
+     agreed is the whole deal, received is what has arrived, billed is
+     what has actually been earned so far, and outstanding is what is
+     still owed. Only the last two move as the work is delivered. */
+  const agreed =
+    billedNpr(client.bookings) +
     client.engagements.reduce((sum, e) => sum + e.feeNpr, 0);
-  const received = receivedNpr(client.payments) +
+  const received =
+    receivedNpr(client.payments) +
     client.engagements.reduce((sum, e) => sum + engagementEarnedNpr(e), 0);
+  // Engagements count once delivered; there is no part-delivery on them.
+  const billed =
+    deliveredNpr(client.bookings) +
+    client.engagements.reduce(
+      (sum, e) => (e.status === "DELIVERED" ? sum + e.feeNpr : sum),
+      0,
+    );
   const advanceLeft = advanceLeftNpr(client.payments, client.bookings);
   const liveSessions = client.bookings.filter(
     (b) => b.bookingStatus !== "CANCELLED",
@@ -130,10 +144,10 @@ export default async function ClientPage({
       {/* The three figures the engagement is actually run on. Billed is
           what was agreed, received is what arrived, and the advance is
           what is left of it once delivered sessions are taken off. */}
-      <div className="mt-8 grid gap-4 sm:grid-cols-3">
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          label="Total billed"
-          value={npr(billed)}
+          label="Agreed amount"
+          value={npr(agreed)}
           sublabel={`${liveSessions} session${liveSessions === 1 ? "" : "s"}${
             client.engagements.length
               ? ` · ${client.engagements.length} other job${client.engagements.length === 1 ? "" : "s"}`
@@ -143,17 +157,25 @@ export default async function ClientPage({
         <StatCard
           label="Advance received"
           value={npr(received)}
-          sublabel={due > 0 ? `${npr(due)} still to pay` : "Paid in full"}
+          sublabel={
+            advanceLeft > 0
+              ? `${npr(advanceLeft)} of it unspent`
+              : advanceLeft < 0
+                ? `${npr(-advanceLeft)} owed for delivered work`
+                : "Fully used"
+          }
+          tone={advanceLeft < 0 ? "warn" : "default"}
         />
         <StatCard
-          label="Advance left"
-          value={advanceLeft >= 0 ? npr(advanceLeft) : npr(-advanceLeft)}
-          sublabel={
-            advanceLeft < 0
-              ? "Owed for delivered sessions"
-              : `${deliveredCount} of ${liveSessions} delivered`
-          }
-          tone={advanceLeft <= 0 ? "warn" : "default"}
+          label="Billed so far"
+          value={npr(billed)}
+          sublabel={`${deliveredCount} of ${liveSessions} session${liveSessions === 1 ? "" : "s"} delivered`}
+        />
+        <StatCard
+          label="Outstanding"
+          value={npr(due)}
+          sublabel={due > 0 ? "Agreed less received" : "Paid in full"}
+          tone={due > 0 ? "warn" : "default"}
         />
       </div>
 
