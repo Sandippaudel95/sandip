@@ -1,4 +1,4 @@
-import type { Booking, Engagement } from "@prisma/client";
+import type { Booking, Engagement, Payment } from "@prisma/client";
 
 /* ==========================================================================
    Revenue arithmetic.
@@ -21,9 +21,68 @@ export interface RevenueSplit {
   totalNpr: number;
 }
 
-/** A booking counts only once its payment has actually been verified. */
-export function bookingIsEarned(b: Pick<Booking, "paymentStatus" | "bookingStatus">): boolean {
+/**
+ * Whether a booking is live: verified and not cancelled.
+ *
+ * No longer a statement about money. paymentStatus is a workflow flag,
+ * and what was actually received lives in the Payment ledger, because a
+ * part payment cannot be expressed by an enum.
+ */
+export function bookingIsEarned(
+  b: Pick<Booking, "paymentStatus" | "bookingStatus">,
+): boolean {
   return b.paymentStatus === "VERIFIED" && b.bookingStatus !== "CANCELLED";
+}
+
+type SessionAmount = Pick<Booking, "amountNpr" | "bookingStatus">;
+
+/* receivedAt is required even where the arithmetic does not need it.
+   Booking also has amountNpr, so a narrower type would let a list of
+   bookings be passed as payments and silently count unpaid work as
+   revenue. Booking has no receivedAt, so this makes that a type error. */
+type PaymentLike = Pick<Payment, "amountNpr" | "receivedAt">;
+
+/** What the client has been charged: every session still standing. */
+export function billedNpr(sessions: SessionAmount[]): number {
+  return sessions.reduce(
+    (sum, s) => (s.bookingStatus === "CANCELLED" ? sum : sum + s.amountNpr),
+    0,
+  );
+}
+
+/** What has actually arrived. */
+export function receivedNpr(payments: PaymentLike[]): number {
+  return payments.reduce((sum, p) => sum + p.amountNpr, 0);
+}
+
+/** The value of the sessions already delivered. */
+export function deliveredNpr(sessions: SessionAmount[]): number {
+  return sessions.reduce(
+    (sum, s) => (s.bookingStatus === "COMPLETED" ? sum + s.amountNpr : sum),
+    0,
+  );
+}
+
+/**
+ * How much of what was paid up front is still unspent.
+ *
+ * Goes negative on purpose, and that is the signal worth having: it means
+ * sessions have been delivered that the client has not covered. Callers
+ * show that as owing for work already done rather than as a minus sign.
+ */
+export function advanceLeftNpr(
+  payments: PaymentLike[],
+  sessions: SessionAmount[],
+): number {
+  return receivedNpr(payments) - deliveredNpr(sessions);
+}
+
+/** Billed but not yet received. Never negative; an overpayment is not a debt. */
+export function stillOwedNpr(
+  sessions: SessionAmount[],
+  payments: PaymentLike[],
+): number {
+  return Math.max(0, billedNpr(sessions) - receivedNpr(payments));
 }
 
 /** Engagements count what has arrived, not what was quoted. */
@@ -41,14 +100,18 @@ export function engagementOutstandingNpr(
   return Math.max(0, e.feeNpr - e.amountPaidNpr);
 }
 
+/**
+ * Money received, split by where it came from.
+ *
+ * Sessions are summed from the payment ledger rather than from verified
+ * bookings: once part payment exists, "this order is verified" and "this
+ * much arrived" are different facts, and only the second is revenue.
+ */
 export function revenue(
-  bookings: Pick<Booking, "paymentStatus" | "bookingStatus" | "amountNpr">[],
+  payments: PaymentLike[],
   engagements: Pick<Engagement, "status" | "amountPaidNpr">[],
 ): RevenueSplit {
-  const consultationsNpr = bookings.reduce(
-    (sum, b) => (bookingIsEarned(b) ? sum + b.amountNpr : sum),
-    0,
-  );
+  const consultationsNpr = receivedNpr(payments);
   const otherWorkNpr = engagements.reduce(
     (sum, e) => sum + engagementEarnedNpr(e),
     0,
@@ -60,21 +123,27 @@ export function revenue(
   };
 }
 
+/** Quoted but unpaid across live engagements, plus unpaid session time. */
 export function outstanding(
   engagements: Pick<Engagement, "status" | "feeNpr" | "amountPaidNpr">[],
+  sessions: SessionAmount[] = [],
+  payments: PaymentLike[] = [],
 ): number {
-  return engagements.reduce((sum, e) => sum + engagementOutstandingNpr(e), 0);
+  return (
+    engagements.reduce((sum, e) => sum + engagementOutstandingNpr(e), 0) +
+    stillOwedNpr(sessions, payments)
+  );
 }
 
 /**
- * The date a booking's revenue belongs to: when the session runs.
+ * The date a payment belongs to: when the money arrived.
  *
- * Not when payment cleared. For a consultant the useful question is what a
- * given month's work was worth, and a session paid in advance belongs to
- * the month it is delivered in.
+ * Exact, where the old rule had to approximate from the session date and
+ * said so. A payment entered a week late still lands in the month it was
+ * received.
  */
-export function bookingRevenueDate(b: Pick<Booking, "startsAt">): Date {
-  return b.startsAt;
+export function paymentRevenueDate(p: Pick<Payment, "receivedAt">): Date {
+  return p.receivedAt;
 }
 
 /**

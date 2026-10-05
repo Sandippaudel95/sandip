@@ -147,6 +147,7 @@ model Client {
 
   bookings    Booking[]
   engagements Engagement[]
+  payments    Payment[]
 
   @@index([status])
   @@index([nextActionDate])
@@ -224,4 +225,36 @@ model BlackoutDate {
   createdAt DateTime @default(now()) @db.Timestamptz(3)
 
   @@index([date])
+}
+
+/// Money actually received.
+///
+/// Booking.paymentStatus is a workflow flag — has this been verified, is
+/// the slot live — and says nothing about how much arrived. A client who
+/// agrees 30 hours and pays half up front needs the order confirmed and
+/// the balance outstanding at the same time, which one enum cannot do.
+model Payment {
+  id       String @id @default(cuid())
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  /// The booking order this paid for, when it was for sessions. Null for
+  /// money received against anything else.
+  groupId String?
+
+  amountNpr Int
+
+  /// When the money arrived, not when it was typed in, so a payment
+  /// entered late still lands in the month it belongs to.
+  receivedAt DateTime @db.Date
+
+  /// eSewa, bank transfer, cash.
+  method String?
+  note   String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([clientId])
+  @@index([groupId])
+  @@index([receivedAt])
 }

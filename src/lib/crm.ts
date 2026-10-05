@@ -2,7 +2,7 @@ import type { Booking, Client, Engagement } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { addDays, nepalDateKey, nepalToUtc } from "@/lib/time";
 import {
-  bookingRevenueDate,
+  paymentRevenueDate,
   engagementRevenueDate,
   outstanding,
   revenue,
@@ -138,37 +138,34 @@ export async function earnings(): Promise<Earnings> {
 
   // Pulled whole and split in memory: the arithmetic rules live in money.ts,
   // and at this volume one round trip beats six aggregate queries.
-  const [bookings, engagements, sessionsThisWeek] = await Promise.all([
-    prisma.booking.findMany({
-      select: {
-        paymentStatus: true,
-        bookingStatus: true,
-        amountNpr: true,
-        startsAt: true,
-      },
-    }),
-    prisma.engagement.findMany({
-      select: {
-        status: true,
-        feeNpr: true,
-        amountPaidNpr: true,
-        completedAt: true,
-        createdAt: true,
-      },
-    }),
-    prisma.booking.count({
-      where: {
-        startsAt: {
-          gte: dayStart(today),
-          lt: dayStart(addDays(today, 7)),
+  const [payments, bookings, engagements, sessionsThisWeek] =
+    await Promise.all([
+      prisma.payment.findMany({ select: { amountNpr: true, receivedAt: true } }),
+      prisma.booking.findMany({
+        select: { bookingStatus: true, amountNpr: true },
+      }),
+      prisma.engagement.findMany({
+        select: {
+          status: true,
+          feeNpr: true,
+          amountPaidNpr: true,
+          completedAt: true,
+          createdAt: true,
         },
-        bookingStatus: { not: "CANCELLED" },
-      },
-    }),
-  ]);
+      }),
+      prisma.booking.count({
+        where: {
+          startsAt: {
+            gte: dayStart(today),
+            lt: dayStart(addDays(today, 7)),
+          },
+          bookingStatus: { not: "CANCELLED" },
+        },
+      }),
+    ]);
 
   const since = (from: Date) => ({
-    bookings: bookings.filter((b) => bookingRevenueDate(b) >= from),
+    payments: payments.filter((p) => paymentRevenueDate(p) >= from),
     engagements: engagements.filter((e) => engagementRevenueDate(e) >= from),
   });
 
@@ -176,10 +173,12 @@ export async function earnings(): Promise<Earnings> {
   const year = since(yearStart);
 
   return {
-    thisMonth: revenue(month.bookings, month.engagements),
-    thisYear: revenue(year.bookings, year.engagements),
-    allTime: revenue(bookings, engagements),
-    outstandingNpr: outstanding(engagements),
+    thisMonth: revenue(month.payments, month.engagements),
+    thisYear: revenue(year.payments, year.engagements),
+    allTime: revenue(payments, engagements),
+    // Unpaid session time now counts as outstanding too, not just quoted
+    // engagement work: a half-paid 30-hour package owes the balance.
+    outstandingNpr: outstanding(engagements, bookings, payments),
     sessionsThisWeek,
   };
 }
@@ -197,13 +196,13 @@ export interface ClientSummary {
 
 export async function clientSummaries(): Promise<ClientSummary[]> {
   const clients = await prisma.client.findMany({
-    include: { bookings: true, engagements: true },
+    include: { bookings: true, engagements: true, payments: true },
     orderBy: { updatedAt: "desc" },
   });
 
   return clients
     .map((c) => {
-      const split = revenue(c.bookings, c.engagements);
+      const split = revenue(c.payments, c.engagements);
       const dates: Date[] = [
         ...c.bookings.map((b) => b.startsAt),
         ...c.engagements.map((e) => engagementRevenueDate(e)),
@@ -213,7 +212,7 @@ export async function clientSummaries(): Promise<ClientSummary[]> {
         bookingCount: c.bookings.length,
         engagementCount: c.engagements.length,
         totalPaidNpr: split.totalNpr,
-        outstandingNpr: outstanding(c.engagements),
+        outstandingNpr: outstanding(c.engagements, c.bookings, c.payments),
         lastActivity: dates.length
           ? new Date(Math.max(...dates.map((d) => d.getTime())))
           : null,
@@ -232,6 +231,7 @@ export async function clientDetail(id: string) {
     include: {
       bookings: { orderBy: { startsAt: "desc" } },
       engagements: { orderBy: { createdAt: "desc" } },
+      payments: { orderBy: { receivedAt: "desc" } },
     },
   });
 }

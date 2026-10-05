@@ -20,10 +20,10 @@ export default async function BookingsPage() {
   const session = await auth();
   if (!session?.user) redirect("/");
 
-  const bookings = await prisma.booking.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 300,
-  });
+  const [bookings, payments] = await Promise.all([
+    prisma.booking.findMany({ orderBy: { createdAt: "desc" }, take: 300 }),
+    prisma.payment.findMany({ where: { groupId: { not: null } } }),
+  ]);
 
   const awaiting = bookings.filter(
     (b) => b.paymentStatus === "PENDING" && b.bookingStatus === "PENDING",
@@ -63,7 +63,7 @@ export default async function BookingsPage() {
             Check each transaction ID against your bank or Fonepay app before
             confirming.
           </p>
-          <BookingsTable bookings={awaiting} />
+          <BookingsTable bookings={awaiting} payments={payments} />
         </section>
       )}
 
@@ -72,7 +72,7 @@ export default async function BookingsPage() {
           All bookings
         </h2>
         <div className="mt-5">
-          <BookingsTable bookings={bookings} />
+          <BookingsTable bookings={bookings} payments={payments} />
         </div>
       </section>
     </Container>

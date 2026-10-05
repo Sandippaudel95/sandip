@@ -1,12 +1,12 @@
 import { AlertTriangle, Pencil } from "lucide-react";
 import Link from "next/link";
-import type { Booking } from "@prisma/client";
+import type { Booking, Payment } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { formatDateKey, formatTime, nepalDateKey } from "@/lib/time";
 import { npr } from "@/content/services";
-import { bookingIsEarned } from "@/lib/money";
+import { billedNpr, receivedNpr } from "@/lib/money";
 import { BookingRowActions } from "./BookingRowActions";
 import { SessionRowActions } from "./SessionRowActions";
 
@@ -51,7 +51,14 @@ function intoOrders(bookings: Booking[]): Booking[][] {
   );
 }
 
-export function BookingsTable({ bookings }: { bookings: Booking[] }) {
+export function BookingsTable({
+  bookings,
+  payments = [],
+}: {
+  bookings: Booking[];
+  /** Money received, so each order can show what is still owed. */
+  payments?: Payment[];
+}) {
   if (bookings.length === 0) {
     return (
       <p className="rounded-lg border border-dashed p-10 text-center text-muted-foreground">
@@ -69,14 +76,15 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
         // as good as any. Money and progress have to be aggregated.
         const b = sessions[0];
         const multi = sessions.length > 1;
-        const totalNpr = sessions.reduce((sum, s) => sum + s.amountNpr, 0);
         const totalDiscount = sessions.reduce(
           (sum, s) => sum + s.discountNpr,
           0,
         );
-        const earnedNpr = sessions
-          .filter(bookingIsEarned)
-          .reduce((sum, s) => sum + s.amountNpr, 0);
+        const orderKey = b.groupId ?? b.id;
+        const orderPayments = payments.filter((x) => x.groupId === orderKey);
+        const billed = billedNpr(sessions);
+        const received = receivedNpr(orderPayments);
+        const due = Math.max(0, billed - received);
         const done = sessions.filter(
           (s) => s.bookingStatus === "COMPLETED",
         ).length;
@@ -158,13 +166,17 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
                   <div className="flex gap-2">
                     <dt className="text-muted-foreground">Amount</dt>
                     <dd className="font-medium">
-                      {npr(totalNpr)}
+                      {npr(billed)}
                       {totalDiscount > 0 && (
                         <span className="ml-2 text-muted-foreground">
                           ({npr(totalDiscount)} off
                           {b.couponCode ? ` · ${b.couponCode}` : ""})
                         </span>
                       )}
+                      <span className="mt-0.5 block text-xs text-muted-foreground">
+                        {npr(received)} received
+                        {due > 0 ? ` · ${npr(due)} still owed` : " · paid in full"}
+                      </span>
                     </dd>
                   </div>
                   <div className="flex gap-2 sm:col-span-2">
@@ -190,7 +202,7 @@ export function BookingsTable({ bookings }: { bookings: Booking[] }) {
                   id={b.id}
                   status={orderStatus}
                   disabled={orderStatus === "CANCELLED"}
-                  earnedLabel={earnedNpr > 0 ? npr(earnedNpr) : null}
+                  earnedLabel={received > 0 ? npr(received) : null}
                 />
               </div>
             </div>

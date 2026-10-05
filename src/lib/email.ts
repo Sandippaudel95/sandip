@@ -212,6 +212,58 @@ export function sendBookingConfirmed(
   );
 }
 
+export interface PaymentRequestData {
+  clientName: string;
+  clientEmail: string;
+  billedNpr: number;
+  receivedNpr: number;
+  dueNpr: number;
+  advanceLeftNpr: number;
+  sessionsDelivered: number;
+  sessionsRemaining: number;
+}
+
+/**
+ * Ask the client for the next payment.
+ *
+ * States the position plainly rather than chasing: what was agreed, what
+ * has been received, what is left. Someone who has already paid a large
+ * advance deserves to see it acknowledged in the same message.
+ */
+export function sendPaymentRequest(d: PaymentRequestData): Promise<boolean> {
+  const used = d.advanceLeftNpr <= 0;
+  return send(
+    d.clientEmail,
+    `Your sessions with ${profile.name}`,
+    layout(
+      used ? "Your advance has been used" : "Your sessions so far",
+      p(`Dear ${esc(d.clientName)},`) +
+        p(
+          used
+            ? "Thank you for the advance you paid. It now covers all of the sessions completed so far, so the remaining balance is due before we continue."
+            : "A short summary of where your sessions stand.",
+        ) +
+        details([
+          ["Agreed total", npr(d.billedNpr)],
+          ["Received so far", npr(d.receivedNpr)],
+          ["Still to pay", npr(d.dueNpr)],
+          [
+            "Sessions completed",
+            `${d.sessionsDelivered}${
+              d.sessionsRemaining
+                ? ` · ${d.sessionsRemaining} still to come`
+                : ""
+            }`,
+          ],
+        ]) +
+        p(
+          "Payment can be made to the same account as before. Reply to this email if anything above does not match your records.",
+        ),
+    ),
+    ADMIN_TO,
+  );
+}
+
 /**
  * To the client when the admin moves a session.
  *

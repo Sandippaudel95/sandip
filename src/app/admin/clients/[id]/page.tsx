@@ -12,9 +12,10 @@ import {
 import { auth } from "@/lib/auth";
 import { clientDetail } from "@/lib/crm";
 import {
-  revenue,
   outstanding,
-  bookingIsEarned,
+  advanceLeftNpr,
+  billedNpr,
+  receivedNpr,
   engagementEarnedNpr,
 } from "@/lib/money";
 import { npr } from "@/content/services";
@@ -24,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import { StatCard } from "@/components/admin/StatCard";
 import { ClientTimeline } from "@/components/admin/ClientTimeline";
 import { NextActionCard } from "@/components/admin/NextActionCard";
+import { PaymentsPanel } from "@/components/admin/PaymentsPanel";
 import { DeleteClientCard } from "@/components/admin/DeleteClientCard";
 
 export const metadata: Metadata = {
@@ -45,8 +47,18 @@ export default async function ClientPage({
   const client = await clientDetail(id);
   if (!client) notFound();
 
-  const split = revenue(client.bookings, client.engagements);
-  const due = outstanding(client.engagements);
+  const billed = billedNpr(client.bookings) +
+    client.engagements.reduce((sum, e) => sum + e.feeNpr, 0);
+  const received = receivedNpr(client.payments) +
+    client.engagements.reduce((sum, e) => sum + engagementEarnedNpr(e), 0);
+  const advanceLeft = advanceLeftNpr(client.payments, client.bookings);
+  const liveSessions = client.bookings.filter(
+    (b) => b.bookingStatus !== "CANCELLED",
+  ).length;
+  const deliveredCount = client.bookings.filter(
+    (b) => b.bookingStatus === "COMPLETED",
+  ).length;
+  const due = outstanding(client.engagements, client.bookings, client.payments);
   const nextDue = client.nextActionDate
     ? client.nextActionDate.toISOString().slice(0, 10)
     : null;
@@ -115,24 +127,33 @@ export default async function ClientPage({
         </div>
       </div>
 
+      {/* The three figures the engagement is actually run on. Billed is
+          what was agreed, received is what arrived, and the advance is
+          what is left of it once delivered sessions are taken off. */}
       <div className="mt-8 grid gap-4 sm:grid-cols-3">
         <StatCard
-          label="Received"
-          value={npr(split.totalNpr)}
-          sublabel={`${npr(split.consultationsNpr)} sessions · ${npr(
-            split.otherWorkNpr,
-          )} other work`}
+          label="Total billed"
+          value={npr(billed)}
+          sublabel={`${liveSessions} session${liveSessions === 1 ? "" : "s"}${
+            client.engagements.length
+              ? ` · ${client.engagements.length} other job${client.engagements.length === 1 ? "" : "s"}`
+              : ""
+          }`}
         />
         <StatCard
-          label="Outstanding"
-          value={npr(due)}
-          sublabel="On live work"
-          tone={due > 0 ? "warn" : "default"}
+          label="Advance received"
+          value={npr(received)}
+          sublabel={due > 0 ? `${npr(due)} still to pay` : "Paid in full"}
         />
         <StatCard
-          label="History"
-          value={String(client.bookings.length + client.engagements.length)}
-          sublabel={`${client.bookings.length} sessions · ${client.engagements.length} other jobs`}
+          label="Advance left"
+          value={advanceLeft >= 0 ? npr(advanceLeft) : npr(-advanceLeft)}
+          sublabel={
+            advanceLeft < 0
+              ? "Owed for delivered sessions"
+              : `${deliveredCount} of ${liveSessions} delivered`
+          }
+          tone={advanceLeft <= 0 ? "warn" : "default"}
         />
       </div>
 
@@ -169,17 +190,23 @@ export default async function ClientPage({
         </section>
       )}
 
+      <PaymentsPanel
+        clientId={client.id}
+        payments={client.payments}
+        advanceLeft={advanceLeft}
+        dueNpr={due}
+        sessionsRemaining={liveSessions - deliveredCount}
+      />
+
       <DeleteClientCard
         id={client.id}
         name={client.name}
         bookingCount={client.bookings.length}
         engagementCount={client.engagements.length}
-        earnedNpr={
-          client.bookings
-            .filter(bookingIsEarned)
-            .reduce((sum, b) => sum + b.amountNpr, 0) +
-          client.engagements.reduce((sum, e) => sum + engagementEarnedNpr(e), 0)
-        }
+        // Money actually received, not sessions marked verified: the
+        // payments cascade away with the client, so this is what comes
+        // off the earnings figures.
+        earnedNpr={received}
         isArchived={client.status === "ARCHIVED"}
       />
     </Container>
