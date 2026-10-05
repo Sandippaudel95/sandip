@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { npr } from "@/content/services";
 import { formatDateKey, formatTime, nepalDateKey } from "@/lib/time";
 import type { BookingWithClient } from "@/lib/crm";
+import { SessionRowActions } from "./SessionRowActions";
 
 /* Used for both Today and Upcoming: the same row, grouped by day when the
    list spans more than one. */
@@ -100,6 +101,17 @@ export function SessionsPanel({
                   className="size-4 text-muted-foreground"
                   aria-label="Online session"
                 />
+
+                {/* The day's work gets closed off here, where it is
+                    already being looked at, rather than by going to find
+                    the row on the bookings page. */}
+                <div className="flex w-full justify-end sm:w-auto">
+                  <SessionRowActions
+                    id={b.id}
+                    status={b.bookingStatus}
+                    note={b.sessionNote}
+                  />
+                </div>
               </li>
             ))}
           </ul>

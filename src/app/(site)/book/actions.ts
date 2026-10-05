@@ -17,6 +17,7 @@ import {
   lastBookableDate,
 } from "@/lib/slots";
 import { addHours, formatSession, nepalToUtc } from "@/lib/time";
+import { splitByHours } from "@/lib/money";
 import {
   sendAdminNotice,
   sendBookingReceived,
@@ -288,21 +289,6 @@ export async function createBooking(
   }
 
   return { ok: true, reference: first.id };
-}
-
-/**
- * Divide a total into parts proportional to hours, summing to the total.
- *
- * Rounding each share independently would lose or gain a rupee or two, and
- * the parts have to add back to what was actually charged, because revenue
- * is summed from the rows. The remainder lands on the first session.
- */
-function splitByHours(total: number, hours: number[]): number[] {
-  const all = hours.reduce((a, b) => a + b, 0);
-  if (all <= 0) return hours.map(() => 0);
-  const parts = hours.map((h) => Math.floor((total * h) / all));
-  parts[0] += total - parts.reduce((a, b) => a + b, 0);
-  return parts;
 }
 
 class CapExceeded extends Error {}

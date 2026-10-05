@@ -89,3 +89,22 @@ export function engagementRevenueDate(
 ): Date {
   return e.completedAt ?? e.createdAt;
 }
+
+/**
+ * Divide a total into parts proportional to hours, summing to the total.
+ *
+ * Rounding each share independently would lose or gain a rupee or two,
+ * and the parts have to add back to what was actually charged, because
+ * revenue is summed from the rows rather than stored once. The remainder
+ * lands on the first session.
+ *
+ * Used by both booking paths: a client paying for several days online,
+ * and the admin entering one agreed total for a long engagement.
+ */
+export function splitByHours(total: number, hours: number[]): number[] {
+  const all = hours.reduce((a, b) => a + b, 0);
+  if (all <= 0) return hours.map(() => 0);
+  const parts = hours.map((h) => Math.floor((total * h) / all));
+  parts[0] += total - parts.reduce((a, b) => a + b, 0);
+  return parts;
+}

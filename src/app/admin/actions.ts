@@ -191,7 +191,10 @@ export async function rejectBooking(
 }
 
 /** Close off a session that has already happened. */
-export async function markCompleted(id: string): Promise<AdminActionResult> {
+export async function markCompleted(
+  id: string,
+  sessionNote?: string,
+): Promise<AdminActionResult> {
   await requireAdmin();
 
   const current = await prisma.booking.findUnique({ where: { id } });
@@ -205,11 +208,19 @@ export async function markCompleted(id: string): Promise<AdminActionResult> {
 
   await prisma.booking.update({
     where: { id },
-    data: { bookingStatus: "COMPLETED" },
+    data: {
+      bookingStatus: "COMPLETED",
+      // Only overwrite when something was actually written, so completing
+      // a session again does not wipe an earlier note.
+      ...(sessionNote?.trim()
+        ? { sessionNote: sessionNote.trim().slice(0, 500) }
+        : {}),
+    },
   });
 
   revalidatePath("/admin/dashboard");
   revalidatePath("/admin/bookings");
+  revalidatePath("/admin/clients");
   return { ok: true, message: "Marked completed." };
 }
 
@@ -232,6 +243,8 @@ export async function reopenBooking(id: string): Promise<AdminActionResult> {
     };
   }
 
+  // sessionNote is deliberately left alone: reopening a day completed by
+  // mistake should not discard what was recorded about it.
   await prisma.booking.update({
     where: { id },
     data: { bookingStatus: "CONFIRMED" },
@@ -239,6 +252,7 @@ export async function reopenBooking(id: string): Promise<AdminActionResult> {
 
   revalidatePath("/admin/dashboard");
   revalidatePath("/admin/bookings");
+  revalidatePath("/admin/clients");
   return { ok: true, message: "Reopened as confirmed." };
 }
 

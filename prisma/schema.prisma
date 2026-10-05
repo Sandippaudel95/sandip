@@ -87,6 +87,11 @@ model Booking {
   /// Reason shown to the client when rejecting or cancelling.
   adminNote String?
 
+  /// What this particular day covered, written when it is marked
+  /// completed. Separate from adminNote, which is the order-level reason
+  /// sent to the client, and survives a session being reopened.
+  sessionNote String?
+
   /// Set when a notification email could not be sent, so the dashboard can
   /// flag that the client was never told.
   emailFailed Boolean @default(false)

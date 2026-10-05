@@ -1,44 +1,32 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import {
-  Check,
-  CheckCheck,
-  Loader2,
-  Pencil,
-  RotateCcw,
-  Trash2,
-  X,
-} from "lucide-react";
-import Link from "next/link";
+import { Check, Loader2, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   confirmBooking,
   deleteBooking,
-  markCompleted,
   rejectBooking,
-  reopenBooking,
 } from "@/app/admin/actions";
 
-/* Confirm is a single click. Reject asks for a reason first, because the
-   reason is emailed to the client and "no reason given" is a poor message
-   to receive about money.
-
-   Delete is offered on every row, including the cancelled and completed
-   ones that have no other actions left — clearing out test entries and
-   spam is the main reason to reach for it, and those are exactly the rows
-   that are already past their useful actions. */
+/* Decisions that belong to the whole order: one payment, one approval.
+ *
+ * Closing off an individual day lives in SessionRowActions, on the
+ * session row itself. Keeping them apart is what stops "Mark completed"
+ * on a fifteen-day engagement silently completing only day one. */
 export function BookingRowActions({
   id,
   status,
   disabled,
   earnedLabel,
 }: {
+  /** Any session of the order; the actions resolve the group themselves. */
   id: string;
+  /** The order's state: PENDING while any session awaits verification. */
   status?: string;
   disabled?: boolean;
-  /** Set when this booking counts towards revenue, so the confirmation can
-      say what deleting it costs rather than asking a vague "are you sure?". */
+  /** Set when the order counts towards revenue, so the delete
+      confirmation can say what removing it costs. */
   earnedLabel?: string | null;
 }) {
   const [pending, startTransition] = useTransition();
@@ -61,7 +49,8 @@ export function BookingRowActions({
   const deleteControl = confirmingDelete ? (
     <div className="space-y-2 rounded-md border border-destructive/30 bg-destructive/5 p-3">
       <p className="text-xs leading-relaxed">
-        Delete this booking permanently? It will not be emailed to the client.
+        Delete this booking permanently, with all of its sessions? The client
+        is not emailed.
         {earnedLabel && (
           <span className="mt-1 block font-medium text-destructive">
             {earnedLabel} will come off your earnings.
@@ -105,91 +94,18 @@ export function BookingRowActions({
     </Button>
   );
 
-  /* Editing is available on every row whatever its state: a cancelled or
-     completed booking is exactly the kind you need to correct. */
-  const editControl = !confirmingDelete && (
-    <Button asChild size="sm" variant="ghost" className="text-muted-foreground">
-      <Link href={`/admin/bookings/${id}/edit`}>
-        <Pencil aria-hidden="true" />
-        Edit
-      </Link>
-    </Button>
-  );
-
-  const status_ = feedback && (
+  const feedbackLine = feedback && (
     <p role="status" className="text-xs text-muted-foreground">
       {feedback}
     </p>
   );
 
-  // A confirmed session that has happened is closed off here rather than in
-  // the pending queue, so the two actions never appear together.
-  if (status === "CONFIRMED") {
-    return (
-      <div className="space-y-2">
-        {!confirmingDelete && (
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={pending}
-            onClick={() => run(() => markCompleted(id))}
-          >
-            {pending ? (
-              <Loader2 className="animate-spin" aria-hidden="true" />
-            ) : (
-              <CheckCheck aria-hidden="true" />
-            )}
-            Mark completed
-          </Button>
-        )}
-        <div className="flex flex-wrap gap-1">
-          {editControl}
-          {deleteControl}
-        </div>
-        {status_}
-      </div>
-    );
-  }
-
-  // Completing is a single click on a row that looks like every other, so
-  // it has to be reversible.
-  if (status === "COMPLETED") {
-    return (
-      <div className="space-y-2">
-        {!confirmingDelete && (
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={pending}
-            onClick={() => run(() => reopenBooking(id))}
-          >
-            {pending ? (
-              <Loader2 className="animate-spin" aria-hidden="true" />
-            ) : (
-              <RotateCcw aria-hidden="true" />
-            )}
-            Mark as not completed
-          </Button>
-        )}
-        <div className="flex flex-wrap gap-1">
-          {editControl}
-          {deleteControl}
-        </div>
-        {status_}
-      </div>
-    );
-  }
-
-  // Cancelled bookings have nothing left to decide, but they can still be
-  // cleared away.
+  // Nothing left to decide: cancelled, or already seen through.
   if (disabled) {
     return (
       <div className="space-y-2">
-        <div className="flex flex-wrap gap-1">
-          {editControl}
-          {deleteControl}
-        </div>
-        {status_}
+        {deleteControl}
+        {feedbackLine}
       </div>
     );
   }
@@ -199,18 +115,20 @@ export function BookingRowActions({
       {!asking ? (
         <>
           <div className="flex flex-wrap gap-2">
-            <Button
-              size="sm"
-              disabled={pending}
-              onClick={() => run(() => confirmBooking(id))}
-            >
-              {pending ? (
-                <Loader2 className="animate-spin" aria-hidden="true" />
-              ) : (
-                <Check aria-hidden="true" />
-              )}
-              Verify &amp; confirm
-            </Button>
+            {status === "PENDING" && (
+              <Button
+                size="sm"
+                disabled={pending}
+                onClick={() => run(() => confirmBooking(id))}
+              >
+                {pending ? (
+                  <Loader2 className="animate-spin" aria-hidden="true" />
+                ) : (
+                  <Check aria-hidden="true" />
+                )}
+                Verify &amp; confirm
+              </Button>
+            )}
             <Button
               size="sm"
               variant="outline"
@@ -218,13 +136,10 @@ export function BookingRowActions({
               onClick={() => setAsking(true)}
             >
               <X aria-hidden="true" />
-              Reject
+              {status === "PENDING" ? "Reject" : "Cancel booking"}
             </Button>
           </div>
-          <div className="flex flex-wrap gap-1">
-            {editControl}
-            {deleteControl}
-          </div>
+          {deleteControl}
         </>
       ) : (
         <div className="space-y-2 rounded-md border bg-muted/50 p-3">
@@ -247,10 +162,8 @@ export function BookingRowActions({
               disabled={pending}
               onClick={() => run(() => rejectBooking(id, note))}
             >
-              {pending && (
-                <Loader2 className="animate-spin" aria-hidden="true" />
-              )}
-              Confirm rejection
+              {pending && <Loader2 className="animate-spin" aria-hidden="true" />}
+              Confirm
             </Button>
             <Button
               size="sm"
@@ -264,7 +177,7 @@ export function BookingRowActions({
         </div>
       )}
 
-      {status_}
+      {feedbackLine}
     </div>
   );
 }

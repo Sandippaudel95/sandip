@@ -9,8 +9,11 @@ import { cn } from "@/lib/utils";
 import { nepalDateKey } from "@/lib/time";
 import {
   createManualBooking,
+  previewRun,
   updateBooking,
 } from "@/app/admin/bookings/actions";
+import type { RunDatePreview, RunPattern } from "@/lib/run";
+import { formatDateKey } from "@/lib/time";
 
 /* Adding and editing take the same fields, so they are the same form.
    Adding covers work agreed off-site, where the point is to get the time
@@ -40,9 +43,54 @@ export function BookingForm({
     booking ? booking.amountNpr : null,
   );
 
+  /* A run of sessions. Only on the add path: editing works on one
+     existing session, and turning it into fifteen would be a surprise. */
+  const [startDate, setStartDate] = useState("");
+  const [timeSlot, setTimeSlot] = useState("");
+  const [pattern, setPattern] = useState<RunPattern>("daily");
+  const [count, setCount] = useState(1);
+  const [preview, setPreview] = useState<RunDatePreview[] | null>(null);
+  const [dropped, setDropped] = useState<string[]>([]);
+  const [previewing, startPreview] = useTransition();
+
+  const chosenDates = (preview ?? [])
+    .filter((d) => !dropped.includes(d.date))
+    .map((d) => d.date);
+
+  function refreshPreview(next?: {
+    start?: string;
+    time?: string;
+    pat?: RunPattern;
+    n?: number;
+    hrs?: number;
+  }) {
+    const start = next?.start ?? startDate;
+    const time = next?.time ?? timeSlot;
+    if (!start || !time) {
+      setPreview(null);
+      return;
+    }
+    startPreview(async () => {
+      const rows = await previewRun({
+        startDate: start,
+        timeSlot: time,
+        durationHours: next?.hrs ?? hours,
+        pattern: next?.pat ?? pattern,
+        count: next?.n ?? count,
+      });
+      setPreview(rows);
+      // Anything already taken starts unticked, so the default never
+      // submits a run that is going to be refused in full.
+      setDropped(rows.filter((r) => r.clashes).map((r) => r.date));
+    });
+  }
+
   function onSubmit(formData: FormData) {
     setMessage(null);
     setErrors({});
+    if (!booking) {
+      formData.set("dates", JSON.stringify(chosenDates));
+    }
     start(async () => {
       const res = booking
         ? await updateBooking(booking.id, formData)
@@ -155,6 +203,10 @@ export function BookingForm({
               name="date"
               type="date"
               defaultValue={booking ? nepalDateKey(booking.startsAt) : undefined}
+              onChange={(e) => {
+                setStartDate(e.target.value);
+                refreshPreview({ start: e.target.value });
+              }}
               required
               className={inputClass("date")}
             />,
@@ -167,6 +219,10 @@ export function BookingForm({
               name="timeSlot"
               type="time"
               defaultValue={booking?.timeSlot}
+              onChange={(e) => {
+                setTimeSlot(e.target.value);
+                refreshPreview({ time: e.target.value });
+              }}
               required
               step={900}
               className={inputClass("timeSlot")}
@@ -183,12 +239,119 @@ export function BookingForm({
               min={1}
               max={12}
               value={hours}
-              onChange={(e) => setHours(Number(e.target.value) || 1)}
+              onChange={(e) => {
+                const h = Number(e.target.value) || 1;
+                setHours(h);
+                refreshPreview({ hrs: h });
+              }}
               required
               className={inputClass("durationHours")}
             />,
           )}
         </div>
+
+        {!editing && (
+          <div className="mt-6 rounded-xl border bg-card p-4">
+            <h3 className="text-sm font-medium">Repeat</h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              For an engagement that runs over several days. Leave the count
+              at 1 for a single session.
+            </p>
+
+            <div className="mt-4 flex flex-wrap items-end gap-4">
+              <div>
+                <label htmlFor="pattern" className="block text-sm font-medium">
+                  How often
+                </label>
+                <select
+                  id="pattern"
+                  value={pattern}
+                  onChange={(e) => {
+                    const pat = e.target.value as RunPattern;
+                    setPattern(pat);
+                    refreshPreview({ pat });
+                  }}
+                  className="mt-2 rounded-md border bg-background px-3 py-2 text-sm"
+                >
+                  <option value="daily">Every day</option>
+                  <option value="weekdays">Weekdays only</option>
+                  <option value="weekly">Weekly</option>
+                </select>
+              </div>
+              <div>
+                <label htmlFor="count" className="block text-sm font-medium">
+                  Sessions
+                </label>
+                <input
+                  id="count"
+                  type="number"
+                  min={1}
+                  max={60}
+                  value={count}
+                  onChange={(e) => {
+                    const n = Number(e.target.value) || 1;
+                    setCount(n);
+                    refreshPreview({ n });
+                  }}
+                  className="mt-2 w-24 rounded-md border bg-background px-3 py-2 text-sm tabular-nums"
+                />
+              </div>
+              {previewing && (
+                <p className="flex items-center gap-2 pb-2 text-xs text-muted-foreground">
+                  <Loader2 className="size-3 animate-spin" aria-hidden="true" />
+                  Checking the calendar
+                </p>
+              )}
+            </div>
+
+            {preview && preview.length > 0 && (
+              <>
+                <p className="mt-5 text-xs text-muted-foreground">
+                  {chosenDates.length} of {preview.length} dates selected.
+                  Anything already booked is unticked.
+                </p>
+                <ul className="mt-2 grid gap-1 sm:grid-cols-2 lg:grid-cols-3">
+                  {preview.map((d) => {
+                    const on = !dropped.includes(d.date);
+                    return (
+                      <li key={d.date}>
+                        <label
+                          className={cn(
+                            "flex cursor-pointer items-center gap-2 rounded-md border px-3 py-2 text-xs",
+                            on
+                              ? "border-brand/30 bg-brand-soft"
+                              : "border-input text-muted-foreground",
+                          )}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={on}
+                            onChange={() =>
+                              setDropped((prev) =>
+                                prev.includes(d.date)
+                                  ? prev.filter((x) => x !== d.date)
+                                  : [...prev, d.date],
+                              )
+                            }
+                            className="size-3.5"
+                          />
+                          <span className="min-w-0 flex-1 truncate">
+                            {formatDateKey(d.date)}
+                          </span>
+                          {d.clashes && (
+                            <span className="shrink-0 font-medium text-destructive">
+                              taken
+                            </span>
+                          )}
+                        </label>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
+            )}
+          </div>
+        )}
       </section>
 
       <section>
@@ -198,7 +361,7 @@ export function BookingForm({
         <div className="mt-4 grid gap-5 sm:grid-cols-3">
           {field(
             "amountNpr",
-            "Amount (Rs.)",
+            editing ? "Amount (Rs.)" : "Agreed total (Rs.)",
             <input
               id="amountNpr"
               name="amountNpr"
@@ -207,11 +370,16 @@ export function BookingForm({
               required
               // Follows the hours until the admin types their own figure,
               // since negotiated work is often not the standard rate.
-              value={amount ?? hourlyRate * hours}
+              value={
+                amount ??
+                hourlyRate * hours * (editing ? 1 : chosenDates.length || 1)
+              }
               onChange={(e) => setAmount(Number(e.target.value) || 0)}
               className={inputClass("amountNpr")}
             />,
-            amount === null ? `${hours} × Rs. ${hourlyRate}` : undefined,
+            editing
+              ? undefined
+              : `Total for ${chosenDates.length || 1} session${chosenDates.length === 1 ? "" : "s"}, divided across them.`,
           )}
           {field(
             "paymentStatus",
@@ -296,7 +464,10 @@ export function BookingForm({
       </section>
 
       <div className="flex flex-wrap items-center gap-4">
-        <Button type="submit" disabled={pending}>
+        <Button
+          type="submit"
+          disabled={pending || (!editing && chosenDates.length === 0)}
+        >
           {pending ? (
             <Loader2 className="animate-spin" aria-hidden="true" />
           ) : editing ? (
