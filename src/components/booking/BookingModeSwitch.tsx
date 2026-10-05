@@ -17,10 +17,13 @@ import { WorkEnquiryForm } from "./WorkEnquiryForm";
 export function BookingModeSwitch({
   consultation,
   email,
+  qrSrc,
 }: {
   /** The existing wizard, rendered on the server and passed through. */
   consultation: React.ReactNode;
   email: string;
+  /** The same payment QR the consultation flow uses. */
+  qrSrc: string | null;
 }) {
   const [mode, setMode] = useState<"consultation" | "work">("consultation");
 
@@ -102,7 +105,7 @@ export function BookingModeSwitch({
                 quote will follow by email.
               </p>
             </div>
-            <WorkEnquiryForm email={email} />
+            <WorkEnquiryForm email={email} qrSrc={qrSrc} />
           </>
         )}
       </div>

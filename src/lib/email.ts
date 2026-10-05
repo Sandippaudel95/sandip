@@ -220,6 +220,8 @@ export interface WorkEnquiryData {
   title: string;
   notes: string;
   dueAt: string | null;
+  paidNpr: number;
+  transactionId: string | null;
 }
 
 const WORK_TYPE_LABEL: Record<string, string> = {
@@ -243,6 +245,12 @@ export async function sendWorkEnquiry(d: WorkEnquiryData): Promise<boolean> {
     ["Work", WORK_TYPE_LABEL[d.type] ?? d.type],
     ["Title", d.title],
     ["Needed by", d.dueAt ? formatDateKey(d.dueAt) : "Not specified"],
+    ...(d.paidNpr > 0
+      ? ([
+          ["Paid on submission", npr(d.paidNpr)],
+          ["Payment reference", d.transactionId ?? ""],
+        ] as [string, string][])
+      : []),
     ["Reference", d.id],
   ];
 
@@ -253,7 +261,9 @@ export async function sendWorkEnquiry(d: WorkEnquiryData): Promise<boolean> {
       "Your request has been received",
       p(`Dear ${esc(d.clientName)},`) +
         p(
-          "Thank you for getting in touch. Work of this kind is quoted individually, so nothing has been priced or scheduled yet. You will receive a quote by email, usually within a couple of days.",
+          d.paidNpr > 0
+            ? "Thank you for getting in touch, and for the payment. It will be checked against the account and set against this work once the scope is confirmed. A quote follows by email, usually within a couple of days."
+            : "Thank you for getting in touch. Work of this kind is quoted individually, so nothing has been priced or scheduled yet. You will receive a quote by email, usually within a couple of days.",
         ) +
         details(rows) +
         p("Reply to this email if you need to add anything."),

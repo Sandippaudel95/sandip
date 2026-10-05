@@ -128,6 +128,7 @@ export default async function BookPage() {
                 no calendar, no slots, nothing to pick. */}
             <BookingModeSwitch
               email={profile.emails[0]}
+              qrSrc={findQr()}
               consultation={
                 <BookingWizard
                   availability={availability}

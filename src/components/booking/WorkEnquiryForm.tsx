@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
-import { CheckCircle2, Loader2, Send } from "lucide-react";
+import Image from "next/image";
+import { CheckCircle2, Clock, Loader2, QrCode, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { createWorkEnquiry, type WorkResult } from "@/app/(site)/book/work-actions";
@@ -20,7 +21,39 @@ const TYPES = [
   ["OTHER", "Something else"],
 ] as const;
 
-export function WorkEnquiryForm({ email }: { email: string }) {
+export function WorkEnquiryForm({
+  email,
+  qrSrc,
+}: {
+  email: string;
+  qrSrc: string | null;
+}) {
+  /* Paying now only makes sense for someone who has already agreed a
+     figure in conversation: nothing has been quoted at this point, so
+     the form cannot tell them what to pay. Default is to wait. */
+  const [payNow, setPayNow] = useState(false);
+
+  /* Controlled on purpose. React resets a form once its action returns,
+     so with uncontrolled inputs a mistyped email would wipe the whole
+     description the client had just written. */
+  const [values, setValues] = useState({
+    type: "THESIS_REVIEW",
+    title: "",
+    notes: "",
+    clientName: "",
+    clientEmail: "",
+    dueAt: "",
+    amountNpr: "",
+    transactionId: "",
+  });
+  const bind = (name: keyof typeof values) => ({
+    value: values[name],
+    onChange: (
+      e: React.ChangeEvent<
+        HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+      >,
+    ) => setValues((v) => ({ ...v, [name]: e.target.value })),
+  });
   const [state, formAction] = useActionState<WorkResult | null, FormData>(
     createWorkEnquiry,
     null,
@@ -38,6 +71,8 @@ export function WorkEnquiryForm({ email }: { email: string }) {
           Work of this kind is quoted individually, so nothing has been
           priced or scheduled yet. A quote will follow by email, usually
           within a couple of days.
+          {payNow &&
+            " Your payment will be checked against the account and set against this work."}
         </p>
         <p className="mt-4 text-sm text-muted-foreground">
           Reference{" "}
@@ -65,7 +100,7 @@ export function WorkEnquiryForm({ email }: { email: string }) {
         <select
           id="type"
           name="type"
-          defaultValue="THESIS_REVIEW"
+          {...bind("type")}
           className={inputClass(errors.type)}
         >
           {TYPES.map(([value, label]) => (
@@ -85,6 +120,7 @@ export function WorkEnquiryForm({ email }: { email: string }) {
         <input
           id="title"
           name="title"
+          {...bind("title")}
           maxLength={200}
           required
           className={inputClass(errors.title)}
@@ -100,6 +136,7 @@ export function WorkEnquiryForm({ email }: { email: string }) {
         <textarea
           id="notes"
           name="notes"
+          {...bind("notes")}
           rows={6}
           maxLength={3000}
           required
@@ -112,6 +149,7 @@ export function WorkEnquiryForm({ email }: { email: string }) {
           <input
             id="clientName"
             name="clientName"
+            {...bind("clientName")}
             autoComplete="name"
             maxLength={100}
             required
@@ -122,6 +160,7 @@ export function WorkEnquiryForm({ email }: { email: string }) {
           <input
             id="clientEmail"
             name="clientEmail"
+            {...bind("clientEmail")}
             type="email"
             autoComplete="email"
             maxLength={200}
@@ -140,10 +179,130 @@ export function WorkEnquiryForm({ email }: { email: string }) {
         <input
           id="dueAt"
           name="dueAt"
+          {...bind("dueAt")}
           type="date"
           className={cn(inputClass(errors.dueAt), "sm:w-56")}
         />
       </Field>
+
+      <fieldset>
+        <legend className="text-sm font-medium">Payment</legend>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          {[
+            {
+              value: false,
+              icon: Clock,
+              title: "Send me a quote first",
+              blurb: "Nothing to pay now. Most people choose this.",
+            },
+            {
+              value: true,
+              icon: QrCode,
+              title: "I will pay now",
+              blurb: "If a price has already been agreed with you.",
+            },
+          ].map((o) => (
+            <label
+              key={String(o.value)}
+              className={cn(
+                "flex cursor-pointer gap-3 rounded-xl border p-4 transition-colors",
+                payNow === o.value
+                  ? "border-brand/30 bg-brand-soft ring-1 ring-brand/30"
+                  : "border-input hover:border-brand/30 hover:bg-accent/60",
+              )}
+            >
+              <input
+                type="radio"
+                name="payNow"
+                value={o.value ? "now" : "later"}
+                checked={payNow === o.value}
+                onChange={() => setPayNow(o.value)}
+                className="sr-only"
+              />
+              <o.icon
+                className={cn(
+                  "mt-0.5 size-4 shrink-0",
+                  payNow === o.value ? "text-brand" : "text-muted-foreground",
+                )}
+                aria-hidden="true"
+              />
+              <span className="min-w-0">
+                <span className="block text-sm font-medium">{o.title}</span>
+                <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">
+                  {o.blurb}
+                </span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
+      {payNow && (
+        <div className="grid gap-6 rounded-xl border bg-card p-5 sm:grid-cols-[auto_1fr]">
+          <div className="mx-auto sm:mx-0">
+            {qrSrc ? (
+              <>
+                {/* White in both themes on purpose: a QR code needs a
+                    light quiet zone to stay scannable. */}
+                <div className="rounded-xl bg-white p-3">
+                  <Image
+                    src={qrSrc}
+                    alt="QR code for payment"
+                    width={180}
+                    height={180}
+                    className="size-[180px] object-contain"
+                    unoptimized
+                  />
+                </div>
+                <p className="mt-2 text-center text-xs text-muted-foreground">
+                  Scan to pay
+                </p>
+              </>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Email {email} for payment details.
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-5">
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Pay the amount you have agreed, then enter it below with the
+              reference from your payment app. It is checked against the
+              account before being set against your work.
+            </p>
+            <Field
+              name="amountNpr"
+              label="Amount you have paid (Rs.)"
+              error={errors.amountNpr}
+            >
+              <input
+                id="amountNpr"
+                name="amountNpr"
+                {...bind("amountNpr")}
+                type="number"
+                min={1}
+                inputMode="numeric"
+                className={cn(inputClass(errors.amountNpr), "sm:w-48")}
+              />
+            </Field>
+            <Field
+              name="transactionId"
+              label="Transaction reference"
+              hint="The reference shown in eSewa, Fonepay or your bank app."
+              error={errors.transactionId}
+            >
+              <input
+                id="transactionId"
+                name="transactionId"
+                {...bind("transactionId")}
+                maxLength={100}
+                className={inputClass(errors.transactionId)}
+              />
+            </Field>
+          </div>
+        </div>
+      )}
 
       {state?.ok === false && state.message && (
         <p role="alert" className="text-sm text-destructive">
@@ -154,8 +313,10 @@ export function WorkEnquiryForm({ email }: { email: string }) {
       <Submit />
 
       <p className="text-sm leading-relaxed text-muted-foreground">
-        No payment is taken now. You will be quoted first, and nothing is
-        agreed until you accept it. You can also just email{" "}
+        {payNow
+          ? "Nothing is agreed until the quote is accepted; anything paid now is held against this work."
+          : "No payment is taken now. You will be quoted first, and nothing is agreed until you accept it."}{" "}
+        You can also just email{" "}
         <a
           href={`mailto:${email}`}
           className="font-medium text-brand underline underline-offset-4"
