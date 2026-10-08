@@ -52,11 +52,15 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
+              {/* Named, and pointing at the service's own page rather
+                  than an anchor on the index. "Read more" tells a crawler
+                  nothing about what it leads to, and the anchor wasted a
+                  page built to answer exactly this search. */}
               <Link
-                href={`/consulting#${pkg.id}`}
+                href={`/consulting/${pkg.id}`}
                 className="mt-auto pt-5 text-sm font-medium text-brand underline-offset-4 hover:underline"
               >
-                Read more
+                About {pkg.name.toLowerCase()}
               </Link>
             </article>
           ))}
