@@ -3,6 +3,7 @@ import path from "node:path";
 import type { Metadata } from "next";
 import { Clock, Video, FileText } from "lucide-react";
 import { Section } from "@/components/layout/Section";
+import { JsonLd, faqSchema } from "@/lib/schema";
 import { BookingWizard } from "@/components/booking/BookingWizard";
 import { BookingModeSwitch } from "@/components/booking/BookingModeSwitch";
 import { getAvailability, type DayAvailability } from "@/lib/slots";
@@ -70,6 +71,14 @@ export default async function BookPage() {
 
   return (
     <>
+      {/* The expectations below are already written as question-and-answer
+          pairs, so they are eligible for an FAQ rich result as they
+          stand. Marking up invented questions would not be. */}
+      <JsonLd
+        schema={faqSchema(
+          expectations.map((e) => ({ question: e.title, answer: e.detail })),
+        )}
+      />
       {/* Deliberately tighter and smaller than the other pages' headers.
           This is a utility page: arriving here from "Book a Consultation"
           should put the first step of the form on screen, not a title and
