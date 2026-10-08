@@ -1,0 +1,265 @@
+// Booking system for sandipaudel.com.np
+//
+// Times are stored in UTC and rendered in Asia/Kathmandu, matching how the
+// rest of the site formats dates.
+//
+// Overlap prevention is enforced by a Postgres exclusion constraint added in
+// the migration, not by application code. See prisma/migrations for the SQL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PaymentStatus {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  /// The session has happened. Distinct from CONFIRMED so "upcoming" means
+  /// something and past work can be counted as delivered.
+  COMPLETED
+  CANCELLED
+}
+
+enum ClientStatus {
+  LEAD
+  ACTIVE
+  PAST
+  ARCHIVED
+}
+
+enum EngagementType {
+  THESIS_REVIEW
+  PAPER_REVIEW
+  DATA_ANALYSIS
+  RESEARCH_CONSULTANCY
+  TRAINING
+  OTHER
+}
+
+enum EngagementStatus {
+  ENQUIRY
+  QUOTED
+  AGREED
+  IN_PROGRESS
+  DELIVERED
+  CANCELLED
+}
+
+model Booking {
+  id                String @id @default(cuid())
+  clientName        String
+  clientEmail       String
+  consultationTopic String
+
+  /// Calendar date in Nepal time, for the per-client daily cap.
+  date          DateTime @db.Date
+  /// Start time in Nepal time, "HH:mm".
+  timeSlot      String
+  durationHours Int      @default(1)
+
+  /// True instants, stored as timestamptz so their meaning never depends on
+  /// the reader's timezone: the server runs UTC, Nepal is UTC+05:45. Derived
+  /// from date + timeSlot in createBooking; nothing else should write them.
+  startsAt DateTime @db.Timestamptz(3)
+  endsAt   DateTime @db.Timestamptz(3)
+
+  transactionId String
+
+  /// What the client was asked to pay, in rupees, computed server-side at
+  /// insert time. Recorded so a later change to the rate or to a coupon
+  /// cannot rewrite history.
+  amountNpr   Int
+  discountNpr Int     @default(0)
+  couponCode  String?
+
+  paymentStatus PaymentStatus @default(PENDING)
+  bookingStatus BookingStatus @default(PENDING)
+
+  /// Reason shown to the client when rejecting or cancelling.
+  adminNote String?
+
+  /// What this particular day covered, written when it is marked
+  /// completed. Separate from adminNote, which is the order-level reason
+  /// sent to the client, and survives a session being reopened.
+  sessionNote String?
+
+  /// Set when a notification email could not be sent, so the dashboard can
+  /// flag that the client was never told.
+  emailFailed Boolean @default(false)
+
+  /// Sessions booked and paid for together share this id: one payment, one
+  /// transaction reference, one approval. A single-day booking is a group
+  /// of one. Deliberately not a parent table — the overlap exclusion
+  /// constraint lives on this row and cannot reference another table, so
+  /// splitting would force the status back down here anyway.
+  groupId String?
+
+  /// Set for every booking. Nullable only so the backfill could run.
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([clientId])
+  @@index([groupId])
+  @@index([date])
+  @@index([clientEmail, date])
+  @@index([bookingStatus, createdAt])
+  @@index([couponCode])
+}
+
+/// A person or institution Sandip works with. Created automatically from a
+/// booking, or by hand for work that arrives by email.
+model Client {
+  id   String @id @default(cuid())
+  name String
+
+  /// Always stored lowercase. Lookups must lowercase too, or the unique
+  /// constraint turns two spellings of one address into a crash.
+  email String @unique
+
+  phone        String?
+  organisation String?
+  /// Bachelor, Master, MPhil, PhD, Faculty, Institution, Other.
+  level        String?
+
+  status ClientStatus @default(ACTIVE)
+  tags   String[]     @default([])
+  notes  String?
+
+  /// What to do next for this client, and when it is due. Anything due or
+  /// overdue is surfaced on the dashboard.
+  nextAction     String?
+  nextActionDate DateTime? @db.Date
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  bookings    Booking[]
+  engagements Engagement[]
+  payments    Payment[]
+
+  @@index([status])
+  @@index([nextActionDate])
+}
+
+/// Work agreed outside the booking flow: reviews, analysis, commissioned
+/// studies, training. Deliberately never created from a Booking, so the two
+/// revenue streams stay disjoint and cannot double-count.
+model Engagement {
+  id       String @id @default(cuid())
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  type   EngagementType
+  title  String
+  status EngagementStatus @default(ENQUIRY)
+
+  /// Agreed fee and how much of it has arrived. Kept apart because
+  /// negotiated work is often part-paid, and what is outstanding matters.
+  feeNpr        Int @default(0)
+  amountPaidNpr Int @default(0)
+
+  startedAt   DateTime? @db.Date
+  dueAt       DateTime? @db.Date
+  completedAt DateTime? @db.Date
+
+  /// When the recorded payment arrived. Null on rows written before this
+  /// existed, where the ledger falls back to updatedAt and says so rather
+  /// than presenting a guess as fact.
+  paidAt DateTime? @db.Date
+
+  notes String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+
+  @@index([clientId])
+  @@index([status])
+  @@index([dueAt])
+}
+
+/// Booking rules, editable from the admin panel.
+///
+/// One row, id "singleton". These were constants in
+/// src/content/availability.ts, which meant a code change and a deploy to
+/// close a Friday afternoon. That file now holds only the defaults this
+/// row is seeded from.
+model AvailabilitySetting {
+  id String @id @default("singleton")
+
+  /// Start times per weekday, as { "0": ["10:00", ...] } with 0 = Sunday.
+  /// A weekday that is absent or empty is closed. JSON rather than a table
+  /// because it is always read and written whole.
+  openingHours Json
+
+  /// Lengths a client may choose, in hours.
+  sessionLengths Int[] @default([1, 2])
+
+  /// No booking may start within this many hours from now.
+  minimumNoticeHours Int @default(24)
+
+  /// How far ahead the calendar opens.
+  bookingWindowDays Int @default(30)
+
+  /// Total hours one client may hold on a single day, across every session
+  /// of every booking. Enforced under an advisory lock, so raising it here
+  /// cannot be raced by two submissions.
+  maxHoursPerClientPerDay Int @default(2)
+
+  updatedAt DateTime @updatedAt @db.Timestamptz(3)
+}
+
+/// A date closed regardless of the weekday's opening hours.
+model BlackoutDate {
+  id     String   @id @default(cuid())
+  /// Nepal-time calendar date, stored as a plain date.
+  date   DateTime @unique @db.Date
+  reason String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([date])
+}
+
+/// Money actually received.
+///
+/// Booking.paymentStatus is a workflow flag — has this been verified, is
+/// the slot live — and says nothing about how much arrived. A client who
+/// agrees 30 hours and pays half up front needs the order confirmed and
+/// the balance outstanding at the same time, which one enum cannot do.
+model Payment {
+  id       String @id @default(cuid())
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  /// The booking order this paid for, when it was for sessions. Null for
+  /// money received against anything else.
+  groupId String?
+
+  amountNpr Int
+
+  /// When the money arrived, not when it was typed in, so a payment
+  /// entered late still lands in the month it belongs to.
+  receivedAt DateTime @db.Date
+
+  /// eSewa, bank transfer, cash.
+  method String?
+  note   String?
+
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([clientId])
+  @@index([groupId])
+  @@index([receivedAt])
+}
